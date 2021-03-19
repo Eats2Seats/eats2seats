@@ -15,7 +15,8 @@ mix.js('resources/js/app.js', 'public/js').vue()
     .postCss('resources/css/app.css', 'public/css', [
         require("@tailwindcss/jit"),
     ])
-    .webpackConfig(require('./webpack.config'));
+    .webpackConfig(require('./webpack.config'))
+    .browserSync('localhost');
 
 if (mix.inProduction()) {
     mix.version();
