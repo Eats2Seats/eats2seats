@@ -16,7 +16,10 @@ mix.js('resources/js/app.js', 'public/js').vue()
         require("@tailwindcss/jit"),
     ])
     .webpackConfig(require('./webpack.config'))
-    .browserSync('localhost');
+    .browserSync({
+        proxy: 'localhost',
+        open: false,
+    });
 
 if (mix.inProduction()) {
     mix.version();

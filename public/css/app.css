@@ -2176,13 +2176,13 @@ select {
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px
 }
-.rounded-b {
-    border-bottom-right-radius: 0.25rem;
-    border-bottom-left-radius: 0.25rem
-}
 .rounded-t {
     border-top-left-radius: 0.25rem;
     border-top-right-radius: 0.25rem
+}
+.rounded-b {
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem
 }
 .border {
     border-width: 1px
