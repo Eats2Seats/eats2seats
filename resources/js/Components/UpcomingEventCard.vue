@@ -1,23 +1,119 @@
 <template>
-
+    <card>
+        <template #header>
+            <div class="flex justify-between">
+                <div>
+                    <p class="mt-4 font-serif font-bold text-gray-700 text-lg">
+                        <slot name="upcoming-event-name">{{ event.name }}</slot>
+                    </p>
+                </div>
+                <div>
+                    <a href="#">
+                        <svg
+                            class="mt-4 h-6 w-6 transform rotate-45 text-gray-300"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 10l7-7m0 0l7 7m-7-7v18"
+                            />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </template>
+        <template #body>
+            <div class="flex-col divide-y-2">
+                <div class="flex flex-col">
+                    <p
+                        class="mt-4 font-serif font-regular text-gray-500 text-sm"
+                    >
+                        <slot> Location </slot>
+                    </p>
+                    <p
+                        class="mt-2 font-serif font-regular text-gray-700 text-base"
+                    >
+                        <slot name="upcoming-event-location">
+                            {{ event.location }}
+                        </slot>
+                    </p>
+                </div>
+                <div class="flex flex-col">
+                    <div class="flex justify-between">
+                        <div>
+                            <p
+                                class="mt-4 font-serif font-regular text-gray-500 text-sm"
+                            >
+                                <slot name> Date </slot>
+                            </p>
+                            <p
+                                class="mt-2 font-serif font-regular text-gray-700 text-base"
+                            >
+                                <slot name="upcoming-event-date">
+                                    {{ getDate() }}
+                                </slot>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <p
+                        class="mt-4 font-serif font-regular text-gray-500 text-sm"
+                    >
+                        <slot> Positions </slot>
+                    </p>
+                    <p
+                        class="mt-2 font-serif font-regular text-gray-700 text-base"
+                    >
+                        <slot name="upcoming-event-positions">
+                            {{ event.positions }}
+                        </slot>
+                    </p>
+                </div>
+            </div>
+        </template>
+    </card>
 </template>
 
 <script>
+import Card from "@/Components/Card";
 export default {
-    name: "UpcomingEventCard",
-    data () {
+    name: "RegisteredEventCard",
+    components: {
+        Card,
+    },
+    data() {
         return {
             event: {
-                name: 'Princeton vs Georgia Tech',
-                location: 'Fred Yager Stadium',
-                start: '2021-04-05 17:00:00',
-                end: '2021-04-05 20:30:00',
-            }
-        }
-    }
-}
+                name: "UNC vs Virginia Tech",
+                location: "Kenan Memorial Stadium",
+                start: "2021-03-26 19:15:00",
+                positions: 11,
+            },
+        };
+    },
+    methods: {
+        getDate() {
+            // 2021-04-05 -> 2021/04/05
+            var modifiedDate = this.event.start
+                .split(" ")[0]
+                .split("-")
+                .join("/");
+            // Mon Apr 05 2021 00:00:00 GMT-0700 (Pacific Daylight Time)
+            var date = new Date(modifiedDate);
+
+            return (
+                date.toString("MMMM").split(" ")[1] +
+                " " +
+                date.toString("MMMM").split(" ")[2]
+            );
+        },
+    },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

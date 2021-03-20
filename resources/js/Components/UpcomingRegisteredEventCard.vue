@@ -1,53 +1,75 @@
 <template>
     <card>
         <template #header>
-            <div class="flex flex-col">
-                <p class="mt-4 font-serif font-bold text-gray-700 text-lg">
-                    <slot name="eventDetailTitle"></slot>
-                </p>
+            <div class="flex justify-between">
+                <div>
+                    <p class="mt-4 font-serif font-bold text-gray-700 text-lg">
+                        <slot name="upcoming-registered-event-name">{{ event.name }}</slot>
+                    </p>
+                </div>
+                <div>
+                    <a href="#">
+                        <svg
+                            class="mt-4 h-6 w-6 transform rotate-45 text-gray-300"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 10l7-7m0 0l7 7m-7-7v18"
+                            />
+                        </svg>
+                    </a>
+                </div>
             </div>
         </template>
-
         <template #body>
             <div class="flex-col divide-y-2">
                 <div class="flex flex-col">
                     <p
                         class="mt-4 font-serif font-regular text-gray-500 text-sm"
                     >
-                        <slot name="location"> Location </slot>
+                        <slot> Location </slot>
                     </p>
                     <p
                         class="mt-2 font-serif font-regular text-gray-700 text-base"
                     >
-                        <slot name="detailedLocation">
+                        <slot name="upcoming-event-location">
                             {{ event.location }}
                         </slot>
                     </p>
                 </div>
                 <div class="flex flex-col">
-                    <p
-                        class="mt-4 font-serif font-regular text-gray-500 text-sm"
-                    >
-                        <slot name="Date"> Date </slot>
-                    </p>
-                    <p
-                        class="mt-2 font-serif font-regular text-gray-700 text-base"
-                    >
-                        <slot name="detailedDate">
-                            {{ getDate() }}
-                        </slot>
-                    </p>
+                    <div class="flex justify-between">
+                        <div>
+                            <p
+                                class="mt-4 font-serif font-regular text-gray-500 text-sm"
+                            >
+                                <slot name> Date </slot>
+                            </p>
+                            <p
+                                class="mt-2 font-serif font-regular text-gray-700 text-base"
+                            >
+                                <slot name="upcoming-event-date">
+                                    {{ getDate() }}
+                                </slot>
+                            </p>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex flex-col">
                     <p
                         class="mt-4 font-serif font-regular text-gray-500 text-sm"
                     >
-                        <slot name="Time"> Time </slot>
+                        <slot> Time </slot>
                     </p>
                     <p
                         class="mt-2 font-serif font-regular text-gray-700 text-base"
                     >
-                        <slot name="detailedTime">
+                        <slot name="upcoming-event-positions">
                             {{ getTime() }}
                         </slot>
                     </p>
@@ -60,21 +82,21 @@
 <script>
 import Card from "@/Components/Card";
 export default {
-    name: "EventDetailsCard",
-    components: {
+    name: "UpcomingEventCard",
+    components:{
         Card,
     },
-    data() {
+    data () {
         return {
             event: {
-                name: "Princeton vs Georgia Tech",
-                location: "Fred Yager Stadium",
-                start: "2021-04-05 17:00:00",
-                end: "2021-04-05 20:30:00",
-            },
-        };
+                name: 'Princeton vs Georgia Tech',
+                location: 'Fred Yager Stadium',
+                start: '2021-04-05 17:00:00',
+                end: '2021-04-05 20:30:00',
+            }
+        }
     },
-     methods:{
+    methods:{
         getDate() {
             // 2021-04-05 -> 2021/04/05
             var modifiedDate = this.event.start
@@ -105,7 +127,9 @@ export default {
             return startTime + " to " + endTime;
         },
     }
-};
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>
