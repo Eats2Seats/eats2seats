@@ -7,7 +7,7 @@
             <slot name="header"></slot>
         </div>
         <div
-            class="px-6 border-gray-300"
+            class="border-gray-300"
             :class="[
                 hasHeader ? 'rounded-none border-t' : 'rounded-t border-t-0',
                 hasFooter ? 'rounded-none border-b' : 'rounded-b border-b-0',
