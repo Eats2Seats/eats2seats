@@ -3,14 +3,14 @@
         <template #header>
             <div class="flex justify-between">
                 <div>
-                    <p class="mt-4 font-serif font-bold text-gray-700 text-lg">
+                    <p class="font-serif font-bold text-gray-700 text-lg">
                         <slot name="upcoming-registered-event-name">{{ event.name }}</slot>
                     </p>
                 </div>
                 <div>
                     <a href="#">
                         <svg
-                            class="mt-4 h-6 w-6 transform rotate-45 text-gray-300"
+                            class="h-6 w-6 transform rotate-45 text-gray-300"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -27,12 +27,12 @@
             </div>
         </template>
         <template #body>
-            <div class="flex-col divide-y-2">
-                <div class="flex flex-col">
+            <div class="flex-col divide-y divide-gray-300 space-y-4">
+                <div class="flex flex-col px-6">
                     <p
-                        class="mt-4 font-serif font-regular text-gray-500 text-sm"
+                        class="font-serif font-regular text-gray-500 text-sm"
                     >
-                        <slot> Location </slot>
+                        <p> Location </p>
                     </p>
                     <p
                         class="mt-2 font-serif font-regular text-gray-700 text-base"
@@ -42,13 +42,13 @@
                         </slot>
                     </p>
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col px-6">
                     <div class="flex justify-between">
                         <div>
                             <p
                                 class="mt-4 font-serif font-regular text-gray-500 text-sm"
                             >
-                                <slot name> Date </slot>
+                                <p> Date </p>
                             </p>
                             <p
                                 class="mt-2 font-serif font-regular text-gray-700 text-base"
@@ -60,11 +60,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col px-6">
                     <p
                         class="mt-4 font-serif font-regular text-gray-500 text-sm"
                     >
-                        <slot> Time </slot>
+                        <p> Time </p>
                     </p>
                     <p
                         class="mt-2 font-serif font-regular text-gray-700 text-base"

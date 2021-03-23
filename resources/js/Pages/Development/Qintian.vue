@@ -2,9 +2,6 @@
     <dev-layout class="p-4">
         <div class="min-w-full flex flex-col space-y-9">
             <event-details-card>
-                <template v-slot:eventDetailTitle>
-                    Event Details
-                </template>
 
             </event-details-card>
 

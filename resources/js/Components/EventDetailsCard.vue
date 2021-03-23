@@ -3,7 +3,7 @@
         <template #header>
             <div class="flex flex-col">
                 <p class="font-serif font-bold text-gray-700 text-lg">
-                    <slot name="eventDetailTitle"></slot>
+                   <p>Event Details</p>
                 </p>
             </div>
         </template>
@@ -22,11 +22,11 @@
                         </slot>
                     </p>
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col px-6">
                     <p
                         class="mt-4 font-serif font-regular text-gray-500 text-sm"
                     >
-                        <slot name="Date"> Date </slot>
+                        <p> Date </p>
                     </p>
                     <p
                         class="mt-2 font-serif font-regular text-gray-700 text-base"
@@ -36,11 +36,11 @@
                         </slot>
                     </p>
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col px-6">
                     <p
                         class="mt-4 font-serif font-regular text-gray-500 text-sm"
                     >
-                        <slot name="Time"> Time </slot>
+                        <p> Time </p>
                     </p>
                     <p
                         class="mt-2 font-serif font-regular text-gray-700 text-base"

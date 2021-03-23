@@ -2,18 +2,18 @@
     <card>
         <template #header>
             <div class="flex flex-col">
-                <p class="mt-4 font-serif font-bold text-gray-700 text-lg">
-                    <slot name>Stand Information</slot>
+                <p class="font-serif font-bold text-gray-700 text-lg">
+                    <p>Stand Information</p>
                 </p>
             </div>
         </template>
         <template #body>
-            <div class="flex-col divide-y-2">
-                <div class="flex flex-col">
+            <div class="flex-col divide-y divide-gray-300 space-y-4">
+                <div class="flex flex-col px-6">
                     <p
-                        class="mt-4 font-serif font-regular text-gray-500 text-sm"
+                        class="font-serif font-regular text-gray-500 text-sm"
                     >
-                        <slot> Stand Information </slot>
+                        <p> Stand Information </p>
                     </p>
                     <p
                         class="mt-2 font-serif font-regular text-gray-700 text-base"
@@ -23,13 +23,13 @@
                         </slot>
                     </p>
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col px-6">
                     <div class="flex justify-between">
                         <div>
                             <p
                                 class="mt-4 font-serif font-regular text-gray-500 text-sm"
                             >
-                                <slot name> Location </slot>
+                                <p> Location </p>
                             </p>
                             <p
                                 class="mt-2 font-serif font-regular text-gray-700 text-base"
@@ -57,11 +57,11 @@
                         </a>
                     </div>
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col px-6">
                     <p
                         class="mt-4 font-serif font-regular text-gray-500 text-sm"
                     >
-                        <slot> Position </slot>
+                        <p> Position </p>
                     </p>
                     <p
                         class="mt-2 font-serif font-regular text-gray-700 text-base"

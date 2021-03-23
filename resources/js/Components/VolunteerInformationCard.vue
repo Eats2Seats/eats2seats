@@ -2,18 +2,18 @@
     <card>
         <template #header>
             <div class="flex flex-col">
-                <p class="mt-4 font-serif font-bold text-gray-700 text-lg">
-                    <slot name="volunteerTitle"> Volunteer Information </slot>
+                <p class="font-serif font-bold text-gray-700 text-lg">
+                    <p> Volunteer Information </p>
                 </p>
             </div>
         </template>
         <template #body>
-            <div class="flex-col divide-y-2">
-                <div class="flex flex-col">
+            <div class="flex-col divide-y divide-gray-300 space-y-4">
+                <div class="flex flex-col px-6">
                     <p
-                        class="mt-4 font-serif font-regular text-gray-500 text-sm"
+                        class="font-serif font-regular text-gray-500 text-sm"
                     >
-                        <slot name="orgName"> Organization </slot>
+                        <p> Organization </p>
                     </p>
                     <p
                         class="mt-2 font-serif font-regular text-gray-700 text-base"
@@ -23,11 +23,11 @@
                         </slot>
                     </p>
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col px-6">
                     <p
                         class="mt-4 font-serif font-regular text-gray-500 text-sm"
                     >
-                        <slot name="managerName"> Manager </slot>
+                        <p> Manager </p>
                     </p>
                     <p
                         class="mt-2 font-serif font-regular text-gray-700 text-base"
