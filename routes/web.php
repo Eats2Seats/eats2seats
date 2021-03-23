@@ -37,3 +37,10 @@ Route::get('/qintian', function () {
 Route::get('/deven', function () {
     return Inertia::render('Development/Deven');
 });
+
+/**
+ * Volunteer Paths
+ */
+Route::prefix('volunteer')->group(function () {
+    Route::get('/events/{id}', [\App\Http\Controllers\Volunteer\EventsController::class, 'show']);
+});
