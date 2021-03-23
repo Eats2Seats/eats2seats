@@ -3,6 +3,7 @@
 namespace Tests\Feature\Volunteer;
 
 use App\Models\Event;
+use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
@@ -17,23 +18,37 @@ class ViewEventDetailsTest extends TestCase
         $this->withoutExceptionHandling();
 
         // Arrange
-        $details = [
+        $venue = Venue::factory()->create([
+            'name' => 'Kenan Memorial Stadium',
+            'street' => '104 Stadium Drive',
+            'city' => 'Chapel Hill',
+            'state' => 'North Carolina',
+            'zip' => '27514',
+        ]);
+        $event = Event::factory()->published()->create([
             'title' => 'UNC vs Duke',
-            'venue' => 'Kenan Memorial Stadium',
+            'venue_id' => $venue->id,
             'start' => Carbon::parse('March 23rd 2021 5:00 PM'),
             'end' => Carbon::parse('March 23rd 2021 8:00 PM'),
-        ];
-        $event = Event::factory()->published()->create($details);
+        ]);
 
         // Act
         $response = $this->get('/volunteer/events/' . $event->id);
 
         // Assert
         $response->assertStatus(200);
-        $response->assertSee($details['title']);
-        $response->assertSee($details['venue']);
-        $response->assertSee($details['start']);
-        $response->assertSee($details['end']);
+        $response->assertPropValue('event', function ($event) {
+            $this->assertEquals('UNC vs Duke', $event['title']);
+            $this->assertEquals(Carbon::parse('March 23rd 2021 5:00 PM'), $event['start']);
+            $this->assertEquals(Carbon::parse('March 23rd 2021 8:00 PM'), $event['end']);
+        });
+        $response->assertPropValue('venue', function ($venue) {
+            $this->assertEquals('Kenan Memorial Stadium', $venue['name']);
+            $this->assertEquals('104 Stadium Drive', $venue['street']);
+            $this->assertEquals('Chapel Hill', $venue['city']);
+            $this->assertEquals('North Carolina', $venue['state']);
+            $this->assertEquals('27514', $venue['zip']);
+        });
     }
 
     /** @test */

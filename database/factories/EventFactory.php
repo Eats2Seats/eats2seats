@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Event;
+use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -24,7 +25,9 @@ class EventFactory extends Factory
     {
         return [
             'title' => 'Example Title',
-            'venue' => 'Example Venue',
+            'venue_id' => function () {
+                return Venue::factory()->create()->id;
+            },
             'start' => Carbon::parse('+1 day 5:00 PM'),
             'end' => Carbon::parse('+1 day 8:00 PM'),
         ];

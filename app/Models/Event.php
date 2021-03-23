@@ -13,4 +13,9 @@ class Event extends Model
     {
         return $query->whereNotNull('published_at');
     }
+
+    public function venue()
+    {
+        return $this->belongsTo(Venue::class);
+    }
 }

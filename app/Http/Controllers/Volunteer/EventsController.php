@@ -13,10 +13,8 @@ class EventsController extends Controller
         $event = Event::published()->findOrFail($id);
 
         return Inertia::render('Volunteer/Event/Show', [
-            'title' => $event->title,
+            'event' => $event,
             'venue' => $event->venue,
-            'start' => $event->start,
-            'end' => $event->end,
         ]);
     }
 }
