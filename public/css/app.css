@@ -2130,6 +2130,10 @@ select {
     border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
     border-bottom-width: calc(1px * var(--tw-divide-y-reverse))
 }
+.divide-gray-300 > :not([hidden]) ~ :not([hidden]) {
+    --tw-divide-opacity: 1;
+    border-color: rgba(209, 213, 219, var(--tw-divide-opacity))
+}
 .overflow-hidden {
     overflow: hidden
 }

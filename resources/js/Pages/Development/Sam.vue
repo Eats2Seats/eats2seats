@@ -4,19 +4,24 @@
             <stand-information-card>
                 
             </stand-information-card>
+            <next-event-card>
+
+            </next-event-card>
         </div>
     </dev-layout>
 </template>
 
 <script>
 import DevLayout from "@/Layouts/DevLayout";
-import NavigationActionCard from "@/Components/NavigationActionCard";
+import NavigationActionCard from "@/Components/NavigationActionCard"
 import StandInformationCard from "@/Components/StandInformationCard"
+import NextEventCard from "@/Components/NextEventCard"
 export default {
     components: {
         DevLayout,
         NavigationActionCard,
         StandInformationCard,
+        NextEventCard,
     },
     props: {},
     data () {
