@@ -7,6 +7,9 @@
             <next-event-card>
 
             </next-event-card>
+            <manage-registration-card>
+
+            </manage-registration-card>
         </div>
     </dev-layout>
 </template>
@@ -16,12 +19,14 @@ import DevLayout from "@/Layouts/DevLayout";
 import NavigationActionCard from "@/Components/NavigationActionCard"
 import StandInformationCard from "@/Components/StandInformationCard"
 import NextEventCard from "@/Components/NextEventCard"
+import ManageRegistrationCard from "@/Components/ManageRegistrationCard"
 export default {
     components: {
         DevLayout,
         NavigationActionCard,
         StandInformationCard,
         NextEventCard,
+        ManageRegistrationCard,
     },
     props: {},
     data () {

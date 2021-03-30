@@ -1,13 +1,13 @@
 <template>
     <card>
         <template #header>
-            <p class="font-serif text-lg font-bold text-grey-700">
+            <p class="font-serif text-lg font-bold text-gray-700">
                 Stand information
             </p>
         </template>
     
         <template #body>
-            <div class="grid grid-cols-1 divide-y divide-grey-300">
+            <div class="grid grid-cols-1 divide-y divide-gray-300">
                 <!-- Name feild-->
                 <div class="">
                     <p class="font-serif text-sm text-gray-500 font-regular">Name</p>
