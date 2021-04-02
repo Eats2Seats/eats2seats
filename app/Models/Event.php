@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Event extends Model
 {
@@ -17,5 +18,10 @@ class Event extends Model
     public function venue()
     {
         return $this->belongsTo(Venue::class);
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Reservation::class);
     }
 }

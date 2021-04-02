@@ -3,6 +3,8 @@
 namespace Tests\Unit;
 
 use App\Models\Event;
+use App\Models\Reservation;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
@@ -12,7 +14,7 @@ class EventTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function an_events_with_a_published_at_date_are_published()
+    public function events_with_a_published_at_date_are_published()
     {
         // Arrange
         $publishedEventA = Event::factory()->create([
