@@ -24,20 +24,25 @@ class ReservationFactory extends Factory
      */
     public function definition()
     {
-        $event = Event::factory()->published()->create();
-
         return [
-            'event_id' => $event,
-            'stand_id' => function () use ($event) {
-                return Stand::factory()->create([
-                    'venue_id' => $event->venue_id,
+            'event_id' => Event::factory()->published(),
+            'stand_id' => function (array $attributes) {
+                return Stand::factory()->state([
+                    'venue_id' => Event::find($attributes['event_id'])->venue_id,
                 ]);
             },
-            'user_id' => function () {
-                return User::factory()->create();
-            },
+            'user_id' => null,
             'stand_name' => 'Test Stand Name',
             'position_type' => 'Test Position',
         ];
+    }
+
+    public function claimed()
+    {
+        return $this->state([
+            'user_id' => function () {
+                return User::factory()->create();
+            }
+        ]);
     }
 }

@@ -17,7 +17,7 @@ class CreateReservationsTable extends Migration
             $table->id();
             $table->foreignId('event_id')->constrained();
             $table->foreignId('stand_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->string('stand_name');
             $table->string('position_type');
             $table->timestamps();

@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\Models\Event;
 use App\Models\Reservation;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
@@ -34,5 +33,35 @@ class EventTest extends TestCase
         $this->assertTrue($publishedEvents->contains($publishedEventA));
         $this->assertFalse($publishedEvents->contains($publishedEventB));
         $this->assertTrue($publishedEvents->contains($publishedEventC));
+    }
+
+    /** @test */
+    public function events_with_available_reservations_are_available()
+    {
+        // Arrange
+        $eventA = Event::factory()
+            ->published()
+            ->future()
+            ->has(Reservation::factory()->count(1))
+            ->has(Reservation::factory()->claimed()->count(3))
+            ->create();
+        $eventB = Event::factory()
+            ->published()
+            ->future()
+            ->has(Reservation::factory()->claimed()->count(3))
+            ->create();
+        $eventC = Event::factory()
+            ->published()
+            ->future()
+            ->has(Reservation::factory()->count(2))
+            ->create();
+
+        // Act
+        $availableEvents = Event::available()->get();
+
+        // Assert
+        $availableEvents->assertContains($eventA->fresh());
+        $availableEvents->assertNotContains($eventB->fresh());
+        $availableEvents->assertContains($eventC->fresh());
     }
 }

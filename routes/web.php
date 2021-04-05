@@ -42,5 +42,6 @@ Route::get('/deven', function () {
  * Volunteer Paths
  */
 Route::prefix('volunteer')->group(function () {
+    Route::get('/events', [\App\Http\Controllers\Volunteer\EventsController::class, 'index']);
     Route::get('/events/{id}', [\App\Http\Controllers\Volunteer\EventsController::class, 'show']);
 });

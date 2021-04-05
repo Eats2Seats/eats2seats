@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Testing\TestResponse;
@@ -53,6 +54,14 @@ class TestServiceProvider extends ServiceProvider
 
             /** @var TestResponse $this */
             return $this;
+        });
+
+        Collection::macro('assertContains', function ($value) {
+            Assert::assertTrue($this->contains($value), "Failed asserting that the collection contains the specified value.");
+        });
+
+        Collection::macro('assertNotContains', function ($value) {
+            Assert::assertFalse($this->contains($value), "Failed asserting that the collection did not contain the specified value.");
         });
     }
 

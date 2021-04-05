@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 class Event extends Model
 {
@@ -15,12 +16,19 @@ class Event extends Model
         return $query->whereNotNull('published_at');
     }
 
+    public function scopeAvailable($query)
+    {
+        return $query->whereHas('reservations', function (Builder $query) {
+           $query->available();
+        });
+    }
+
     public function venue()
     {
         return $this->belongsTo(Venue::class);
     }
 
-    public function tickets()
+    public function reservations()
     {
         return $this->hasMany(Reservation::class);
     }

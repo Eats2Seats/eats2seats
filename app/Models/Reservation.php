@@ -13,4 +13,14 @@ class Reservation extends Model
     {
         return $query->where('user_id', $user->id);
     }
+
+    public function scopeAvailable($query)
+    {
+        return $query->where('user_id', null);
+    }
+
+    public function stand()
+    {
+        return $this->belongsTo(Stand::class);
+    }
 }

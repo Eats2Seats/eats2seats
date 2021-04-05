@@ -23,9 +23,7 @@ class StandFactory extends Factory
     public function definition()
     {
         return [
-            'venue_id' => function () {
-                return Venue::factory()->create();
-            },
+            'venue_id' => Venue::factory(),
             'location' => 'Test Location',
         ];
     }

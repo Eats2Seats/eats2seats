@@ -27,4 +27,21 @@ class ReservationTest extends TestCase
         // Assert
         $this->assertEquals($reservation->id, $claimedReservation->id);
     }
+
+    /** @test */
+    public function reservations_without_a_user_id_are_available()
+    {
+        // Arrange
+        $reservationA = Reservation::factory()->create();
+        $reservationB = Reservation::factory()->claimed()->create();
+        $reservationC = Reservation::factory()->create();
+
+        // Act
+        $availableReservations = Reservation::available()->get()->toArray();
+
+        // Assert
+        $this->assertContains($reservationA->fresh()->attributesToArray(), $availableReservations);
+        $this->assertNotContains($reservationB->fresh()->attributesToArray(), $availableReservations);
+        $this->assertContains($reservationC->fresh()->attributesToArray(), $availableReservations);
+    }
 }
