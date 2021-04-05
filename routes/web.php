@@ -39,9 +39,14 @@ Route::get('/deven', function () {
 });
 
 /**
- * Volunteer Paths
+ * Volunteer Routes
  */
 Route::prefix('volunteer')->group(function () {
-    Route::get('/events', [\App\Http\Controllers\Volunteer\EventsController::class, 'index']);
-    Route::get('/events/{id}', [\App\Http\Controllers\Volunteer\EventsController::class, 'show']);
+    Route::prefix('events')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Volunteer\EventsController::class, 'index']);
+        Route::get('/{id}', [\App\Http\Controllers\Volunteer\EventsController::class, 'show']);
+    });
+    Route::prefix('reservations')->group(function () {
+        Route::get('/{id}', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'show']);
+    });
 });
