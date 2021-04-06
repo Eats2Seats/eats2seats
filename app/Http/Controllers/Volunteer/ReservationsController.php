@@ -75,4 +75,13 @@ class ReservationsController extends Controller
             ],
         ]);
     }
+
+    public function update(Request $request, $id)
+    {
+        Reservation::findOrFail($id)->update([
+            'user_id' => $request['user_id'],
+        ]);
+
+        return redirect('/volunteer/reservations/' . $id);
+    }
 }

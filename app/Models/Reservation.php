@@ -9,6 +9,8 @@ class Reservation extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     protected $casts = [
         'event_id' => 'integer',
         'stand_id' => 'integer',
