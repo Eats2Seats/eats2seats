@@ -16,7 +16,7 @@ class ViewReservationRecordTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function a_user_can_view_a_reservation_for_a_future_event()
+    public function a_user_can_view_their_claimed_reservation_for_a_future_event()
     {
         $this->withoutExceptionHandling();
         // Arrange

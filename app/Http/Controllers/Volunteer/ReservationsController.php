@@ -11,6 +11,42 @@ use Inertia\Inertia;
 
 class ReservationsController extends Controller
 {
+    public function index()
+    {
+        $reservations = Reservation::with(['event', 'event.venue'])->get();
+
+        $nextReservation = $reservations->where('event.start', '>=', Carbon::now())
+            ->sortBy('event.start')
+            ->first();
+
+        return Inertia::render('Volunteer/Reservation/Index', [
+            'next' => [
+                'id' => $nextReservation->id,
+                'event' => [
+                    'title' => $nextReservation->event->title,
+                    'start' => $nextReservation->event->start,
+                    'end' => $nextReservation->event->end,
+                ],
+                'venue' => [
+                    'name' => $nextReservation->event->venue->name,
+                    'street' => $nextReservation->event->venue->street,
+                    'city' => $nextReservation->event->venue->city,
+                    'state' => $nextReservation->event->venue->state,
+                    'zip' => $nextReservation->event->venue->zip,
+                ],
+            ],
+            'reservations' => $reservations->map(function ($reservation) {
+                return [
+                    'id' => $reservation->id,
+                    'event_title' => $reservation->event->title,
+                    'event_date' => $reservation->event->start,
+                    'venue_name' => $reservation->event->venue->name,
+                    'position_type' => $reservation->position_type,
+                ];
+            }),
+        ]);
+    }
+
     public function show($id)
     {
         $reservation = Reservation::with(['event', 'event.venue', 'stand'])->findOrFail($id);
