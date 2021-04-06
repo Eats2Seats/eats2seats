@@ -80,9 +80,7 @@ class ViewReservationRecordTest extends TestCase
         // Arrange
         $userA = User::factory()->create();
         $userB = User::factory()->create();
-        $reservation = Reservation::factory()->create([
-            'user_id' => $userA->id,
-        ]);
+        $reservation = Reservation::factory()->claimedBy($userA)->create();
 
         // Act
         $response = $this->actingAs($userB)->get('/volunteer/reservations/' . $reservation->id);

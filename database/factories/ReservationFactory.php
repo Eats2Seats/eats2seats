@@ -45,4 +45,18 @@ class ReservationFactory extends Factory
             }
         ]);
     }
+
+    public function claimedBy($user)
+    {
+        return $this->state([
+            'user_id' => $user->id,
+        ]);
+    }
+
+    public function unclaimed()
+    {
+        return $this->state([
+            'user_id' => null,
+        ]);
+    }
 }

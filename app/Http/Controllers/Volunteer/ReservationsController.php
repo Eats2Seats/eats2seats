@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
@@ -13,7 +14,7 @@ class ReservationsController extends Controller
 {
     public function index()
     {
-        $reservations = Reservation::with(['event', 'event.venue'])->get();
+        $reservations = Reservation::claimedBy(Auth::user())->with(['event', 'event.venue'])->get();
 
         $nextReservation = $reservations->where('event.start', '>=', Carbon::now())
             ->sortBy('event.start')
