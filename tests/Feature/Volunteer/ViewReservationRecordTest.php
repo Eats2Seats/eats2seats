@@ -73,4 +73,33 @@ class ViewReservationRecordTest extends TestCase
                 $this->assertEquals($reservation['position_type'], $actual['position_type']);
             });
     }
+
+    /** @test */
+    public function a_user_cannot_view_a_reservation_that_they_have_not_claimed()
+    {
+        // Arrange
+        $userA = User::factory()->create();
+        $userB = User::factory()->create();
+        $reservation = Reservation::factory()->create([
+            'user_id' => $userA->id,
+        ]);
+
+        // Act
+        $response = $this->actingAs($userB)->get('/volunteer/reservations/' . $reservation->id);
+
+        // Assert
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function a_user_cannot_view_a_reservation_that_does_not_exist()
+    {
+        // Arrange
+
+        // Act
+        $response = $this->get('/volunteer/reservations/1');
+
+        // Assert
+        $response->assertStatus(404);
+    }
 }
