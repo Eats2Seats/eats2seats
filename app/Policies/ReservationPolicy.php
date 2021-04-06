@@ -75,7 +75,9 @@ class ReservationPolicy
      */
     public function delete(User $user, Reservation $reservation)
     {
-        //
+        return $user->id === $reservation->user_id
+            ? Response::allow()
+            : Response::deny('You cannot cancel a reservation claimed by another user.');
     }
 
     /**

@@ -83,10 +83,6 @@ class ReservationsController extends Controller
             'user_id' => ['required', 'integer', 'exists:users,id'],
         ])->validate();
 
-//        if (Auth::id() !== $request['user_id']) {
-//            return response('You cannot claim a reservation for another user.', 403);
-//        }
-
         $reservation = Reservation::findOrFail($id);
 
         Gate::authorize('update', [$reservation, $request['user_id']]);
@@ -96,5 +92,18 @@ class ReservationsController extends Controller
         ]);
 
         return redirect('/volunteer/reservations/' . $id);
+    }
+
+    public function delete($id)
+    {
+        $reservation = Reservation::findOrFail($id);
+
+        Gate::authorize('delete', $reservation);
+
+        $reservation->update([
+            'user_id' => null,
+        ]);
+
+        return redirect('/volunteer/reservations');
     }
 }
