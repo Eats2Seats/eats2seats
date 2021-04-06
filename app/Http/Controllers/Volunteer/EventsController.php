@@ -30,7 +30,7 @@ class EventsController extends Controller
         $event = Event::published()->with([
             'venue',
             'reservations' => function ($query) {
-                $query->available();
+                $query->unclaimed();
             },
             'reservations.stand',
         ])->findOrFail($id);

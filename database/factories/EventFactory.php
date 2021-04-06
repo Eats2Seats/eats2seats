@@ -65,7 +65,7 @@ class EventFactory extends Factory
 
     public function available()
     {
-        return $this->has(Reservation::factory()->count(1));
+        return $this->has(Reservation::factory()->unclaimed()->count(1));
     }
 
     public function unavailable()

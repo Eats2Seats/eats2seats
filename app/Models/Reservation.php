@@ -22,7 +22,7 @@ class Reservation extends Model
         return $query->where('user_id', $user->id);
     }
 
-    public function scopeAvailable($query)
+    public function scopeUnclaimed($query)
     {
         return $query->where('user_id', null);
     }

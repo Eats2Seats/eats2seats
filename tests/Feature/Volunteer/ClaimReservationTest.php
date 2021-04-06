@@ -72,7 +72,7 @@ class ClaimReservationTest extends TestCase
     }
 
     /** @test */
-    public function user_id_is_required()
+    public function user_id_attribute_is_required()
     {
         // Arrange
         $user = User::factory()->create();
@@ -93,7 +93,7 @@ class ClaimReservationTest extends TestCase
     }
 
     /** @test */
-    public function user_id_must_be_an_integer()
+    public function user_id_attribute_must_be_an_integer()
     {
         // Arrange
         $user = User::factory()->create();
@@ -114,7 +114,7 @@ class ClaimReservationTest extends TestCase
     }
 
     /** @test */
-    public function user_id_must_exist_in_database()
+    public function user_id_attribute_must_exist_in_database()
     {
         // Arrange
         $user = User::factory()->create([

@@ -19,7 +19,7 @@ class Event extends Model
     public function scopeAvailable($query)
     {
         return $query->whereHas('reservations', function (Builder $query) {
-           $query->available();
+           $query->unclaimed();
         });
     }
 

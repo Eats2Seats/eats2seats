@@ -29,7 +29,7 @@ class ReservationTest extends TestCase
     }
 
     /** @test */
-    public function reservations_without_a_user_id_are_available()
+    public function reservations_without_a_user_id_are_unclaimed()
     {
         // Arrange
         $reservationA = Reservation::factory()->create();
@@ -37,7 +37,7 @@ class ReservationTest extends TestCase
         $reservationC = Reservation::factory()->create();
 
         // Act
-        $availableReservations = Reservation::available()->get()->toArray();
+        $availableReservations = Reservation::unclaimed()->get()->toArray();
 
         // Assert
         $this->assertContains($reservationA->fresh()->attributesToArray(), $availableReservations);

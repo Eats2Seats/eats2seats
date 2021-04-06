@@ -36,7 +36,7 @@ class EventTest extends TestCase
     }
 
     /** @test */
-    public function events_with_available_reservations_are_available()
+    public function events_with_unclaimed_reservations_are_available()
     {
         // Arrange
         $eventA = Event::factory()
