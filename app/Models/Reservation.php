@@ -9,6 +9,12 @@ class Reservation extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'event_id' => 'integer',
+        'stand_id' => 'integer',
+        'user_id' => 'integer',
+    ];
+
     public function scopeClaimedBy($query, $user)
     {
         return $query->where('user_id', $user->id);

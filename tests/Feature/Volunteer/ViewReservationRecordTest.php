@@ -47,7 +47,7 @@ class ViewReservationRecordTest extends TestCase
         ]);
 
         // Act
-        $response = $this->get('/volunteer/reservations/' . $reservation->id);
+        $response = $this->actingAs($user)->get('/volunteer/reservations/' . $reservation->id);
 
         // Assert
         $response->assertStatus(200)

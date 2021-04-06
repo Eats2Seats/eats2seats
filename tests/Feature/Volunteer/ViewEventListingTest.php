@@ -117,4 +117,15 @@ class ViewEventListingTest extends TestCase
         // Assert
         $response->assertStatus(404);
     }
+
+    /** @test */
+    public function a_user_cannot_view_an_event_that_does_not_exist()
+    {
+        // Arrange
+
+        // Act
+        $response = $this->get('/volunteer/events/1');
+        // Assert
+        $response->assertStatus(404);
+    }
 }
