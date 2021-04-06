@@ -14,8 +14,6 @@ class ClaimReservationTest extends TestCase
     /** @test */
     public function a_user_can_claim_a_reservation_for_themselves()
     {
-        $this->withoutExceptionHandling();
-
         // Arrange
         $user = User::factory()->create();
         $reservation = Reservation::factory()->unclaimed()->create();
@@ -51,6 +49,26 @@ class ClaimReservationTest extends TestCase
         // Assert
         $response->assertStatus(403);
         $this->assertNull($reservation->fresh()->user_id);
+    }
+
+    /** @test */
+    public function a_user_cannot_claim_a_reservation_already_claimed_by_another_user()
+    {
+        // Arrange
+        $userA = User::factory()->create();
+        $userB = User::factory()->create();
+        $reservation = Reservation::factory()->claimedBy($userB)->create();
+
+        // Act
+        $response =$this->actingAs($userA)
+            ->from('/volunteer/reservations/' . $reservation->id . '/claim')
+            ->put('/volunteer/reservations/' . $reservation->id, [
+                'user_id' => $userA->id,
+            ]);
+
+        // Assert
+        $response->assertStatus(403);
+        $this->assertEquals($userB->id, $reservation->fresh()->user_id);
     }
 
     /** @test */

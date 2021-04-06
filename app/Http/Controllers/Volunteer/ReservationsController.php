@@ -83,11 +83,15 @@ class ReservationsController extends Controller
             'user_id' => ['required', 'integer', 'exists:users,id'],
         ])->validate();
 
-        if (Auth::id() !== $request['user_id']) {
-            return response('You cannot claim a reservation for another user.', 403);
-        }
+//        if (Auth::id() !== $request['user_id']) {
+//            return response('You cannot claim a reservation for another user.', 403);
+//        }
 
-        Reservation::findOrFail($id)->update([
+        $reservation = Reservation::findOrFail($id);
+
+        Gate::authorize('update', [$reservation, $request['user_id']]);
+
+        $reservation->update([
             'user_id' => $request['user_id'],
         ]);
 

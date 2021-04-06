@@ -6,6 +6,7 @@ use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Request;
 
 class ReservationPolicy
 {
@@ -54,9 +55,15 @@ class ReservationPolicy
      * @param  \App\Models\Reservation  $reservation
      * @return mixed
      */
-    public function update(User $user, Reservation $reservation)
+    public function update(User $user, Reservation $reservation, int $requestUserID)
     {
-        //
+        if ($reservation->user_id !== null) {
+            return Response::deny('This reservation has already been claimed.');
+        }
+        if ($user->id !== $requestUserID) {
+            return Response::deny('You cannot claim a reservation for another user.');
+        }
+        return Response::allow();
     }
 
     /**
