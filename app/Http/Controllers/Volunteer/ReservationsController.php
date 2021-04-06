@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class ReservationsController extends Controller
@@ -78,6 +79,14 @@ class ReservationsController extends Controller
 
     public function update(Request $request, $id)
     {
+        Validator::make($request->all(), [
+            'user_id' => ['required', 'integer', 'exists:users,id'],
+        ])->validate();
+
+        if (Auth::id() !== $request['user_id']) {
+            return response('You cannot claim a reservation for another user.', 403);
+        }
+
         Reservation::findOrFail($id)->update([
             'user_id' => $request['user_id'],
         ]);
