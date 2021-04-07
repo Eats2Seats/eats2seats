@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Venue extends Model
 {
     use HasFactory;
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
 }

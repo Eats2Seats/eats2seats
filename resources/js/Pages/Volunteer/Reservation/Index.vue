@@ -22,16 +22,16 @@ export default {
                     && typeof next['venue']['zip'] === 'string'
             },
         },
-        events: {
+        reservations: {
             required: true,
             type: Array,
-            validator: (events) => events.every((event) => {
-                return typeof event === 'object'
-                    && typeof event['id'] === 'number'
-                    && typeof event['title'] === 'string'
-                    && !isNaN(Date.parse(event['start']))
-                    && !isNaN(Date.parse(event['end']));
-            }),
+            validator: (reservations) => reservations.every((reservation) => {
+                return typeof reservation === 'object'
+                    && typeof reservation['event_title'] === 'string'
+                    && !isNaN(Date.parse(reservation['event_date']))
+                    && typeof reservation['venue_name'] === 'string'
+                    && typeof reservation['position_type'] === 'string';
+            })
         }
     }
 }

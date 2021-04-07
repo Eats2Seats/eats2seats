@@ -10,8 +10,7 @@ export default {
             required: true,
             type: Object,
             validator: (event) => {
-                return typeof event['id'] === 'number'
-                    && typeof event['title'] === 'string'
+                return typeof event['title'] === 'string'
                     && !isNaN(Date.parse(event['start']))
                     && !isNaN(Date.parse(event['end']));
             },
@@ -24,19 +23,18 @@ export default {
                     && typeof venue['street'] === 'string'
                     && typeof venue['city'] === 'string'
                     && typeof venue['state'] === 'string'
-                    && typeof venue['zip'] === 'string'
+                    && typeof venue['zip'] === 'string';
             },
         },
-        reservations: {
+        reservation: {
             required: true,
-            type: Array,
-            validator: (reservations) => reservations.every((reservation) => {
-                return typeof reservation === 'object'
-                    && typeof reservation['id'] === 'number'
+            type: Object,
+            validator: (reservation) => {
+                return typeof reservation['id'] === 'number'
                     && typeof reservation['stand_name'] === 'string'
-                    && typeof reservation['position_type'] === 'string'
-                    && typeof reservation['location'] === 'string'
-            }),
+                    && typeof reservation['stand_location'] === 'string'
+                    && typeof reservation['position_type'] === 'string';
+            }
         }
     }
 }

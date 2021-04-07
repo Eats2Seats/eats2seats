@@ -72,6 +72,17 @@ class ClaimReservationTest extends TestCase
     }
 
     /** @test */
+    public function a_user_cannot_claim_more_than_one_reservation_per_event()
+    {
+        // Arrange
+
+        // Act
+
+        // Assert
+        $this->fail('NEEDS TO BE IMPLEMENTED');
+    }
+
+    /** @test */
     public function user_id_attribute_is_required()
     {
         // Arrange
