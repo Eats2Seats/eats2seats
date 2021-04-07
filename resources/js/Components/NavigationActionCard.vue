@@ -11,13 +11,14 @@
                             class="p-3 rounded shadow"
                             :class="iconBackgroundColor"
                         >
+                            <slot name="icon-path"></slot>
                             <svg
                                 class="h-6 w-6"
                                 :class="iconTextColor"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor">
-                                <slot name="icon-path"></slot>
+
                             </svg>
 
                         </div>
