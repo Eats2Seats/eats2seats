@@ -19,6 +19,7 @@ module.exports = {
                 serif: ['Lato', ...defaultTheme.fontFamily.serif],
             },
             colors: {
+                blueGray: colors.blueGray,
                 amber: colors.amber,
                 lime: colors.lime,
                 emerald: colors.emerald,

@@ -1,12 +1,12 @@
 <template>
-    <div class="p-6 bg-white shadow">
+    <h3 class="mb-1.5 font-serif font-normal text-sm text-gray-500">
         <slot></slot>
-    </div>
+    </h3>
 </template>
 
 <script>
 export default {
-    name: 'Card',
+    name: 'label'
 }
 </script>
 

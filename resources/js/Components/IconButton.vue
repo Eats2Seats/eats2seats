@@ -1,12 +1,12 @@
 <template>
-    <div class="p-6 bg-white shadow">
+    <button class="p-2 border border-gray-200 rounded">
         <slot></slot>
-    </div>
+    </button>
 </template>
 
 <script>
 export default {
-    name: 'Card',
+    name: 'IconButton'
 }
 </script>
 
