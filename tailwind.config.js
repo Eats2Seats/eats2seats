@@ -2,6 +2,8 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 const colors = require('tailwindcss/colors')
 
 module.exports = {
+    mode: 'jit',
+
     purge: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './vendor/laravel/jetstream/**/*.blade.php',
@@ -17,6 +19,7 @@ module.exports = {
                 serif: ['Lato', ...defaultTheme.fontFamily.serif],
             },
             colors: {
+                blueGray: colors.blueGray,
                 amber: colors.amber,
                 lime: colors.lime,
                 emerald: colors.emerald,
