@@ -1,10 +1,10 @@
 <template>
-
+    <hr class="-mx-6 my-6 bg-gray-200">
 </template>
 
 <script>
 export default {
-    name: "ManageRegistrationCard"
+    name: 'Divider'
 }
 </script>
 

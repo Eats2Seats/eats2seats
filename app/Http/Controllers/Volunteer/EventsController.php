@@ -13,7 +13,26 @@ class EventsController extends Controller
     {
         $events = Event::published()->available()->where('start', '>=', Carbon::now())->get();
 
+        $nextEvent = $events->where('start', '>=', Carbon::now())
+            ->sortBy('start')
+            ->first();
+
         return Inertia::render('Volunteer/Event/Index', [
+            'next' => [
+                'id' => $nextEvent->id,
+                'event' => [
+                    'title' => $nextEvent->title,
+                    'start' => $nextEvent->start,
+                    'end' => $nextEvent->end,
+                ],
+                'venue' => [
+                    'name' => $nextEvent->venue->name,
+                    'street' => $nextEvent->venue->street,
+                    'city' => $nextEvent->venue->city,
+                    'state' => $nextEvent->venue->state,
+                    'zip' => $nextEvent->venue->zip,
+                ],
+            ],
             'events' => $events->map(function ($event) {
                 return [
                     'id' => $event->id,

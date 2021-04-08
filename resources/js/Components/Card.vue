@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
     <div class="bg-white rounded shadow">
         <div
             class="p-6"
@@ -22,20 +23,16 @@
         >
             <slot name="footer"></slot>
         </div>
+=======
+    <div class="p-6 bg-white shadow">
+        <slot></slot>
+>>>>>>> b15afa96c3ecc2c66df935458865f1493f50359c
     </div>
 </template>
 
 <script>
 export default {
-    name: "Card",
-    computed: {
-        hasHeader() {
-            return !!this.$slots.header;
-        },
-        hasFooter() {
-            return !!this.$slots.footer;
-        },
-    }
+    name: 'Card',
 }
 </script>
 

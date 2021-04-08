@@ -36,6 +36,22 @@ class ViewEventListTest extends TestCase
 
         // Assert
         $response->assertStatus(200)
+            ->assertPropCount('next', 3)
+            ->assertPropValue('next.id', $eventA->id)
+            ->assertPropCount('next.event', 3)
+            ->assertPropValue('next.event', function ($event) use ($eventA) {
+                $this->assertEquals($eventA->title, $event['title']);
+                $this->assertEquals($eventA->start, $event['start']);
+                $this->assertEquals($eventA->end, $event['end']);
+            })
+            ->assertPropCount('next.venue', 5)
+            ->assertPropValue('next.venue', function ($venue) use ($eventA) {
+                $this->assertEquals($eventA->venue->name, $venue['name']);
+                $this->assertEquals($eventA->venue->street, $venue['street']);
+                $this->assertEquals($eventA->venue->city, $venue['city']);
+                $this->assertEquals($eventA->venue->state, $venue['state']);
+                $this->assertEquals($eventA->venue->zip, $venue['zip']);
+            })
             ->assertPropCount('events', 2)
             ->assertPropValue('events', function ($events) use ($eventA, $eventB, $eventC, $eventD, $eventE,
                 $eventF, $eventG, $eventH, $eventI)

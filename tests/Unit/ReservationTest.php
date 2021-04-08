@@ -32,9 +32,9 @@ class ReservationTest extends TestCase
     public function reservations_without_a_user_id_are_unclaimed()
     {
         // Arrange
-        $reservationA = Reservation::factory()->create();
+        $reservationA = Reservation::factory()->unclaimed()->create();
         $reservationB = Reservation::factory()->claimed()->create();
-        $reservationC = Reservation::factory()->create();
+        $reservationC = Reservation::factory()->unclaimed()->create();
 
         // Act
         $availableReservations = Reservation::unclaimed()->get()->toArray();
