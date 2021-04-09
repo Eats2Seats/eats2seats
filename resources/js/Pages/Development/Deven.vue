@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
     <dev-layout class="p-4">
         <div class="min-w-full flex flex-col space-y-9">
             <navigation-action-card
@@ -117,19 +118,64 @@
                     </h3>
                 </template>
             </card>
+=======
+    <x-card>
+        <x-title>
+            Next Reservation
+        </x-title>
+        <x-subtitle class="mt-3">
+            View details for the next event you're scheduled to attend.
+        </x-subtitle>
+        <x-divider/>
+        <x-label>Title</x-label>
+        <x-text>UNC Chapel Hill vs Duke</x-text>
+        <x-divider/>
+        <div class="flex flex-row items-center">
+            <div class="flex-1 flex flex-col">
+                <x-label>Location</x-label>
+                <x-text>Dean Smith Center</x-text>
+            </div>
+            <div class="ml-6">
+                <x-icon-button>
+                    <MapIcon class="h-6 w-6 text-gray-500"/>
+                </x-icon-button>
+            </div>
+>>>>>>> b15afa96c3ecc2c66df935458865f1493f50359c
         </div>
-    </dev-layout>
+        <x-divider/>
+        <x-label>Start</x-label>
+        <x-text>March 31st @ 5:00 PM</x-text>
+        <x-divider/>
+        <x-label>End</x-label>
+        <x-text>March 31st @ 8:00 PM</x-text>
+        <x-divider/>
+        <x-button>
+            View More Details
+        </x-button>
+    </x-card>
 </template>
 
 <script>
-import DevLayout from "@/Layouts/DevLayout";
-import NavigationActionCard from "@/Components/NavigationActionCard";
-import Card from "@/Components/Card";
+import XCard from "@/Components/Card";
+import XTitle from "@/Components/Title";
+import XSubtitle from "@/Components/Subtitle";
+import XLabel from "@/Components/Label";
+import XText from "@/Components/Text";
+import XDivider from "@/Components/Divider";
+import XButton from "@/Components/Button";
+import XIconButton from "@/Components/IconButton";
+import { MapIcon } from "@heroicons/vue/outline"
 export default {
     components: {
-        DevLayout,
-        NavigationActionCard,
-        Card,
+        XCard,
+        XTitle,
+        XSubtitle,
+        XLabel,
+        XText,
+        XDivider,
+        XButton,
+        XIconButton,
+        MapIcon,
     },
     props: {},
     data () {
