@@ -1,7 +1,7 @@
 <template>
     <x-card>
         <x-title>
-            Next Event
+            Event
         </x-title>
         <x-subtitle class="mt-3">
             View details about this upcoming event.
@@ -37,11 +37,11 @@
         <x-subtitle class="mt-3">
             View all staffing positions that are available to reserve.
         </x-subtitle>
-        <x-divider/>
-        <div class="top-0 bg-gray-50">
-            <h2 class="font-serif font-bold text-lg text-gray-700"> Position Options</h2>
+        <hr class="-mx-6 mt-6 bg-gray-200">
+        <div class="-mx-6 bg-gray-50">
+            <h2 class="ml-6 py-4 font-serif font-bold text-lg text-gray-700"> Position Options</h2>
         </div>
-        <x-divider/>
+        <hr class="-mx-6 mb-6 bg-gray-200">
         <x-label>
             Affiliation
         </x-label>
@@ -62,11 +62,13 @@
                 <option v-for="po in positionOptions" :key="po">{{po}}</option>
             </select>
         </div>
-        <x-divider/>
-        <h2 class="font-serif font-bold text-lg text-gray-700"> Available Positions</h2>
-        <x-divider/>
+        <hr class="-mx-6 mt-6 bg-gray-200">
+        <div class="-mx-6 bg-gray-50">
+            <h2 class="ml-6 py-4 font-serif font-bold text-lg text-gray-700"> Available Positions</h2>
+        </div>
+        <hr class="-mx-6 mb-6 bg-gray-200">
 
-        <div v-for="(val, key) in filterReservationsByPosition" :key="key">
+        <div v-for="(val, key, index) in filterReservationsByPosition" :key="key">
             <div class="flex flex-row items-center">
                 <div  class="flex-1 flex flex-col">
                     <x-text>{{key}}</x-text>
@@ -81,7 +83,8 @@
                 </div>
                 
             </div>
-            <x-divider/>
+            <!-- avoid the divider for the last row -->
+            <x-divider v-if="index < Object.keys(filterReservationsByPosition).length - 1"/>
         </div>
         
 
@@ -127,17 +130,18 @@ export default {
             return [...new Set(this.reservations.map(res => res.position_type))]
         },
         filterReservationsByPosition(){
-            var filtered_reservations = this.reservations
+            var filtered_reservations
+            var d = {}
             if (this.position) {
                 filtered_reservations = this.reservations.filter(res => res.position_type == this.position)
-            }
-            var d = {}
-            for (let fr of filtered_reservations){
-                // d[fr.position_type]? 0 : d[fr.position_type]+ 1
-                if (d[fr.stand_name]){
-                    d[fr.stand_name] += 1
-                }else{
-                   d[fr.stand_name] = 1 
+            
+                for (let fr of filtered_reservations){
+                    // d[fr.position_type]? 1 : d[fr.position_type]+ 1
+                    if (d[fr.stand_name]){
+                        d[fr.stand_name] += 1
+                    }else{
+                        d[fr.stand_name] = 1 
+                    }
                 }
             }
             return d

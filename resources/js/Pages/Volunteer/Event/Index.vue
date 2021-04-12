@@ -44,7 +44,6 @@
         <x-subtitle class="mt-3">
             View all future events with available staffing positions you can reserve.
         </x-subtitle>
-        
         <div class="my-3 flex flex-row items-center">
             
             <searchIcon class="inline mr-2 h-4 w-4 text-gray-500"/>
