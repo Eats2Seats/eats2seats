@@ -37,6 +37,10 @@ Route::get('/qintian', function () {
 Route::get('/deven', function () {
     return Inertia::render('Development/Deven');
 });
+//Route added by Sam. Maybe is not right.
+Route::get('/reservation', function() {
+    return Inertia::render('Volunteer/Reservation/Index');
+});
 
 /**
  * Volunteer Routes

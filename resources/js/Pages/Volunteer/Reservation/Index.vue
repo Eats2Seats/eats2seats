@@ -1,10 +1,18 @@
 <template>
-
+    <next-reservation :nextRes="next"/>
+    <my-reservations :res="reservations"/>
 </template>
 
 <script>
+import NextReservation from "@/Components/NextReservationCard"
+import MyReservations from "@/Components/MyReservations"
+
 export default {
     name: 'Index',
+    components: {
+        NextReservation,
+        MyReservations,
+    },
     props: {
         next: {
             required: true,

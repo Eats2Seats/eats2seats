@@ -18,7 +18,11 @@
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
-    <body class="font-sans antialiased bg-blueGray-100 py-8">
+    <body class="py-8 font-sans antialiased bg-blueGray-100">
         @inertia
+
+        @if (app()->isLocal())
+            <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
+        @endif
     </body>
 </html>

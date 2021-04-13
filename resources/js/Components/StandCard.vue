@@ -13,7 +13,7 @@
         </x-label>
         <!-- Carrie's Cotton Candy-->
         <x-text>
-            <slot name="name"></slot>
+            {{ reservationObj.stand_name }}
         </x-text>
         <x-divider/>
         <div class="flex items-center felx-row">
@@ -23,7 +23,7 @@
                 </x-lable>
                 <!-- Concession Stand #2-->
                 <x-text>
-                    <slot name="location"></slot>
+                    {{ reservationObj.stand_location }}
                 </x-text>
             </div>
             <div class ="ml-6">
@@ -38,7 +38,7 @@
         </x-label>
         <!-- Food Sales-->
         <x-text>
-            <slot name="position"></slot>
+            {{ reservationObj.position_type }}
         </x-text>
         <x-divider/>
         <x-label>
@@ -46,7 +46,7 @@
         </x-label>
         <!-- Jim-->
         <x-text>
-            <slot name="manager"></slot>
+            Not Supported
         </x-text>
         <x-divider/>
         <x-label>
@@ -55,7 +55,7 @@
         <!-- TODO: Write conditional about if future or past event to add or remove attendance feild-->
         <!-- Present-->
         <x-text>
-            <slot name="attendance"></slot>
+            Not supported
         </x-text>
     </x-card>
 </template>
@@ -83,7 +83,9 @@ export default {
         XIconButton,
         MapIcon,
     },
-    props: {},
+    props: {
+        reservationObj: Object,
+    },
     data() {
         return {
 

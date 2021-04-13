@@ -1,10 +1,23 @@
 <template>
-
+    <event-card 
+        :eventObj="event" 
+        :venueObj="venue"
+    />
+    <stand-card 
+        :reservationObj="reservation"
+    />
 </template>
 
 <script>
+import EventCard from "@/Components/EventCard"
+import StandCard from "@/Components/StandCard"
+
 export default {
     name: 'Show',
+    components: {
+        EventCard,
+        StandCard,
+    },
     props: {
         event: {
             required: true,

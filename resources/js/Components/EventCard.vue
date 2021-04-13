@@ -13,7 +13,7 @@
         </x-label>
         <!-- UNC Chapel Hill vs Duke-->
         <x-text>
-            <slot name="title"></slot>
+            {{ eventObj.title }}
         </x-text>
         <x-divider/>
         <div class="flex items-center felx-row">
@@ -23,7 +23,7 @@
                 </x-lable>
                 <!-- Dean Smith Center-->
                 <x-text>
-                    <slot name="location"></slot>
+                    {{ venueObj.name }}
                 </x-text>
             </div>
             <div class ="ml-6">
@@ -38,7 +38,7 @@
         </x-label>
         <!-- March 31st @ 5:00 PM-->
         <x-text>
-            <slot name="start"></slot>
+            {{ getDate(eventObj.start) }} at {{ getTime(eventObj.start)}}
         </x-text>
         <x-divider/>
         <x-label>
@@ -46,7 +46,7 @@
         </x-label>
         <!-- March 31st @8:00 PM-->
         <x-text>
-            <slot name="end"></slot>
+            {{ getDate(eventObj.end) }} at {{ getTime(eventObj.end)}}
         </x-text>
     </x-card>
 </template>
@@ -74,7 +74,26 @@ export default {
         XIconButton,
         MapIcon,
     },
-    props: {},
+    props: {
+        eventObj: {
+            type: Object,
+            required: true,
+        },
+        venueObj: {
+            type: Object,
+            required: true,
+        },
+    },
+    methods: {
+        getDate(d) {
+            let date = new Date(d)
+            return date.toDateString()
+        },
+        getTime(d){
+            let time = new Date(d)
+            return time.toLocaleTimeString('en-US', {timeStyle: 'short'})
+        },
+    },
     data() {
         return {
 

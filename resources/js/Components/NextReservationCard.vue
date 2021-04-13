@@ -13,7 +13,7 @@
         </x-label>
         <!-- UNC Chapel Hill vs Duke-->
         <x-text>
-            <slot name="title"></slot>
+            {{ nextRes.event.title }}
         </x-text>
         <x-divider/>
         <div class="flex items-center felx-row">
@@ -23,7 +23,7 @@
                 </x-lable>
                 <!-- Dean Smith Center-->
                 <x-text>
-                    <slot name="location"></slot>
+                    {{ nextRes.venue.name }}
                 </x-text>
             </div>
             <div class ="ml-6">
@@ -38,7 +38,7 @@
         </x-label>
         <!-- March 31st @ 5:00 PM-->
         <x-text>
-            <slot name="start"></slot>
+            {{ getDate(nextRes.event.start) }}  at {{ getTime(nextRes.event.start) }}
         </x-text>
         <x-divider/>
         <x-label>
@@ -46,12 +46,14 @@
         </x-label>
         <!-- March 31st @8:00 PM-->
         <x-text>
-            <slot name="end"></slot>
+            {{ getDate(nextRes.event.end) }} at {{ getTime(nextRes.event.end) }}
         </x-text>
         <x-divider/>
-        <x-button>
-            View More Details
-        </x-button>
+        <inertia-link :href="formAddress(nextRes.id)">
+            <x-button>
+                View More Details
+            </x-button>
+        </inertia-link>
     </x-card>
 </template>
 
@@ -64,7 +66,8 @@ import XText from "@/Components/Text";
 import XDivider from "@/Components/Divider";
 import XButton from "@/Components/Button";
 import XIconButton from "@/Components/IconButton";
-import { MapIcon } from "@heroicons/vue/outline"
+import { MapIcon } from "@heroicons/vue/outline";
+
 export default {
     name: 'NextEvent',
     components: {
@@ -78,7 +81,22 @@ export default {
         XIconButton,
         MapIcon,
     },
-    props: {},
+    props: {
+        nextRes: Object,
+    },
+    methods: {
+        getDate(d) {
+            let date = new Date(d)
+            return date.toDateString()
+        },
+        getTime(d){
+            let time = new Date(d)
+            return time.toLocaleTimeString('en-US', {timeStyle: 'short'})
+        },
+        formAddress(id){
+            return "/volunteer/reservations/" + id
+        }
+    },
     data() {
         return {
 
