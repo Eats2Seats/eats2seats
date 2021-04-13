@@ -61,14 +61,14 @@
             Start
         </x-label>
         <x-text>
-            {{ $props.event.start }}
+            {{ formatDate($props.event.start) }}
         </x-text>
         <x-divider/>
         <x-label>
             End
         </x-label>
         <x-text>
-            {{ $props.event.end }}
+            {{ formatDate($props.event.end) }}
         </x-text>
         <x-divider/>
         <x-button v-on:click="claim">
@@ -85,6 +85,29 @@ import XDivider from '@/Components/Divider';
 import XLabel from '@/Components/Label';
 import XText from '@/Components/Text';
 import XButton from '@/Components/Button';
+const days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+];
+const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+];
 export default {
     name: 'Edit',
     components: {
@@ -142,7 +165,22 @@ export default {
     methods: {
         claim() {
             this.form.put('/volunteer/reservations/' + this.reservation.id);
-        }
+        },
+        formatDate(rawDate) {
+            let dateObj = new Date(rawDate);
+            let dateStr = dateObj.toLocaleDateString('en-US', {
+                day: 'numeric',
+                weekday: 'short',
+                month: 'long',
+                ...(new Date().getFullYear() !== dateObj.getFullYear() && { year: 'numeric'}),
+            });
+            let timeStr = dateObj.toLocaleTimeString('en-US', {
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+            });
+            return `${dateStr} @ ${timeStr}`;
+        },
     }
 }
 </script>
