@@ -1,0 +1,67 @@
+<template>
+    <x-navigation-menu ref="navMenu">
+        <x-navigation-menu-item href="/volunteer">
+            Home
+        </x-navigation-menu-item>
+        <x-navigation-menu-item href="/volunteer/events">
+            Events
+        </x-navigation-menu-item>
+        <x-navigation-menu-item href="/volunteer/reservations">
+            Reservations
+        </x-navigation-menu-item>
+    </x-navigation-menu>
+    <header class="shadow">
+        <div class="flex flex-row justify-between items-center p-6 bg-indigo-600">
+            <h1 class="font-serif font-bold text-2xl text-white hover:underline">
+                <inertia-link href="/volunteer">
+                    Eats2Seats
+                </inertia-link>
+            </h1>
+            <icon-button
+                class="bg-white group hover:bg-transparent"
+                v-on:click="$refs.navMenu.toggleNav()"
+            >
+                <menu-alt1-icon class="h-5 w-5 text-indigo-600 group-hover:text-white"/>
+            </icon-button>
+        </div>
+        <x-breadcrumbs :breadcrumbs="breadcrumbs"/>
+    </header>
+
+    <main>
+        <slot></slot>
+    </main>
+
+    <footer class="mt-8 py-12 px-6 bg-indigo-600 text-center">
+        <x-text class="text-white">Copyright © 2021 Eats2Seats</x-text>
+    </footer>
+</template>
+
+<script>
+import IconButton from "@/Components/IconButton";
+import { MenuAlt1Icon } from '@heroicons/vue/solid';
+import XText from "@/Components/Text";
+import XNavigationMenu from "@/Components/NavigationMenu";
+import XNavigationMenuItem from "@/Components/NavigationMenuItem";
+import XBreadcrumbs from "@/Components/Breadcrumbs";
+export default {
+    name: 'VolunteerLayout',
+    components: {
+        IconButton,
+        MenuAlt1Icon,
+        XText,
+        XNavigationMenu,
+        XNavigationMenuItem,
+        XBreadcrumbs,
+    },
+    props: {
+        breadcrumbs: {
+            required: true,
+            type: Object,
+        },
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

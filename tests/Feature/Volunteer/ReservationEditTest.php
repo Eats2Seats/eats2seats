@@ -48,6 +48,7 @@ class ReservationEditTest extends TestCase
                     ->where('position_type', $reservation->position_type)
                 )
                 ->has('event', fn (Assert $page) => $page
+                    ->where('id', $event->id)
                     ->where('title', $event->title)
                     ->where('start', $event->fresh()->start)
                     ->where('end', $event->fresh()->end)
