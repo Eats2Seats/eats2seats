@@ -50,7 +50,7 @@ class ReservationDeleteTest extends TestCase
     }
 
     /** @test */
-    public function a_user_cannot_delete_a_reservation_that_does_not_exist()
+    public function a_user_cannot_cancel_a_reservation_that_does_not_exist()
     {
         // Arrange
         $user = User::factory()->create();

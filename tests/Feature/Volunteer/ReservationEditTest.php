@@ -16,7 +16,7 @@ class ReservationEditTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function a_user_can_view_a_reservations_claim_page()
+    public function a_user_can_view_a_reservations_registration_page()
     {
         $this->withoutExceptionHandling();
         // Arrange
@@ -63,7 +63,7 @@ class ReservationEditTest extends TestCase
     }
 
     /** @test */
-    public function a_user_cannot_view_a_claimed_reservations_claim_page()
+    public function a_user_cannot_view_a_claimed_reservations_registration_page()
     {
         // Arrange
         $user = User::factory()->create();
@@ -78,7 +78,7 @@ class ReservationEditTest extends TestCase
     }
 
     /** @test */
-    public function a_user_cannot_view_a_reservations_claim_page_if_they_have_claimed_another_reservation_for_the_same_event()
+    public function a_user_cannot_view_a_reservations_registration_page_if_they_have_already_claimed_another_reservation_for_the_same_event()
     {
         // Arrange
         $user = User::factory()->create();
@@ -100,7 +100,7 @@ class ReservationEditTest extends TestCase
     }
 
     /** @test */
-    public function a_user_cannot_view_the_claim_page_for_a_reservation_that_does_not_exist()
+    public function a_user_cannot_view_the_registration_page_for_a_reservation_that_does_not_exist()
     {
         // Arrange
         $user = User::factory()->create();
@@ -114,7 +114,7 @@ class ReservationEditTest extends TestCase
     }
 
     /** @test */
-    public function an_unauthenticated_user_cannot_view_a_reservations_claim_page()
+    public function an_unauthenticated_user_cannot_view_a_reservations_registration_page()
     {
         // Arrange
         $reservation = Reservation::factory()->unclaimed()->create();
