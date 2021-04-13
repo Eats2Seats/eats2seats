@@ -32,12 +32,12 @@ class Reservation extends Model
         return $query->where('event_id', $eventId);
     }
 
-    public function event()
+    public function event(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Event::class);
     }
 
-    public function stand()
+    public function stand(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Stand::class);
     }

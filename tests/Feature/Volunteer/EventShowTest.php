@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class ViewEventDetailsTest extends TestCase
+class EventShowTest extends TestCase
 {
     use DatabaseMigrations;
 

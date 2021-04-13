@@ -18,7 +18,7 @@ class ReservationsController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(): \Inertia\Response
     {
         $reservations = Reservation::claimedBy(Auth::user())->with(['event', 'event.venue'])->get();
 
@@ -54,7 +54,10 @@ class ReservationsController extends Controller
         ]);
     }
 
-    public function show($id)
+    /**
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function show($id): \Inertia\Response
     {
         $reservation = Reservation::with(['event', 'event.venue', 'stand'])->findOrFail($id);
 
@@ -82,7 +85,42 @@ class ReservationsController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    /**
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit(Request $request, $id): \Inertia\Response
+    {
+        $reservation = Reservation::with(['event', 'event.venue'])->unclaimed()->findOrFail($id);
+
+        Gate::authorize('viewAny', $reservation);
+
+        return Inertia::render('Volunteer/Reservation/Edit', [
+            'reservation' => [
+                'id' => $reservation->id,
+                'stand_name' => $reservation->stand_name,
+                'stand_location' => $reservation->stand->location,
+                'position_type' => $reservation->position_type
+            ],
+            'event' => [
+                'title' => $reservation->event->title,
+                'start' => $reservation->event->start,
+                'end' => $reservation->event->end,
+            ],
+            'venue' => [
+                'name' => $reservation->event->venue->name,
+                'street' => $reservation->event->venue->street,
+                'city' => $reservation->event->venue->city,
+                'state' => $reservation->event->venue->state,
+                'zip' => $reservation->event->venue->zip,
+            ],
+        ]);
+    }
+
+    /**
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function update(Request $request, $id): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
     {
         Validator::make($request->all(), [
             'user_id' => ['required', 'integer', 'exists:users,id'],
@@ -99,7 +137,10 @@ class ReservationsController extends Controller
         return redirect('/volunteer/reservations/' . $id);
     }
 
-    public function delete($id)
+    /**
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function delete($id): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
     {
         $reservation = Reservation::findOrFail($id);
 

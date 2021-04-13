@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class ViewReservationDetailsTest extends TestCase
+class ReservationShowTest extends TestCase
 {
     use DatabaseMigrations;
 

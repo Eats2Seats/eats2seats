@@ -4,11 +4,14 @@ namespace Tests\Feature\Volunteer;
 
 use App\Models\Event;
 use App\Models\Reservation;
+use App\Models\Stand;
 use App\Models\User;
+use App\Models\Venue;
+use Inertia\Testing\Assert;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class ClaimReservationTest extends TestCase
+class ReservationUpdateTest extends TestCase
 {
     use DatabaseMigrations;
 

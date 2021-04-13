@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Event;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -15,12 +16,16 @@ class ReservationPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
-     * @return mixed
+     * @param \App\Models\User $user
+     * @param \App\Models\Reservation $reservation
+     * @return Response
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user, Reservation $reservation): Response
     {
-        //
+        $event = Event::with('reservations')->where('id', $reservation->event_id)->firstOrFail();
+        return $event->reservations()->claimedBy($user)->get()->count() === 0
+            ? Response::allow()
+            : Response::deny('You have already claimed a reservation for this event');
     }
 
     /**
@@ -28,9 +33,9 @@ class ReservationPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Reservation  $reservation
-     * @return mixed
+     * @return Response
      */
-    public function view(User $user, Reservation $reservation)
+    public function view(User $user, Reservation $reservation): Response
     {
         return $user->id === $reservation->user_id
             ? Response::allow()
@@ -51,11 +56,12 @@ class ReservationPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Reservation  $reservation
-     * @return mixed
+     * @param \App\Models\User $user
+     * @param \App\Models\Reservation $reservation
+     * @param int $requestUserID
+     * @return \Illuminate\Auth\Access\Response
      */
-    public function update(User $user, Reservation $reservation, int $requestUserID)
+    public function update(User $user, Reservation $reservation, int $requestUserID): Response
     {
         if ($reservation->user_id !== null) {
             return Response::deny('This reservation has already been claimed.');
@@ -74,9 +80,9 @@ class ReservationPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Reservation  $reservation
-     * @return mixed
+     * @return \Illuminate\Auth\Access\Response
      */
-    public function delete(User $user, Reservation $reservation)
+    public function delete(User $user, Reservation $reservation): Response
     {
         return $user->id === $reservation->user_id
             ? Response::allow()

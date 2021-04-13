@@ -49,6 +49,7 @@ Route::prefix('volunteer')->group(function () {
     Route::prefix('reservations')->group(function () {
         Route::get('/', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'index']);
         Route::get('/{id}', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'show']);
+        Route::get('/{id}/claim', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'edit']);
         Route::put('/{id}', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'update']);
         Route::delete('/{id}', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'delete']);
     });
