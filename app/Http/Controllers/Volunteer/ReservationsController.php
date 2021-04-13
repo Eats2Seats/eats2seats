@@ -102,6 +102,7 @@ class ReservationsController extends Controller
                 'position_type' => $reservation->position_type
             ],
             'event' => [
+                'id' => $reservation->event->id,
                 'title' => $reservation->event->title,
                 'start' => $reservation->event->start,
                 'end' => $reservation->event->end,

@@ -1,83 +1,86 @@
 <template>
-    <x-card>
-        <x-title>
-            Reservation
-        </x-title>
-        <x-subtitle>
-            View details about the reservation you're claiming.
-        </x-subtitle>
-        <x-divider/>
-        <x-label>
-            Affiliation
-        </x-label>
-        <x-text>
-            Independent
-        </x-text>
-        <x-divider/>
-        <x-label>
-            Stand
-        </x-label>
-        <x-text>
-            {{ $props.reservation.stand_name }}
-        </x-text>
-        <x-divider/>
-        <x-label>
-            Location
-        </x-label>
-        <x-text>
-            {{ $props.reservation.stand_location }}
-        </x-text>
-        <x-divider/>
-        <x-label>
-            Position Type
-        </x-label>
-        <x-text>
-            {{ $props.reservation.position_type }}
-        </x-text>
-    </x-card>
-    <x-card class="mt-8">
-        <x-title>
-            Claim
-        </x-title>
-        <x-subtitle>
-            By claiming this reservation you are committing to attending the event.
-        </x-subtitle>
-        <x-divider/>
-        <x-label>
-            Event
-        </x-label>
-        <x-text>
-            {{ $props.event.title }}
-        </x-text>
-        <x-divider/>
-        <x-label>
-            Location
-        </x-label>
-        <x-text>
-            {{ $props.venue.name }}
-        </x-text>
-        <x-divider/>
-        <x-label>
-            Start
-        </x-label>
-        <x-text>
-            {{ formatDate($props.event.start) }}
-        </x-text>
-        <x-divider/>
-        <x-label>
-            End
-        </x-label>
-        <x-text>
-            {{ formatDate($props.event.end) }}
-        </x-text>
-        <x-divider/>
-        <x-button v-on:click="claim">
-            Claim the Reservation
-        </x-button>
-    </x-card>
+    <volunteer-layout :breadcrumbs="breadcrumbs">
+        <x-card>
+            <x-title>
+                Reservation
+            </x-title>
+            <x-subtitle>
+                View details about the reservation you're claiming.
+            </x-subtitle>
+            <x-divider/>
+            <x-label>
+                Affiliation
+            </x-label>
+            <x-text>
+                Independent
+            </x-text>
+            <x-divider/>
+            <x-label>
+                Stand
+            </x-label>
+            <x-text>
+                {{ $props.reservation.stand_name }}
+            </x-text>
+            <x-divider/>
+            <x-label>
+                Location
+            </x-label>
+            <x-text>
+                {{ $props.reservation.stand_location }}
+            </x-text>
+            <x-divider/>
+            <x-label>
+                Position Type
+            </x-label>
+            <x-text>
+                {{ $props.reservation.position_type }}
+            </x-text>
+        </x-card>
+        <x-card class="mt-8">
+            <x-title>
+                Register
+            </x-title>
+            <x-subtitle>
+                By claiming this reservation you are committing to attending the event.
+            </x-subtitle>
+            <x-divider/>
+            <x-label>
+                Event
+            </x-label>
+            <x-text>
+                {{ $props.event.title }}
+            </x-text>
+            <x-divider/>
+            <x-label>
+                Location
+            </x-label>
+            <x-text>
+                {{ $props.venue.name }}
+            </x-text>
+            <x-divider/>
+            <x-label>
+                Start
+            </x-label>
+            <x-text>
+                {{ formatDate($props.event.start) }}
+            </x-text>
+            <x-divider/>
+            <x-label>
+                End
+            </x-label>
+            <x-text>
+                {{ formatDate($props.event.end) }}
+            </x-text>
+            <x-divider/>
+            <x-button v-on:click="claim">
+                Claim the Reservation
+            </x-button>
+        </x-card>
+    </volunteer-layout>
 </template>
 
 <script>
+import VolunteerLayout from "@/Layouts/VolunteerLayout";
 import XCard from '@/Components/Card';
 import XTitle from '@/Components/Title';
 import XSubtitle from '@/Components/Subtitle';
@@ -111,6 +114,7 @@ const months = [
 export default {
     name: 'Edit',
     components: {
+        VolunteerLayout,
         XCard,
         XTitle,
         XSubtitle,
@@ -128,7 +132,8 @@ export default {
             required: true,
             type: Object,
             validator: (event) => {
-                return typeof event['title'] === 'string'
+                return typeof event['id'] === 'number'
+                    && typeof event['title'] === 'string'
                     && !isNaN(Date.parse(event['start']))
                     && !isNaN(Date.parse(event['end']));
             },
@@ -157,6 +162,11 @@ export default {
     },
     data() {
         return {
+            breadcrumbs: [
+                { name: 'Events', url: '/volunteer/events' },
+                { name: 'Event', url: `/volunteer/events/${this.$props.event.id}` },
+                { name: 'Register', url: window.location.pathname },
+            ],
             form: this.$inertia.form({
                 user_id: this.$props.user.id,
             }),
