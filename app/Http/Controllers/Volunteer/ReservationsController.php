@@ -98,6 +98,7 @@ class ReservationsController extends Controller
             'reservation' => [
                 'id' => $reservation->id,
                 'stand_name' => $reservation->stand_name,
+                'stand_location' => $reservation->stand->location,
                 'position_type' => $reservation->position_type
             ],
             'event' => [
