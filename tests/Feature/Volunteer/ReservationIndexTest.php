@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class ViewReservationListTest extends TestCase
+class ReservationIndexTest extends TestCase
 {
     use DatabaseMigrations;
 

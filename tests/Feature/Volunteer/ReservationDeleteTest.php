@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class CancelReservationTest extends TestCase
+class ReservationDeleteTest extends TestCase
 {
     use DatabaseMigrations;
 

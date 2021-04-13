@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class ViewEventListTest extends TestCase
+class EventIndexTest extends TestCase
 {
     use DatabaseMigrations;
 
