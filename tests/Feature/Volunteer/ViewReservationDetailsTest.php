@@ -47,7 +47,8 @@ class ViewReservationDetailsTest extends TestCase
         ]);
 
         // Act
-        $response = $this->actingAs($user)->get('/volunteer/reservations/' . $reservation->id);
+        $response = $this->actingAs($user)
+            ->get('/volunteer/reservations/' . $reservation->id);
 
         // Assert
         $response->assertStatus(200)
@@ -83,7 +84,8 @@ class ViewReservationDetailsTest extends TestCase
         $reservation = Reservation::factory()->claimedBy($userA)->create();
 
         // Act
-        $response = $this->actingAs($userB)->get('/volunteer/reservations/' . $reservation->id);
+        $response = $this->actingAs($userB)
+            ->get('/volunteer/reservations/' . $reservation->id);
 
         // Assert
         $response->assertStatus(403);
@@ -93,11 +95,27 @@ class ViewReservationDetailsTest extends TestCase
     public function a_user_cannot_view_a_reservation_that_does_not_exist()
     {
         // Arrange
+        $user = User::factory()->create();
 
         // Act
-        $response = $this->get('/volunteer/reservations/1');
+        $response = $this->actingAs($user)
+            ->get('/volunteer/reservations/1');
 
         // Assert
         $response->assertStatus(404);
+    }
+
+    /** @test */
+    public function an_unauthenticated_user_cannot_view_a_reservation()
+    {
+        // Arrange
+        $reservation = Reservation::factory()->claimed()->create();
+
+        // Act
+        $response = $this->get('/volunteer/reservations/' . $reservation->id);
+
+        // Assert
+        $response->assertStatus(302)
+            ->assertRedirect('/login');
     }
 }

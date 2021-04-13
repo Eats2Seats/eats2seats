@@ -108,4 +108,17 @@ class ViewReservationListTest extends TestCase
                 $this->assertNotContains($reservationF->id, $reservations);
             });
     }
+
+    /** @test */
+    public function an_unauthenticated_user_cannot_view_a_list_of_reservations()
+    {
+        // Arrange
+
+        // Act
+        $response = $this->get('/volunteer/reservations');
+
+        // Assert
+        $response->assertStatus(302)
+            ->assertRedirect('/login');
+    }
 }

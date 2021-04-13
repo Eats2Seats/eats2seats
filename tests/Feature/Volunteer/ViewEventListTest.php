@@ -4,6 +4,7 @@ namespace Tests\Feature\Volunteer;
 
 use App\Models\Event;
 use App\Models\Reservation;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -17,6 +18,8 @@ class ViewEventListTest extends TestCase
         $this->withoutExceptionHandling();
 
         // Arrange
+        $user = User::factory()->create();
+
         $eventA = Event::factory()->published()->future()->available()->create();
         $eventB = Event::factory()->published()->future()->unavailable()->create();
 
@@ -32,7 +35,8 @@ class ViewEventListTest extends TestCase
         $eventI = Event::factory()->published()->future()->available()->create();
 
         // Act
-        $response = $this->get('/volunteer/events');
+        $response = $this->actingAs($user)
+            ->get('/volunteer/events');
 
         // Assert
         $response->assertStatus(200)
@@ -66,5 +70,18 @@ class ViewEventListTest extends TestCase
                 $this->assertNotContains($eventH->fresh()->only(['id', 'title', 'start', 'end']), $events);
                 $this->assertContains($eventI->fresh()->only(['id', 'title', 'start', 'end']), $events);
             });
+    }
+
+    /** @test */
+    public function an_unauthenticated_user_cannot_view_a_list_of_events()
+    {
+        // Arrange
+
+        // Act
+        $response = $this->get('/volunteer/events');
+
+        // Assert
+        $response->assertStatus(302)
+            ->assertRedirect('/login');
     }
 }

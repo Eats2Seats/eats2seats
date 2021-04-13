@@ -27,6 +27,11 @@ class Reservation extends Model
         return $query->where('user_id', null);
     }
 
+    public function scopeForEvent($query, $eventId)
+    {
+        return $query->where('event_id', $eventId);
+    }
+
     public function event()
     {
         return $this->belongsTo(Event::class);

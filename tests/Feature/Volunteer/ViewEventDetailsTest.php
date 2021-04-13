@@ -20,6 +20,7 @@ class ViewEventDetailsTest extends TestCase
     {
         $this->withoutExceptionHandling();
         // Arrange
+        $user = User::factory()->create();
         $venue = Venue::factory()->create([
             'name' => 'Kenan Memorial Stadium',
             'street' => '104 Stadium Drive',
@@ -60,7 +61,8 @@ class ViewEventDetailsTest extends TestCase
         ]);
 
         // Act
-        $response = $this->get('/volunteer/events/' . $event->id);
+        $response = $this->actingAs($user)
+            ->get('/volunteer/events/' . $event->id);
 
         // Assert
         $response->assertStatus(200)
@@ -109,10 +111,12 @@ class ViewEventDetailsTest extends TestCase
     public function a_user_cannot_view_unpublished_event_details()
     {
         // Arrange
+        $user = User::factory()->create();
         $event = Event::factory()->unpublished()->create();
 
         // Act
-        $response = $this->get('/volunteer/events/' . $event->id);
+        $response = $this->actingAs($user)
+            ->get('/volunteer/events/' . $event->id);
 
         // Assert
         $response->assertStatus(404);
@@ -122,10 +126,26 @@ class ViewEventDetailsTest extends TestCase
     public function a_user_cannot_view_an_event_that_does_not_exist()
     {
         // Arrange
+        $user = User::factory()->create();
 
         // Act
-        $response = $this->get('/volunteer/events/1');
+        $response = $this->actingAs($user)
+            ->get('/volunteer/events/1');
         // Assert
         $response->assertStatus(404);
+    }
+
+    /** @test */
+    public function an_unauthenticated_user_cannot_view_an_event()
+    {
+        // Arrange
+        $event = Event::factory()->published()->future()->create();
+
+        // Act
+        $response = $this->get('/volunteer/events/' . $event->id);
+
+        // Assert
+        $response->assertStatus(302)
+            ->assertRedirect('/login');
     }
 }

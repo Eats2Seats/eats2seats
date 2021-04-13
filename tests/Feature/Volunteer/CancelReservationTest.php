@@ -63,4 +63,18 @@ class CancelReservationTest extends TestCase
         // Assert
         $response->assertStatus(404);
     }
+
+    /** @test */
+    public function an_unauthenticated_user_cannot_cancel_a_reservation()
+    {
+        // Arrange
+        $reservation = Reservation::factory()->claimed()->create();
+
+        // Act
+        $response = $this->delete('/volunteer/reservations/' . $reservation->id);
+
+        // Assert
+        $response->assertStatus(302)
+            ->assertRedirect('/login');
+    }
 }

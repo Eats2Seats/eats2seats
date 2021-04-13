@@ -4,12 +4,20 @@ namespace App\Http\Controllers\Volunteer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class EventsController extends Controller
 {
-    public function index(): \Inertia\Response
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    public function index(Request $request): \Inertia\Response
     {
         $events = Event::published()->available()->where('start', '>=', Carbon::now())->get();
 

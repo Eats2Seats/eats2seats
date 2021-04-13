@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Volunteer;
 
+use App\Models\Event;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -75,11 +76,25 @@ class ClaimReservationTest extends TestCase
     public function a_user_cannot_claim_more_than_one_reservation_per_event()
     {
         // Arrange
+        $user = User::factory()->create();
+        $event = Event::factory()->published()->future()->create();
+        $reservationA = Reservation::factory()->claimedBy($user)->create([
+            'event_id' => $event->id,
+        ]);
+        $reservationB = Reservation::factory()->unclaimed()->create([
+            'event_id' => $event->id,
+        ]);
 
         // Act
+        $response = $this->actingAs($user)
+            ->from('/volunteer/reservations/' . $reservationB->id . '/claim')
+            ->put('/volunteer/reservations/' . $reservationB->id, [
+                'user_id' => $user->id,
+            ]);
 
         // Assert
-        $this->fail('NEEDS TO BE IMPLEMENTED');
+        $response->assertStatus(403);
+        $this->assertNull($reservationB->fresh()->user_id);
     }
 
     /** @test */
@@ -162,5 +177,19 @@ class ClaimReservationTest extends TestCase
 
         // Assert
         $response->assertStatus(404);
+    }
+
+    /** @test */
+    public function an_unauthenticated_user_cannot_claim_a_reservation()
+    {
+        // Arrange
+        $reservation = Reservation::factory()->unclaimed()->create();
+
+        // Act
+        $response = $this->put('/volunteer/reservations/' . $reservation->id);
+
+        // Assert
+        $response->assertStatus(302)
+            ->assertRedirect('/login');
     }
 }

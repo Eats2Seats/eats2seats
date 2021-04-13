@@ -63,6 +63,9 @@ class ReservationPolicy
         if ($user->id !== $requestUserID) {
             return Response::deny('You cannot claim a reservation for another user.');
         }
+        if($user->reservations()->forEvent($reservation->event_id)->get()->count() > 0) {
+            return Response::deny('You cannot claim more than one reservation per event.');
+        }
         return Response::allow();
     }
 
