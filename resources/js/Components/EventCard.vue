@@ -13,7 +13,7 @@
         </x-label>
         <!-- UNC Chapel Hill vs Duke-->
         <x-text>
-            {{ eventObj.title }}
+            {{ $props.event.title }}
         </x-text>
         <x-divider/>
         <div class="flex items-center felx-row">
@@ -23,12 +23,12 @@
                 </x-lable>
                 <!-- Dean Smith Center-->
                 <x-text>
-                    {{ venueObj.name }}
+                    {{ $props.venue.name }}
                 </x-text>
             </div>
             <div class ="ml-6">
                 <x-icon-button>
-                    <MapIcon class="w-6 h-6 text-grey-500" />
+                    <MapIcon class="w-6 h-6 text-gray-500" />
                 </x-icon-button>
             </div>
         </div>
@@ -38,7 +38,7 @@
         </x-label>
         <!-- March 31st @ 5:00 PM-->
         <x-text>
-            {{ getDate(eventObj.start) }} at {{ getTime(eventObj.start)}}
+            {{ formatDate($props.event.start) }}
         </x-text>
         <x-divider/>
         <x-label>
@@ -46,7 +46,7 @@
         </x-label>
         <!-- March 31st @8:00 PM-->
         <x-text>
-            {{ getDate(eventObj.end) }} at {{ getTime(eventObj.end)}}
+            {{ formatDate($props.event.end) }}
         </x-text>
     </x-card>
 </template>
@@ -75,29 +75,43 @@ export default {
         MapIcon,
     },
     props: {
-        eventObj: {
-            type: Object,
+        event: {
             required: true,
+            type: Object,
+            validator: (event) => {
+                return typeof event['title'] === 'string'
+                    && !isNaN(Date.parse(event['start']))
+                    && !isNaN(Date.parse(event['end']));
+            },
         },
-        venueObj: {
-            type: Object,
+        venue: {
             required: true,
+            type: Object,
+            validator: (venue) => {
+                return typeof venue['name'] === 'string'
+                    && typeof venue['street'] === 'string'
+                    && typeof venue['city'] === 'string'
+                    && typeof venue['state'] === 'string'
+                    && typeof venue['zip'] === 'string';
+            },
         },
     },
     methods: {
-        getDate(d) {
-            let date = new Date(d)
-            return date.toDateString()
+        formatDate(rawDate) {
+            let dateObj = new Date(rawDate);
+            let dateStr = dateObj.toLocaleDateString('en-US', {
+                day: 'numeric',
+                weekday: 'short',
+                month: 'long',
+                ...(new Date().getFullYear() !== dateObj.getFullYear() && { year: 'numeric'}),
+            });
+            let timeStr = dateObj.toLocaleTimeString('en-US', {
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+            });
+            return `${dateStr} @ ${timeStr}`;
         },
-        getTime(d){
-            let time = new Date(d)
-            return time.toLocaleTimeString('en-US', {timeStyle: 'short'})
-        },
-    },
-    data() {
-        return {
-
-        }
     },
 }
 </script>

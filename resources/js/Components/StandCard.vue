@@ -13,7 +13,7 @@
         </x-label>
         <!-- Carrie's Cotton Candy-->
         <x-text>
-            {{ reservationObj.stand_name }}
+            {{ $props.reservation.stand_name }}
         </x-text>
         <x-divider/>
         <div class="flex items-center felx-row">
@@ -23,12 +23,12 @@
                 </x-lable>
                 <!-- Concession Stand #2-->
                 <x-text>
-                    {{ reservationObj.stand_location }}
+                    {{ $props.reservation.stand_location }}
                 </x-text>
             </div>
             <div class ="ml-6">
                 <x-icon-button>
-                    <MapIcon class="w-6 h-6 text-grey-500" />
+                    <MapIcon class="w-6 h-6 text-gray-500" />
                 </x-icon-button>
             </div>
         </div>
@@ -38,7 +38,7 @@
         </x-label>
         <!-- Food Sales-->
         <x-text>
-            {{ reservationObj.position_type }}
+            {{ $props.reservation.position_type }}
         </x-text>
         <x-divider/>
         <x-label>
@@ -84,11 +84,15 @@ export default {
         MapIcon,
     },
     props: {
-        reservationObj: Object,
-    },
-    data() {
-        return {
-
+        reservation: {
+            required: true,
+            type: Object,
+            validator: (reservation) => {
+                return typeof reservation['id'] === 'number'
+                    && typeof reservation['stand_name'] === 'string'
+                    && typeof reservation['stand_location'] === 'string'
+                    && typeof reservation['position_type'] === 'string';
+            }
         }
     },
 }

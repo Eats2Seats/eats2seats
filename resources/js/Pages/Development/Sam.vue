@@ -53,7 +53,7 @@ import XSubtitle from "@/Components/Subtitle"
 import XText from "@/Components/Text"
 import XDivider from"@/Components/Divider"
 import NextReservation from "@/Components/NextReservationCard"
-import MyReservations from "@/Components/MyReservations"
+import MyReservations from "@/Components/ReservationList"
 export default {
     components: {
         XSubtitle,

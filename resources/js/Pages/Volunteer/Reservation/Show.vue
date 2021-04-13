@@ -1,20 +1,24 @@
 <template>
-    <event-card 
-        :eventObj="event" 
-        :venueObj="venue"
-    />
-    <stand-card 
-        :reservationObj="reservation"
-    />
+    <volunteer-layout :breadcrumbs="breadcrumbs">
+        <event-card
+            :event="event"
+            :venue="venue"
+        />
+        <stand-card
+            :reservation="reservation"
+        />
+    </volunteer-layout>
 </template>
 
 <script>
+import VolunteerLayout from "@/Layouts/VolunteerLayout";
 import EventCard from "@/Components/EventCard"
 import StandCard from "@/Components/StandCard"
 
 export default {
     name: 'Show',
     components: {
+        VolunteerLayout,
         EventCard,
         StandCard,
     },
@@ -22,34 +26,24 @@ export default {
         event: {
             required: true,
             type: Object,
-            validator: (event) => {
-                return typeof event['title'] === 'string'
-                    && !isNaN(Date.parse(event['start']))
-                    && !isNaN(Date.parse(event['end']));
-            },
         },
         venue: {
             required: true,
             type: Object,
-            validator: (venue) => {
-                return typeof venue['name'] === 'string'
-                    && typeof venue['street'] === 'string'
-                    && typeof venue['city'] === 'string'
-                    && typeof venue['state'] === 'string'
-                    && typeof venue['zip'] === 'string';
-            },
         },
         reservation: {
             required: true,
             type: Object,
-            validator: (reservation) => {
-                return typeof reservation['id'] === 'number'
-                    && typeof reservation['stand_name'] === 'string'
-                    && typeof reservation['stand_location'] === 'string'
-                    && typeof reservation['position_type'] === 'string';
-            }
         }
-    }
+    },
+    data () {
+        return {
+            breadcrumbs: [
+                { name: 'Reservations', url: '/volunteer/events' },
+                { name: 'Reservation', url: window.location.pathname },
+            ],
+        }
+    },
 }
 </script>
 
