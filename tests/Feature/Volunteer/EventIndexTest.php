@@ -6,11 +6,31 @@ use App\Models\Event;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Collection;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 class EventIndexTest extends TestCase
 {
     use DatabaseMigrations;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Collection::macro('hasEvent', function ($event) {
+            \PHPUnit\Framework\Assert::assertTrue($this->contains($event->fresh()->only([
+                'id', 'title', 'start', 'end', 'published_at',
+            ])), 'Failed asserting that the response does contain the specified event.');
+        });
+
+        Collection::macro('missingEvent', function ($event) {
+            \PHPUnit\Framework\Assert::assertFalse($this->contains($event->fresh()->only([
+                'id', 'title', 'start', 'end', 'published_at',
+            ])), 'Failed asserting that the response does not contain the specified event.');
+        });
+
+    }
 
     /** @test */
     public function a_user_can_view_a_list_of_published_future_available_events()
@@ -39,37 +59,58 @@ class EventIndexTest extends TestCase
             ->get('/volunteer/events');
 
         // Assert
-        $response->assertStatus(200)
-            ->assertPropCount('next', 3)
-            ->assertPropValue('next.id', $eventA->id)
-            ->assertPropCount('next.event', 3)
-            ->assertPropValue('next.event', function ($event) use ($eventA) {
-                $this->assertEquals($eventA->title, $event['title']);
-                $this->assertEquals($eventA->start, $event['start']);
-                $this->assertEquals($eventA->end, $event['end']);
-            })
-            ->assertPropCount('next.venue', 5)
-            ->assertPropValue('next.venue', function ($venue) use ($eventA) {
-                $this->assertEquals($eventA->venue->name, $venue['name']);
-                $this->assertEquals($eventA->venue->street, $venue['street']);
-                $this->assertEquals($eventA->venue->city, $venue['city']);
-                $this->assertEquals($eventA->venue->state, $venue['state']);
-                $this->assertEquals($eventA->venue->zip, $venue['zip']);
-            })
-            ->assertPropCount('events', 2)
-            ->assertPropValue('events', function ($events) use ($eventA, $eventB, $eventC, $eventD, $eventE,
-                $eventF, $eventG, $eventH, $eventI)
-            {
-                $this->assertContains($eventA->fresh()->only(['id', 'title', 'start', 'end']), $events);
-                $this->assertNotContains($eventB->fresh()->only(['id', 'title', 'start', 'end']), $events);
-                $this->assertNotContains($eventC->fresh()->only(['id', 'title', 'start', 'end']), $events);
-                $this->assertNotContains($eventD->fresh()->only(['id', 'title', 'start', 'end']), $events);
-                $this->assertNotContains($eventE->fresh()->only(['id', 'title', 'start', 'end']), $events);
-                $this->assertNotContains($eventF->fresh()->only(['id', 'title', 'start', 'end']), $events);
-                $this->assertNotContains($eventG->fresh()->only(['id', 'title', 'start', 'end']), $events);
-                $this->assertNotContains($eventH->fresh()->only(['id', 'title', 'start', 'end']), $events);
-                $this->assertContains($eventI->fresh()->only(['id', 'title', 'start', 'end']), $events);
-            });
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Volunteer/Event/Index')
+            ->has('next', fn (Assert $page) => $page
+                ->whereAll([
+                    'id' => $eventA->id,
+                    'title' => $eventA->title,
+                    'start' => $eventA->fresh()->start,
+                    'end' => $eventA->fresh()->end,
+                ])
+                ->has('venue', fn (Assert $page) => $page
+                    ->whereAll([
+                        'name' => $eventA->venue->name,
+                        'street' => $eventA->venue->street,
+                        'city' => $eventA->venue->city,
+                        'state' => $eventA->venue->state,
+                        'zip' => $eventA->venue->zip,
+                    ])
+                )
+            )
+            ->has('events', fn (Assert $page) => $page
+                ->has('data', 2)
+                ->where('data', function (Collection $events) use ($eventA, $eventB, $eventC, $eventD, $eventE,
+                    $eventF, $eventG, $eventH, $eventI)
+                {
+                    $events->hasEvent($eventA);
+                    $events->missingEvent($eventB);
+                    $events->missingEvent($eventC);
+                    $events->missingEvent($eventD);
+                    $events->missingEvent($eventE);
+                    $events->missingEvent($eventF);
+                    $events->missingEvent($eventG);
+                    $events->missingEvent($eventH);
+                    $events->hasEvent($eventI);
+                    return true;
+                })
+                ->hasAll([
+                    'current_page',
+                    'first_page_url',
+                    'from',
+                    'last_page',
+                    'last_page_url',
+                    'links',
+                    'next_page_url',
+                    'path',
+                    'per_page',
+                    'prev_page_url',
+                    'to',
+                    'total',
+                ])
+            )
+            ->etc()
+        );
     }
 
     /** @test */

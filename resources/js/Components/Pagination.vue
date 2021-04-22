@@ -8,7 +8,7 @@
             <arrow-narrow-left-icon class="h-5 w-5 text-gray-500 group-disabled:text-gray-300"/>
         </x-icon-button>
         <x-text>
-            {{ list.from }} - {{ list.to }} of {{ list.total }}
+            {{ list.from ? list.from : 0}} - {{ list.to ? list.to : 0 }} of {{ list.total }}
         </x-text>
         <x-icon-button
             class="px-4 disabled:bg-gray-50 group"
