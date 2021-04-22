@@ -232,6 +232,7 @@ export default {
                     : { remember: 'forget' }
                 ), this.form, {
                     preserveState: true,
+                    preserveScroll: true,
                 });
             }, 150),
             deep: true,

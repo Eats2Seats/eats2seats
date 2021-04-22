@@ -64,4 +64,79 @@ class EventTest extends TestCase
         $availableEvents->assertNotContains($eventB->fresh());
         $availableEvents->assertContains($eventC->fresh());
     }
+
+    /** @test */
+    public function events_can_be_filtered_by_title()
+    {
+        // Arrange
+        $eventA = Event::factory()->create([
+            'title' => 'One'
+        ]);
+        $eventB = Event::factory()->create([
+            'title' => 'One'
+        ]);
+        $eventC = Event::factory()->create([
+            'title' => 'Two'
+        ]);
+
+        // Act
+        $filteredEvents = Event::filter([
+            'title' => 'one',
+        ])->get()->toArray();
+
+        // Assert
+        $this->assertContains($eventA->fresh()->toArray(), $filteredEvents);
+        $this->assertContains($eventB->fresh()->toArray(), $filteredEvents);
+        $this->assertNotContains($eventC->fresh()->toArray(), $filteredEvents);
+    }
+
+    /** @test */
+    public function events_can_be_filtered_by_start_date()
+    {
+        // Arrange
+        $eventA = Event::factory()->create([
+            'start' => Carbon::parse('March 23 2022')
+        ]);
+        $eventB = Event::factory()->create([
+            'start' => Carbon::parse('March 24 2022')
+        ]);
+        $eventC = Event::factory()->create([
+            'start' => Carbon::parse('March 25 2022')
+        ]);
+
+        // Act
+        $filteredEvents = Event::filter([
+            'start' => Carbon::parse('March 24 2022'),
+        ])->get()->toArray();
+
+        // Assert
+        $this->assertNotContains($eventA->fresh()->toArray(), $filteredEvents);
+        $this->assertContains($eventB->fresh()->toArray(), $filteredEvents);
+        $this->assertContains($eventC->fresh()->toArray(), $filteredEvents);
+    }
+
+    /** @test */
+    public function events_can_be_filtered_by_end_date()
+    {
+        // Arrange
+        $eventA = Event::factory()->create([
+            'end' => Carbon::parse('March 23 2022')
+        ]);
+        $eventB = Event::factory()->create([
+            'end' => Carbon::parse('March 24 2022')
+        ]);
+        $eventC = Event::factory()->create([
+            'end' => Carbon::parse('March 25 2022')
+        ]);
+
+        // Act
+        $filteredEvents = Event::filter([
+            'end' => Carbon::parse('March 24 2022'),
+        ])->get()->toArray();
+
+        // Assert
+        $this->assertContains($eventA->fresh()->toArray(), $filteredEvents);
+        $this->assertContains($eventB->fresh()->toArray(), $filteredEvents);
+        $this->assertNotContains($eventC->fresh()->toArray(), $filteredEvents);
+    }
 }

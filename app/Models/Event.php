@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Event extends Model
 {
@@ -23,17 +24,17 @@ class Event extends Model
         });
     }
 
-    public function scopeFilter($query) {
-        if (request('title')) {
-            $query->where('title', 'LIKE', '%'.request('title').'%');
-        }
-        if (request('start')) {
-            $query->where('start', '>=', Carbon::parse(request('start')));
-        }
-        if (request('end')) {
-            $query->where('end', '<=', Carbon::parse(request('end')));
-        }
-        return $query;
+    public function scopeFilter($query, Array $filters) {
+        $query
+            ->when($filters['title'] ?? null, function ($query, $title) {
+                $query->where('title', 'LIKE', '%'.$title.'%');
+            })
+            ->when($filters['start'] ?? null, function ($query, $start) {
+                $query->where('start', '>=', Carbon::parse($start));
+            })
+            ->when($filters['end'] ?? null, function ($query, $end) {
+                $query->where('end', '<=', Carbon::parse($end));
+            });
     }
 
     public function venue()
