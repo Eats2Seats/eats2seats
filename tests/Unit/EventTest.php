@@ -3,14 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Event;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 use App\Models\Reservation;
->>>>>>> bf1bfff9f0da675f67a0776a5b23c6842dd10ea2
-=======
-use App\Models\Reservation;
->>>>>>> bf1bfff9f0da675f67a0776a5b23c6842dd10ea2
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
@@ -24,29 +17,13 @@ class EventTest extends TestCase
     {
         // Arrange
         $publishedEventA = Event::factory()->create([
-<<<<<<< HEAD
-<<<<<<< HEAD
             'published_at' => Carbon::parse('-1 week'),
-        ]);
-        $publishedEventB = Event::factory()->create([
-            'published_at' => Carbon::parse('-3 days'),
-        ]);
-        $publishedEventC = Event::factory()->create([
-            'published_at' => null,
-=======
-=======
->>>>>>> bf1bfff9f0da675f67a0776a5b23c6842dd10ea2
-            'published_at' => Carbon::parse('-3 weeks'),
         ]);
         $publishedEventB = Event::factory()->create([
             'published_at' => null,
         ]);
         $publishedEventC = Event::factory()->create([
             'published_at' => Carbon::parse('now'),
-<<<<<<< HEAD
->>>>>>> bf1bfff9f0da675f67a0776a5b23c6842dd10ea2
-=======
->>>>>>> bf1bfff9f0da675f67a0776a5b23c6842dd10ea2
         ]);
 
         // Act
@@ -54,13 +31,6 @@ class EventTest extends TestCase
 
         // Assert
         $this->assertTrue($publishedEvents->contains($publishedEventA));
-<<<<<<< HEAD
-<<<<<<< HEAD
-        $this->assertTrue($publishedEvents->contains($publishedEventB));
-        $this->assertFalse($publishedEvents->contains($publishedEventC));
-=======
-=======
->>>>>>> bf1bfff9f0da675f67a0776a5b23c6842dd10ea2
         $this->assertFalse($publishedEvents->contains($publishedEventB));
         $this->assertTrue($publishedEvents->contains($publishedEventC));
     }
@@ -93,9 +63,5 @@ class EventTest extends TestCase
         $availableEvents->assertContains($eventA->fresh());
         $availableEvents->assertNotContains($eventB->fresh());
         $availableEvents->assertContains($eventC->fresh());
-<<<<<<< HEAD
->>>>>>> bf1bfff9f0da675f67a0776a5b23c6842dd10ea2
-=======
->>>>>>> bf1bfff9f0da675f67a0776a5b23c6842dd10ea2
     }
 }

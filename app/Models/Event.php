@@ -23,6 +23,19 @@ class Event extends Model
         });
     }
 
+    public function scopeFilter($query) {
+        if (request('title')) {
+            $query->where('title', 'LIKE', '%'.request('title').'%');
+        }
+        if (request('start')) {
+            $query->where('start', '>=', Carbon::parse(request('start')));
+        }
+        if (request('end')) {
+            $query->where('end', '<=', Carbon::parse(request('end')));
+        }
+        return $query;
+    }
+
     public function venue()
     {
         return $this->belongsTo(Venue::class);

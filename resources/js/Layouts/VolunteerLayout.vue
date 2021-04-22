@@ -1,15 +1,29 @@
 <template>
-    <x-navigation-menu ref="navMenu">
-        <x-navigation-menu-item href="/volunteer">
-            Home
-        </x-navigation-menu-item>
-        <x-navigation-menu-item href="/volunteer/events">
-            Events
-        </x-navigation-menu-item>
-        <x-navigation-menu-item href="/volunteer/reservations">
-            Reservations
-        </x-navigation-menu-item>
-    </x-navigation-menu>
+    <x-slide-out-menu ref="navMenu">
+        <template #title>
+            Navigation Menu
+        </template>
+        <template #body>
+            <nav class="flex-none divide-y border-gray-200 border-b">
+                <x-navigation-menu-item href="/volunteer">
+                    Home
+                </x-navigation-menu-item>
+                <x-navigation-menu-item href="/volunteer/events">
+                    Events
+                </x-navigation-menu-item>
+                <x-navigation-menu-item href="/volunteer/reservations">
+                    Reservations
+                </x-navigation-menu-item>
+            </nav>
+            <div class="flex-1"></div>
+            <x-navigation-menu-item
+                class="border-t border-gray-200"
+                href="/logout"
+            >
+                Sign Out
+            </x-navigation-menu-item>
+        </template>
+    </x-slide-out-menu>
     <header class="shadow">
         <div class="flex flex-row justify-between items-center p-6 bg-indigo-600">
             <h1 class="font-serif font-bold text-2xl text-white hover:underline">
@@ -19,7 +33,7 @@
             </h1>
             <icon-button
                 class="bg-white group hover:bg-transparent"
-                v-on:click="$refs.navMenu.toggleNav()"
+                v-on:click="$refs.navMenu.toggleMenu()"
             >
                 <menu-alt1-icon class="h-5 w-5 text-indigo-600 group-hover:text-white"/>
             </icon-button>
@@ -40,7 +54,7 @@
 import IconButton from "@/Components/IconButton";
 import { MenuAlt1Icon } from '@heroicons/vue/solid';
 import XText from "@/Components/Text";
-import XNavigationMenu from "@/Components/NavigationMenu";
+import XSlideOutMenu from "@/Components/SlideOutMenu";
 import XNavigationMenuItem from "@/Components/NavigationMenuItem";
 import XBreadcrumbs from "@/Components/Breadcrumbs";
 export default {
@@ -49,7 +63,7 @@ export default {
         IconButton,
         MenuAlt1Icon,
         XText,
-        XNavigationMenu,
+        XSlideOutMenu,
         XNavigationMenuItem,
         XBreadcrumbs,
     },

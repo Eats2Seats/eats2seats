@@ -39,7 +39,7 @@ export default {
     data () {
         return {
             breadcrumbs: [
-                { name: 'Reservations', url: '/volunteer/events' },
+                { name: 'Reservations', url: '/volunteer/reservations' },
                 { name: 'Reservation', url: window.location.pathname },
             ],
         }

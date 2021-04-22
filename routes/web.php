@@ -43,7 +43,8 @@ Route::get('/deven', function () {
  */
 Route::prefix('volunteer')->group(function () {
     Route::prefix('events')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Volunteer\EventsController::class, 'index']);
+        Route::get('/', [\App\Http\Controllers\Volunteer\EventsController::class, 'index'])
+            ->name('volunteer.events');
         Route::get('/{id}', [\App\Http\Controllers\Volunteer\EventsController::class, 'show']);
     });
     Route::prefix('reservations')->group(function () {
