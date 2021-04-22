@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    name: 'label'
+    name: 'x-label',
 }
 </script>
 
