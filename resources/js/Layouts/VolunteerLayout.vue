@@ -38,10 +38,10 @@
                 <menu-alt1-icon class="h-5 w-5 text-indigo-600 group-hover:text-white"/>
             </icon-button>
         </div>
-        <x-breadcrumbs :breadcrumbs="breadcrumbs"/>
     </header>
 
-    <main>
+    <main class="container mx-auto">
+        <x-breadcrumbs :breadcrumbs="breadcrumbs"/>
         <slot></slot>
     </main>
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-row items-center space-x-2 py-4 px-6 bg-white">
+    <div class="container mx-auto flex flex-row items-center space-x-2 px-6 py-4 shadow bg-white mt-8 md:mt-10">
         <inertia-link href="/volunteer">
             <home-icon class="h-5 w-5 text-gray-500 hover:text-indigo-600"/>
         </inertia-link>

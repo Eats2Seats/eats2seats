@@ -37,10 +37,14 @@ export default {
     },
     methods: {
         getPrevPage () {
-            this.$inertia.visit(this.list.prev_page_url);
+            this.$inertia.visit(this.list.prev_page_url, {
+                preserveScroll: true,
+            });
         },
         getNextPage () {
-            this.$inertia.visit(this.list.next_page_url);
+            this.$inertia.visit(this.list.next_page_url, {
+                preserveScroll: true,
+            });
         }
     }
 }
