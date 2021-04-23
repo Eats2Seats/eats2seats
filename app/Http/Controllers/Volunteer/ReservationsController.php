@@ -88,9 +88,14 @@ class ReservationsController extends Controller
     /**
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit(Request $request, $id): \Inertia\Response
+    public function edit(Request $request, $event, $stand, $positionType): \Inertia\Response
     {
-        $reservation = Reservation::with(['event', 'event.venue'])->unclaimed()->findOrFail($id);
+        $reservation = Reservation::where('event_id', $event)
+            ->where('stand_id', $stand)
+            ->where('position_type', $positionType)
+            ->with(['event', 'event.venue'])
+            ->unclaimed()
+            ->firstOrFail();
 
         Gate::authorize('viewAny', $reservation);
 

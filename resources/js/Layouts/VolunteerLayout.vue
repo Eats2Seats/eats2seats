@@ -38,14 +38,14 @@
                 <menu-alt1-icon class="h-5 w-5 text-indigo-600 group-hover:text-white"/>
             </icon-button>
         </div>
+        <x-breadcrumbs :breadcrumbs="breadcrumbs"/>
     </header>
 
     <main class="container mx-auto">
-        <x-breadcrumbs :breadcrumbs="breadcrumbs"/>
         <slot></slot>
     </main>
 
-    <footer class="mt-8 py-12 px-6 bg-indigo-600 text-center">
+    <footer class="mt-8 md:mt-10 py-12 px-6 bg-indigo-600 text-center">
         <x-text class="text-white">Copyright © 2021 Eats2Seats</x-text>
     </footer>
 </template>

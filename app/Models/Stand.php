@@ -13,4 +13,9 @@ class Stand extends Model
     {
         return $this->belongsTo(Venue::class);
     }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }

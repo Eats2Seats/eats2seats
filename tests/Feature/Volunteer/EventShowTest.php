@@ -9,11 +9,23 @@ use App\Models\User;
 use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Collection;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 class EventShowTest extends TestCase
 {
     use DatabaseMigrations;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Collection::macro('hasPosition', function ($position) {
+            \PHPUnit\Framework\Assert::assertTrue($this->contains($position), 'Failed asserting that the response does contain the specified event.');
+        });
+
+    }
 
     /** @test */
     public function a_user_can_view_details_for_a_published_future_event()
@@ -34,30 +46,78 @@ class EventShowTest extends TestCase
             'start' => Carbon::parse('March 23rd 2021 5:00 PM'),
             'end' => Carbon::parse('March 23rd 2021 8:00 PM'),
         ]);
-        $stand = Stand::factory()->create([
+        $standA = Stand::factory()->create([
             'venue_id' => $venue->id,
-            'location' => 'Stand 1',
+            'location' => 'Stand A',
         ]);
-        $reservationA = Reservation::factory()->create([
-            'event_id' => $event->id,
-            'stand_id' => $stand->id,
-            'user_id' => null,
-            'stand_name' => 'Bob\'s Burgers',
-            'position_type' => 'Alcohol Sales',
+        $standB = Stand::factory()->create([
+            'venue_id' => $venue->id,
+            'location' => 'Stand B',
         ]);
-        $reservationB = Reservation::factory()->create([
-            'event_id' => $event->id,
-            'stand_id' => $stand->id,
-            'user_id' => null,
-            'stand_name' => 'Sally\'s Subs',
-            'position_type' => 'Food Sales',
-        ]);
-        $reservationC = Reservation::factory()->create([
-            'event_id' => $event->id,
-            'stand_id' => $stand->id,
-            'user_id' => User::factory()->create()->id,
-            'stand_name' => 'Holly\'s Hotdogs',
-            'position_type' => 'Alcohol Sales',
+        $reservations = collect([
+            Reservation::factory()->create([
+                'event_id' => $event->id,
+                'stand_id' => $standA->id,
+                'user_id' => null,
+                'stand_name' => 'Bob\'s Burgers',
+                'position_type' => 'Food Sales',
+            ]),
+            Reservation::factory()->create([
+                'event_id' => $event->id,
+                'stand_id' => $standA->id,
+                'user_id' => null,
+                'stand_name' => 'Bob\'s Burgers',
+                'position_type' => 'Food Sales',
+            ]),
+            Reservation::factory()->create([
+                'event_id' => $event->id,
+                'stand_id' => $standA->id,
+                'user_id' => User::factory()->create()->id,
+                'stand_name' => 'Bob\'s Burgers',
+                'position_type' => 'Food Sales',
+            ]),
+            Reservation::factory()->create([
+                'event_id' => $event->id,
+                'stand_id' => $standA->id,
+                'user_id' => null,
+                'stand_name' => 'Bob\'s Burgers',
+                'position_type' => 'Alcohol Sales',
+            ]),
+            Reservation::factory()->create([
+                'event_id' => $event->id,
+                'stand_id' => $standA->id,
+                'user_id' => null,
+                'stand_name' => 'Bob\'s Burgers',
+                'position_type' => 'Alcohol Sales',
+            ]),
+            Reservation::factory()->create([
+                'event_id' => $event->id,
+                'stand_id' => $standB->id,
+                'user_id' => null,
+                'stand_name' => 'Sally\'s Subs',
+                'position_type' => 'Food Sales',
+            ]),
+            Reservation::factory()->create([
+                'event_id' => $event->id,
+                'stand_id' => $standB->id,
+                'user_id' => null,
+                'stand_name' => 'Sally\'s Subs',
+                'position_type' => 'Food Sales',
+            ]),
+            Reservation::factory()->create([
+                'event_id' => $event->id,
+                'stand_id' => $standB->id,
+                'user_id' => null,
+                'stand_name' => 'Sally\'s Subs',
+                'position_type' => 'Alcohol Sales',
+            ]),
+            Reservation::factory()->create([
+                'event_id' => $event->id,
+                'stand_id' => $standB->id,
+                'user_id' => null,
+                'stand_name' => 'Sally\'s Subs',
+                'position_type' => 'Alcohol Sales',
+            ])
         ]);
 
         // Act
@@ -65,46 +125,73 @@ class EventShowTest extends TestCase
             ->get('/volunteer/events/' . $event->id);
 
         // Assert
-        $response->assertStatus(200)
-            ->assertPropCount('event', 4)
-            ->assertPropValue('event', function ($actual) use ($event) {
-                $this->assertEquals($event->id, $actual['id']);
-                $this->assertEquals($event['title'], $actual['title']);
-                $this->assertEquals($event['start'], $actual['start']);
-                $this->assertEquals($event['end'], $actual['end']);
-            })
-            ->assertPropCount('venue', 5)
-            ->assertPropValue('venue', function ($actual) use ($venue) {
-                $this->assertEquals($venue['name'], $actual['name']);
-                $this->assertEquals($venue['street'], $actual['street']);
-                $this->assertEquals($venue['city'], $actual['city']);
-                $this->assertEquals($venue['state'], $actual['state']);
-                $this->assertEquals($venue['zip'], $actual['zip']);
-            })
-            ->assertPropCount('reservations', 2)
-            ->assertPropValue('reservations', function ($actual) use ($reservationA, $reservationB, $reservationC) {
-                $reservationA = $reservationA->fresh('stand')->toArray();
-                $reservationB = $reservationB->fresh('stand')->toArray();
-                $reservationC = $reservationC->fresh('stand')->toArray();
-                $this->assertContains([
-                    'id' => $reservationA['id'],
-                    'stand_name' => $reservationA['stand_name'],
-                    'position_type' => $reservationA['position_type'],
-                    'location' => $reservationA['stand']['location']
-                ], $actual);
-                $this->assertContains([
-                    'id' => $reservationB['id'],
-                    'stand_name' => $reservationB['stand_name'],
-                    'position_type' => $reservationB['position_type'],
-                    'location' => $reservationB['stand']['location']
-                ], $actual);
-                $this->assertNotContains([
-                    'id' => $reservationC['id'],
-                    'stand_name' => $reservationC['stand_name'],
-                    'position_type' => $reservationC['position_type'],
-                    'location' => $reservationC['stand']['location']
-                ], $actual);
-            });
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Volunteer/Event/Show')
+            ->has('event', fn (Assert $page) => $page
+                ->whereAll([
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'start' => $event->fresh()->start,
+                    'end' => $event->fresh()->end,
+                ])
+            )
+            ->has('venue', fn (Assert $page) => $page
+                ->whereAll([
+                    'name' => $venue->name,
+                    'street' => $venue->street,
+                    'city' => $venue->city,
+                    'state' => $venue->state,
+                    'zip' => $venue->zip,
+                ])
+            )
+            ->has('positions', fn (Assert $page) => $page
+                ->has('position_types', 2)
+                ->where('position_types', function (Collection $positions) {
+                    $this->assertContains('Food Sales', $positions);
+                    $this->assertContains('Alcohol Sales', $positions);
+                    return true;
+                })
+                ->has('list', fn (Assert $page) => $page
+                    ->has('data', 4)
+                    ->where('data', function (Collection $positions) use ($event, $standA, $standB, $reservations) {
+                        $groupedReservations = $reservations->whereNull('user_id')
+                            ->groupBy(['stand_name', 'position_type'])
+                            ->map(function ($stand) {
+                                return $stand->map(function ($position) {
+                                    return [
+                                        'event_id' => $position->first()->event_id,
+                                        'stand_id' => $position->first()->stand_id,
+                                        'stand_name' => $position->first()->stand_name,
+                                        'position_type' => $position->first()->position_type,
+                                        'remaining' => $position->count(),
+                                    ];
+                                })
+                                    ->values();
+                            })
+                            ->collapse()
+                            ->each(function ($position) use ($positions) {
+                                $positions->hasPosition($position);
+                            });
+                        return true;
+                    })
+                    ->hasAll([
+                        'current_page',
+                        'first_page_url',
+                        'from',
+                        'last_page',
+                        'last_page_url',
+                        'links',
+                        'next_page_url',
+                        'path',
+                        'per_page',
+                        'prev_page_url',
+                        'to',
+                        'total',
+                    ])
+                )
+            )
+            ->etc()
+        );
     }
 
     /** @test */

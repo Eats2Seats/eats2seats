@@ -32,6 +32,14 @@ class Reservation extends Model
         return $query->where('event_id', $eventId);
     }
 
+    public function scopeFilter($query, Array $filters)
+    {
+        $query
+            ->when($filters['position_type'] ?? null, function ($query, $positionType) {
+                $query->where('position_type', $positionType);
+            });
+    }
+
     public function event(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Event::class);

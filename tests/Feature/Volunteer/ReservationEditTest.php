@@ -35,7 +35,7 @@ class ReservationEditTest extends TestCase
 
         // Act
         $response = $this->actingAs($user)
-            ->get('/volunteer/reservations/' . $reservation->id . '/claim');
+            ->get('/volunteer/reservations/claim/' . $event->id . '/' . $stand->id . '/' . $reservation->position_type);
 
         // Assert
         $response->assertStatus(200)
@@ -93,7 +93,7 @@ class ReservationEditTest extends TestCase
 
         // Act
         $response = $this->actingAs($user)
-            ->get('/volunteer/reservations/' . $reservationB->id . '/claim');
+            ->get('/volunteer/reservations/claim/' . $event->id . '/' . $reservationB->stand->id . '/' . $reservationB->position_type);
 
         // Assert
         $response->assertStatus(403);
@@ -121,7 +121,7 @@ class ReservationEditTest extends TestCase
         $reservation = Reservation::factory()->unclaimed()->create();
 
         // Act
-        $response = $this->get('/volunteer/reservations/' . $reservation->id . '/claim');
+        $response = $this->get('/volunteer/reservations/claim/' . $reservation->event->id . '/' . $reservation->stand->id . '/' . $reservation->position_type);
 
         // Assert
         $response->assertStatus(302)

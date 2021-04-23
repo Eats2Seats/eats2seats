@@ -44,14 +44,20 @@ Route::get('/deven', function () {
 Route::prefix('volunteer')->group(function () {
     Route::prefix('events')->group(function () {
         Route::get('/', [\App\Http\Controllers\Volunteer\EventsController::class, 'index'])
-            ->name('volunteer.events');
-        Route::get('/{id}', [\App\Http\Controllers\Volunteer\EventsController::class, 'show']);
+            ->name('volunteer.events.index');
+        Route::get('/{id}', [\App\Http\Controllers\Volunteer\EventsController::class, 'show'])
+            ->name('volunteer.events.show');
     });
     Route::prefix('reservations')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'index']);
-        Route::get('/{id}', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'show']);
-        Route::get('/{id}/claim', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'edit']);
-        Route::put('/{id}', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'update']);
-        Route::delete('/{id}', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'delete']);
+        Route::get('/', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'index'])
+            ->name('volunteer.reservations.index');
+        Route::get('/{id}', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'show'])
+            ->name('volunteer.reservations.show');
+        Route::get('/claim/{event}/{stand}/{positionType}', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'edit'])
+            ->name('volunteer.reservations.claim');
+        Route::put('/{id}', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'update'])
+            ->name('volunteer.reservations.update');
+        Route::delete('/{id}', [\App\Http\Controllers\Volunteer\ReservationsController::class, 'delete'])
+            ->name('volunteer.reservations.delete');
     });
 });

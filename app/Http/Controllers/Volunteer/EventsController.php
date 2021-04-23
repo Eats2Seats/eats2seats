@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Volunteer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\Reservation;
+use App\Models\Stand;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
@@ -62,17 +65,17 @@ class EventsController extends Controller
         ]);
     }
 
-    public function show($id): \Inertia\Response
+    public function show(Request $request, $id): \Inertia\Response
     {
-        $event = Event::published()->with([
+        $event = Event::with([
             'venue',
-            'reservations' => function ($query) {
-                $query->unclaimed();
-            },
-            'reservations.stand',
-        ])->findOrFail($id);
+            'reservations',
+        ])
+            ->published()
+            ->findOrFail($id);
 
         return Inertia::render('Volunteer/Event/Show', [
+            'filters' => $request->all(),
             'event' => [
                 'id' => $event->id,
                 'title' => $event->title,
@@ -86,14 +89,29 @@ class EventsController extends Controller
                 'state' => $event->venue->state,
                 'zip' => $event->venue->zip,
             ],
-            'reservations' => $event->reservations->map(function ($reservation) {
-                return [
-                    'id' => $reservation->id,
-                    'stand_name' => $reservation->stand_name,
-                    'position_type' => $reservation->position_type,
-                    'location' => $reservation->stand->location,
-                ];
-            }),
+            'positions' => [
+                'list' => $event->reservations()
+                    ->unclaimed()
+                    ->filter($request->only([
+                        'position_type'
+                    ]))
+                    ->groupBy('event_id', 'stand_id', 'stand_name', 'position_type')
+                    ->select([
+                        'event_id',
+                        'stand_id',
+                        'stand_name',
+                        'position_type',
+                        DB::raw('count(*) as remaining'),
+                    ])
+                    ->paginate(5)
+                    ->appends([
+                        'affiliation' => $request['affiliation'],
+                        'position_type' => $request['position_type'],
+                    ]),
+                'position_types' => $event->reservations
+                    ->pluck('position_type')
+                    ->unique(),
+            ],
         ]);
     }
 }

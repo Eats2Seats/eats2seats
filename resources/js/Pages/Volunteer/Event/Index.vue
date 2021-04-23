@@ -227,7 +227,7 @@ export default {
     watch: {
         form: {
             handler: throttle(function () {
-                this.$inertia.get(this.route('volunteer.events', Object.keys(this.form)
+                this.$inertia.get(this.route('volunteer.events.index', Object.keys(this.form)
                     ? this.form
                     : { remember: 'forget' }
                 ), this.form, {

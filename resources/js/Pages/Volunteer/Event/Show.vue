@@ -4,20 +4,31 @@
             <x-title>
                 Event
             </x-title>
-            <x-subtitle class="mt-3">
+            <x-subtitle>
                 View details about this upcoming event.
             </x-subtitle>
             <x-divider/>
-            <x-label>Title</x-label>
-            <x-text>{{event.title}}</x-text>
+            <x-label>
+                Title
+            </x-label>
+            <x-text>
+                {{ event.title }}
+            </x-text>
             <x-divider/>
-            <div class="flex flex-row items-center">
-                <div class="flex-1 flex flex-col">
-                    <x-label>Location</x-label>
-                    <x-text>{{venue.name}}</x-text>
+            <div class="flex flex-row items-center justify-between">
+                <div>
+                    <x-label>
+                        Location
+                    </x-label>
+                    <x-text>
+                        {{ venue.name }}
+                    </x-text>
                 </div>
-                <div class="ml-6">
-                    <a href="#">
+                <div>
+                    <a
+                        :href="googleMapsLink"
+                        target="_blank"
+                    >
                         <x-icon-button>
                             <MapIcon class="h-6 w-6 text-gray-500"/>
                         </x-icon-button>
@@ -25,72 +36,93 @@
                 </div>
             </div>
             <x-divider/>
-            <x-label>Start</x-label>
-            <x-text>{{transferToStringDate(event.start)}}</x-text>
+            <x-label>
+                Start
+            </x-label>
+            <x-text>
+                {{ formatDate(event.start) }}
+            </x-text>
             <x-divider/>
-            <x-label>End</x-label>
-            <x-text>{{transferToStringDate(event.end)}}</x-text>
+            <x-label>
+                End
+            </x-label>
+            <x-text>
+                {{ formatDate(event.end) }}
+            </x-text>
         </x-card>
-      <x-card class="mt-8">
+        <x-card>
             <x-title>
                 Positions
             </x-title>
-            <x-subtitle class="mt-3">
+            <x-subtitle>
                 View all staffing positions that are available to reserve.
             </x-subtitle>
-            <hr class="-mx-6 mt-6 bg-gray-200">
-            <div class="-mx-6 bg-gray-50">
-                <h2 class="ml-6 py-4 font-serif font-bold text-lg text-gray-700"> Position Options</h2>
-            </div>
-            <hr class="-mx-6 mb-6 bg-gray-200">
-            <x-label>
-                Affiliation
-            </x-label>
-            <div class="mb-4 flex-1 flex flex-col">
-                <select class="h-10 border border-gray-300 placeholder-gray-500" name="" id="">
-                <option value="Independent">Independent</option>
-            </select>
-            </div>
-            <x-label>
-                Position Type
-            </x-label>
-            <div class="mb-4 flex-1 flex flex-col">
-                <select class="h-10 border border-gray-300" v-model="position">
-                    <!-- initial value of v-model have to match the value of the disabled one -->
-                    <option value="" selected disabled hidden>
-                       Select Your Position
-                    </option>
-                    <option v-for="po in positionOptions" :key="po">{{po}}</option>
+            <x-divider/>
+            <x-subtitle class="!font-bold">
+                Position Options
+            </x-subtitle>
+            <x-divider/>
+            <div>
+                <x-label>
+                    Affiliation
+                </x-label>
+                <select
+                    name="affiliation"
+                    id="affiliation-select"
+                    class="w-full"
+                    v-model="form.affiliation"
+                >
+                    <option :value="null">Independent</option>
                 </select>
             </div>
-            <hr class="-mx-6 mt-6 bg-gray-200">
-            <div class="-mx-6 bg-gray-50">
-                <h2 class="ml-6 py-4 font-serif font-bold text-lg text-gray-700"> Available Positions</h2>
+            <div class="mt-3 md:mt-4">
+                <x-label>
+                    Position Type
+                </x-label>
+                <select
+                    name="position_type"
+                    id="position_type-select"
+                    class="w-full"
+                    v-model="form.position_type"
+                >
+                    <option :value="null">Any</option>
+                    <option
+                        v-for="position in positions.position_types"
+                        :key="position"
+                        :value="position"
+                    >
+                        {{ position }}
+                    </option>
+                </select>
             </div>
-            <hr class="-mx-6 mb-6 bg-gray-200">
-
-            <div v-for="(val, key, index) in filterReservationsByPosition" :key="key">
-                <div class="flex flex-row items-center">
-                    <div  class="flex-1 flex flex-col">
-                        <x-text>{{key}}</x-text>
-                        <x-label>{{val}} Positions Remaining</x-label>
+            <x-divider/>
+            <x-subtitle class="!font-bold">
+                Available Positions
+            </x-subtitle>
+            <div
+                v-for="position in positions.list.data"
+                :key="position.id"
+            >
+                <x-divider/>
+                <inertia-link :href="formatReservationClaimUrl(position)" >
+                    <div class="flex flex-row items-center justify-between">
+                        <div>
+                            <x-text>
+                                {{ position.stand_name }}
+                            </x-text>
+                            <x-label>
+                                {{ position.position_type }}, {{ position.remaining }} {{ position.remaining === 1 ? 'position' : 'positions' }} remaining
+                            </x-label>
+                        </div>
+                        <div>
+                            <chevron-right-icon class="h-5 w-5 text-gray-500"/>
+                        </div>
                     </div>
-                    <div class="ml-6">
-                        <inertia-link href= "#" >
-                            <button class="p-2">
-                            <ChevronRightIcon class="h-6 w-6 text-gray-500"/>
-                            </button>
-                        </inertia-link>
-                    </div>
-
-                </div>
-                <!-- avoid the divider for the last row -->
-                <x-divider v-if="index < Object.keys(filterReservationsByPosition).length - 1"/>
+                </inertia-link>
             </div>
-
-
-
-      </x-card>
+            <x-divider/>
+            <x-pagination :list="positions.list"/>
+        </x-card>
     </volunteer-layout>
 </template>
 
@@ -104,9 +136,9 @@ import XText from "@/Components/Text";
 import XDivider from "@/Components/Divider";
 import XButton from "@/Components/Button";
 import XIconButton from "@/Components/IconButton";
-import { MapIcon } from "@heroicons/vue/outline";
-import { ChevronRightIcon } from "@heroicons/vue/outline";
-import { SearchIcon } from "@heroicons/vue/outline";
+import XPagination from "@/Components/Pagination";
+import { MapIcon, ChevronRightIcon, SearchIcon } from "@heroicons/vue/outline";
+import throttle from "lodash/throttle";
 export default {
     name: 'Show',
     components: {
@@ -119,89 +151,73 @@ export default {
         XDivider,
         XButton,
         XIconButton,
+        XPagination,
         MapIcon,
         ChevronRightIcon,
         SearchIcon,
     },
+    props: {
+        event: Object,
+        venue: Object,
+        positions: Array,
+        filters: Object,
+    },
     data() {
         return {
-            position: "",
             breadcrumbs: [
                 { name: 'Events', url: '/volunteer/events' },
                 { name: 'Event', url: window.location.pathname },
             ],
+            form: {
+                affiliation: this.filters.affiliation ? this.filters.affiliation : null,
+                position_type: this.filters.position_type ? this.filters.position_type : null,
+            }
         }
     },
     computed:{
-        positionOptions(){
-            // '...' -> convert a set to array
-            return [...new Set(this.reservations.map(res => res.position_type))]
+        googleMapsLink () {
+            return `https://www.google.com/maps/place/${this.venue.street}+${this.venue.city}+${this.venue.state}+${this.venue.zip}`.split(' ').join('+');
         },
-        filterReservationsByPosition(){
-            var filtered_reservations
-            var d = {}
-            if (this.position) {
-                filtered_reservations = this.reservations.filter(res => res.position_type == this.position)
-
-                for (let fr of filtered_reservations){
-                    // d[fr.position_type]? 1 : d[fr.position_type]+ 1
-                    if (d[fr.stand_name]){
-                        d[fr.stand_name] += 1
-                    }else{
-                        d[fr.stand_name] = 1
-                    }
-                }
-            }
-            return d
-
-        }
     },
     methods: {
-        transferToStringDate(d) {
-            //take in a string and transform to Date object
-            d = new Date(d)
-            //get month in String format
-            let mon = new Intl.DateTimeFormat('en', { month: 'long'}).format(d);
-            //get date with th/rd/st...
-            let day = d.getDate()+(d.getDate() % 10 == 1 && d.getDate() != 11 ? 'st' : (d.getDate() % 10 == 2 && d.getDate() != 12 ? 'nd' : (d.getDate() % 10 == 3 && d.getDate() != 13 ? 'rd' : 'th')))
-            //get time with am/pm
-            let time = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
-            //combine and return
-            return mon + " " + day + " @ " + time
+        formatDate (rawDate) {
+            let dateObj = new Date(rawDate);
+            let dateStr = dateObj.toLocaleDateString('en-US', {
+                day: 'numeric',
+                weekday: 'short',
+                month: 'long',
+                ...(new Date().getFullYear() !== dateObj.getFullYear() && { year: 'numeric'}),
+            });
+            let timeStr = dateObj.toLocaleTimeString('en-US', {
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+            });
+            return `${dateStr} @ ${timeStr}`;
+        },
+        formatReservationClaimUrl (position) {
+            return this.route('volunteer.reservations.claim', {
+                event: position.event_id,
+                stand: position.stand_id,
+                positionType: position.position_type,
+            });
         },
     },
-    props: {
-        event: {
-            required: true,
-            type: Object,
-            validator: (event) => {
-                return typeof event['id'] === 'number'
-                    && typeof event['title'] === 'string'
-                    && !isNaN(Date.parse(event['start']))
-                    && !isNaN(Date.parse(event['end']));
-            },
-        },
-        venue: {
-            required: true,
-            type: Object,
-            validator: (venue) => {
-                return typeof venue['name'] === 'string'
-                    && typeof venue['street'] === 'string'
-                    && typeof venue['city'] === 'string'
-                    && typeof venue['state'] === 'string'
-                    && typeof venue['zip'] === 'string'
-            },
-        },
-        reservations: {
-            required: true,
-            type: Array,
-            validator: (reservations) => reservations.every((reservation) => {
-                return typeof reservation === 'object'
-                    && typeof reservation['id'] === 'number'
-                    && typeof reservation['stand_name'] === 'string'
-                    && typeof reservation['position_type'] === 'string'
-                    && typeof reservation['location'] === 'string'
-            }),
+    watch: {
+        form: {
+            handler: throttle(function () {
+                this.$inertia.get(this.route('volunteer.events.show', {
+                    id: this.event.id,
+                    _query: Object.keys(this.form)
+                        ? this.form
+                        : { remember: 'forget' }
+                }
+                ), this.form, {
+                    preserveState: true,
+                    preserveScroll: true,
+                });
+            }, 150),
+            deep: true,
         }
     }
 }
