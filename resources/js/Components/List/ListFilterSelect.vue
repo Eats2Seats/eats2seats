@@ -15,7 +15,7 @@
                 <slot name="default-option">All</slot>
             </option>
             <option
-                v-for="option in options[field]"
+                v-for="option in options"
                 :key="option"
                 :value="option"
             >
@@ -31,30 +31,42 @@ const emitter = require('tiny-emitter/instance');
 export default {
     name: 'ListFilterSelect',
     emits: [
-        'filter-update',
+        'store-filter',
+        'apply-filter',
     ],
-    props: [
-        'fields',
-        'field',
-        'options',
-    ],
+    props: {
+        field: {
+            type: String,
+            required: true,
+        },
+        instant: {
+            type: Boolean,
+            required: false,
+            default: false,
+        }
+    },
     data () {
         return {
-            value: this.fields[this.field],
+            value: null,
+            options: null,
         };
     },
     mounted () {
-        emitter.on('filter-clear', e => this.value = null);
+        emitter.on('list-filters-initialized', (filters) => {
+            this.value = filters.fields[this.field];
+            this.options = filters.options[this.field];
+        });
+        emitter.on('clear-all-filters', e => this.value = null);
     },
     beforeUnmount() {
-        emitter.off('filter-clear');
+        emitter.off('list-filters-initialized');
+        emitter.off('clear-all-filters');
     },
     watch: {
         value: function () {
-            emitter.emit('filter-update', {
-                field: this.field,
-                value: this.value,
-            });
+            this.instant
+                ? emitter.emit('apply-filter', this.field, this.value)
+                : emitter.emit('store-filter', this.field, this.value);
         }
     },
 }

@@ -1,5 +1,5 @@
 <template>
-    <slot :fields="form"></slot>
+    <slot></slot>
 </template>
 
 <script>
@@ -9,37 +9,61 @@ const emitter = require('tiny-emitter/instance');
 export default {
     name: 'ListFilters',
     props: {
-        routeName: {
-            type: String,
+        route: {
             required: true,
         },
     },
     data () {
         return {
-            form: this.$parent.$props.filters.fields,
+            form: null,
+            fields: null,
         };
     },
     mounted () {
-        emitter.on('filter-update', (filter) => this.updateFilterOptions(filter));
-        emitter.on('filter-apply', e => this.applyFilterOptions());
-        emitter.on('filter-clear', e => this.applyFilterOptions());
+        emitter.on('list-filters-initialized', (filters) => {
+            this.form = filters.fields;
+            this.fields = Object.assign({}, filters.fields);
+        });
+        emitter.on('store-filter', (field, value) => this.storeFilter(field, value));
+        emitter.on('apply-filter', (field, value) => this.applyFilter(field, value));
+        emitter.on('apply-all-filters', this.applyAllFilters);
+        emitter.on('clear-all-filters', this.clearAllFilters);
     },
     beforeUnmount () {
-        emitter.off('filter-update');
-        emitter.off('filter-apply');
-        emitter.off('filter-clear');
+        emitter.off('list-filters-initialized');
+        emitter.off('update-filter');
+        emitter.off('apply-filter');
+        emitter.off('apply-all-filters');
     },
     methods: {
-        updateFilterOptions (filter) {
-            this.form[filter.field] = filter.value;
+        storeFilter (field, value) {
+            this.fields[field] = value;
         },
-        applyFilterOptions: throttle(function () {
-            this.$inertia.get(this.route(this.routeName), this.form, {
-                preserveState: true,
-                preserveScroll: true,
+        applyFilter (field, value) {
+            this.storeFilter(field, value);
+            this.form[field] = value;
+        },
+        applyAllFilters () {
+            this.form = Object.assign({}, this.fields);
+        },
+        clearAllFilters () {
+            Object.keys(this.fields).forEach(key => {
+                this.fields[key] = null;
             });
-        }, 150),
+            this.applyAllFilters();
+        },
     },
+    watch: {
+        form: {
+            handler: throttle(function () {
+                this.$inertia.get(this.route, this.form, {
+                    preserveState: true,
+                    preserveScroll: true,
+                });
+            }, 150),
+            deep: true,
+        }
+    }
 }
 </script>
 

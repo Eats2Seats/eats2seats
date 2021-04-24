@@ -67,49 +67,47 @@
                 :items="events"
                 :filters="filters"
             >
-                <list-filters
-                    route-name="volunteer.events.index"
-                    v-slot="{ fields }"
-                >
+                <list-filters :route="route('volunteer.events.index')">
                     <div class="my-6 flex">
-                        <list-filter-search
-                            :fields="fields"
-                            field="title"
-                            class="mr-4"
-                        />
+                        <list-filter-search field="title" instant class="mr-4"/>
                         <list-filter-menu>
-                            <list-filter-date
-                                :fields="fields"
-                                field="start"
-                            >
+                            <list-filter-date field="start">
                                 Event Start
                             </list-filter-date>
-                            <list-filter-date
-                                :fields="fields"
-                                field="end"
-                            >
+                            <list-filter-date field="end">
                                 Event End
                             </list-filter-date>
                         </list-filter-menu>
                     </div>
                 </list-filters>
-                <list-items v-slot="{ item }">
-                    <x-divider/>
-                    <list-item :href="route('volunteer.events.show', { id: item.id })">
-                        <div class="flex flex-row items-center justify-between">
-                            <div>
-                                <x-text>
-                                    {{ item.title }}
-                                </x-text>
-                                <x-label>
-                                    {{ formatDate(item.start) }}
-                                </x-label>
+                <list-items>
+                    <template v-slot="{ item }">
+                        <x-divider/>
+                        <list-item :href="route('volunteer.events.show', { id: item.id })">
+                            <div class="flex flex-row items-center justify-between">
+                                <div>
+                                    <x-text>
+                                        {{ item.title }}
+                                    </x-text>
+                                    <x-label>
+                                        {{ formatDate(item.start) }}
+                                    </x-label>
+                                </div>
+                                <div>
+                                    <chevron-right-icon class="h-5 w-5 text-gray-500"/>
+                                </div>
                             </div>
-                            <div>
-                                <chevron-right-icon class="h-5 w-5 text-gray-500"/>
-                            </div>
-                        </div>
-                    </list-item>
+                        </list-item>
+                    </template>
+                    <template #empty>
+                        <x-divider/>
+                        <x-subtitle class="text-center">
+                            There are no events to show.
+                        </x-subtitle>
+                        <x-label class="text-center">
+                            Make sure you haven't applied any filters by accident.
+                        </x-label>
+                    </template>
                 </list-items>
                 <x-divider/>
                 <list-pagination/>

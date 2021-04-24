@@ -41,11 +41,13 @@ export default {
         getPrevPage () {
             this.$inertia.visit(this.list.items.prev_page_url, {
                 preserveScroll: true,
+                preserveState: true,
             });
         },
         getNextPage () {
             this.$inertia.visit(this.list.items.next_page_url, {
                 preserveScroll: true,
+                preserveState: true,
             });
         }
     }

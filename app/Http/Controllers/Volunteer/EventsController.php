@@ -81,7 +81,17 @@ class EventsController extends Controller
             ->findOrFail($id);
 
         return Inertia::render('Volunteer/Event/Show', [
-            'filters' => $request->all(),
+            'filters' => [
+                'fields' => [
+                    'affiliation' => $request['affiliation'] ?: null,
+                    'position_type' => $request['position_type'] ?: null,
+                ],
+                'options' => [
+                    'position_type' => $event->reservations
+                        ->pluck('position_type')
+                        ->unique(),
+                ]
+            ],
             'event' => [
                 'id' => $event->id,
                 'title' => $event->title,
@@ -95,29 +105,24 @@ class EventsController extends Controller
                 'state' => $event->venue->state,
                 'zip' => $event->venue->zip,
             ],
-            'positions' => [
-                'list' => $event->reservations()
-                    ->unclaimed()
-                    ->filter($request->only([
-                        'position_type'
-                    ]))
-                    ->groupBy('event_id', 'stand_id', 'stand_name', 'position_type')
-                    ->select([
-                        'event_id',
-                        'stand_id',
-                        'stand_name',
-                        'position_type',
-                        DB::raw('count(*) as remaining'),
-                    ])
-                    ->paginate(5)
-                    ->appends([
-                        'affiliation' => $request['affiliation'],
-                        'position_type' => $request['position_type'],
-                    ]),
-                'position_types' => $event->reservations
-                    ->pluck('position_type')
-                    ->unique(),
-            ],
+            'positions' => $event->reservations()
+                ->unclaimed()
+                ->filter($request->only([
+                    'position_type'
+                ]))
+                ->groupBy('event_id', 'stand_id', 'stand_name', 'position_type')
+                ->select([
+                    'event_id',
+                    'stand_id',
+                    'stand_name',
+                    'position_type',
+                    DB::raw('count(*) as remaining'),
+                ])
+                ->paginate(5)
+                ->appends([
+                    'affiliation' => $request['affiliation'],
+                    'position_type' => $request['position_type'],
+                ]),
         ]);
     }
 }

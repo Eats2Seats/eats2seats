@@ -9,7 +9,7 @@ export default {
     name: 'ListItem',
     props: {
         href: String,
-    }
+    },
 }
 </script>
 

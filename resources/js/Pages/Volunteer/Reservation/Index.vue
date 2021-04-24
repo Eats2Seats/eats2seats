@@ -12,63 +12,53 @@
                 :items="reservations"
                 :filters="filters"
             >
-                <list-filters
-                    route-name="volunteer.reservations.index"
-                    v-slot="{ fields }"
-                >
+                <list-filters :route="route('volunteer.reservations.index')">
                     <div class="my-6 flex">
-                        <list-filter-search
-                            :fields="fields"
-                            field="event_title"
-                            class="mr-4"
-                        />
+                        <list-filter-search field="event_title" instant class="mr-4"/>
                         <list-filter-menu>
-                            <list-filter-date
-                                :fields="fields"
-                                field="event_start"
-                            >
+                            <list-filter-date field="event_start">
                                 Event Start
                             </list-filter-date>
-                            <list-filter-date
-                                :fields="fields"
-                                field="event_end"
-                            >
+                            <list-filter-date field="event_end">
                                 Event End
                             </list-filter-date>
-                            <list-filter-select
-                                :fields="fields"
-                                field="venue_name"
-                                :options="filters.options"
-                            >
+                            <list-filter-select field="venue_name">
                                 Venue Name
                             </list-filter-select>
-                            <list-filter-select
-                                :fields="fields"
-                                field="position_type"
-                                :options="filters.options"
-                            >
+                            <list-filter-select field="position_type">
                                 Position Type
                             </list-filter-select>
                         </list-filter-menu>
                     </div>
                 </list-filters>
-                <list-items v-slot="{ item }">
-                    <x-divider/>
-                    <list-item :href="route('volunteer.reservations.show', { id: item.id })">
-                        <div class="flex flex-row items-center justify-between">
-                            <div>
-                                <x-text>
-                                    {{ item.event_title }}
-                                </x-text>
-                                <x-label>
-                                    {{ formatDate(item.event_start) }}
-                                </x-label>
+                <list-items>
+                    <template v-slot="{ item }">
+                        <x-divider/>
+                        <list-item :href="route('volunteer.reservations.show', { id: item.id })">
+                            <div class="flex flex-row items-center justify-between">
+                                <div>
+                                    <x-text>
+                                        {{ item.event_title }}
+                                    </x-text>
+                                    <x-label>
+                                        {{ formatDate(item.event_start) }}
+                                    </x-label>
+                                </div>
+                                <div>
+                                    <chevron-right-icon class="h-5 w-5 text-gray-500"/>
+                                </div>
                             </div>
-                            <div>
-                                <chevron-right-icon class="h-5 w-5 text-gray-500"/>
-                            </div>
-                        </div>
-                    </list-item>
+                        </list-item>
+                    </template>
+                    <template #empty>
+                        <x-divider/>
+                        <x-subtitle class="text-center">
+                            There are no reservations to show.
+                        </x-subtitle>
+                        <x-label class="text-center">
+                            Make sure you haven't applied any filters by accident.
+                        </x-label>
+                    </template>
                 </list-items>
                 <x-divider/>
                 <list-pagination/>
