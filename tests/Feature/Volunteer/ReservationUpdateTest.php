@@ -101,6 +101,17 @@ class ReservationUpdateTest extends TestCase
     }
 
     /** @test */
+    public function a_user_cannot_claim_a_reservation_if_it_conflicts_with_their_other_claimed_reservations()
+    {
+        // Arrange
+
+        // Act
+
+        // Assert
+        $this->fail('NEED TO IMPLEMENT');
+    }
+
+    /** @test */
     public function user_id_attribute_is_required()
     {
         // Arrange

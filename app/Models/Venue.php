@@ -9,6 +9,14 @@ class Venue extends Model
 {
     use HasFactory;
 
+    public function scopeFilter($query, Array $filters)
+    {
+        $query
+            ->when($filters['name'] ?? null, function ($query, $name) {
+                $query->where('name', $name);
+            });
+    }
+
     public function events()
     {
         return $this->hasMany(Event::class);

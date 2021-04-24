@@ -21,7 +21,7 @@
                         class="absolute top-0 left-0 -ml-8 pt-4 pr-2 flex sm:-ml-10 sm:pr-4 ease-in-out duration-500"
                         :class="showMenu ? 'opacity-100' : 'opacity-0'"
                     ></div>
-                    <div class="h-full flex flex-col pt-6 bg-white shadow-xl overflow-y-scroll divide-y border-gray-200">
+                    <div class="h-full flex flex-col pt-6 bg-white shadow-xl overflow-y-auto divide-y border-gray-200">
                         <div class="flex flex-row items-center justify-between px-6">
                             <x-title id="menu-title">
                                 <slot name="title"></slot>

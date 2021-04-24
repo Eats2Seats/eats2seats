@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Volunteer;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -18,39 +19,92 @@ class ReservationsController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(): \Inertia\Response
+    public function index(Request $request): \Inertia\Response
     {
-        $reservations = Reservation::claimedBy(Auth::user())->with(['event', 'event.venue'])->get();
+        $reservation = Reservation::claimedBy(Auth::user())
+            ->with([
+                'event',
+                'event.venue'
+            ])
+            ->get();
 
-        $nextReservation = $reservations->where('event.start', '>=', Carbon::now())
-            ->sortBy('event.start')
-            ->first();
-
-        return Inertia::render('Volunteer/Reservation/Index', [
-            'next' => [
-                'id' => $nextReservation->id,
-                'event' => [
-                    'title' => $nextReservation->event->title,
-                    'start' => $nextReservation->event->start,
-                    'end' => $nextReservation->event->end,
-                ],
-                'venue' => [
-                    'name' => $nextReservation->event->venue->name,
-                    'street' => $nextReservation->event->venue->street,
-                    'city' => $nextReservation->event->venue->city,
-                    'state' => $nextReservation->event->venue->state,
-                    'zip' => $nextReservation->event->venue->zip,
-                ],
-            ],
-            'reservations' => $reservations->map(function ($reservation) {
+        $reservationsList = Reservation::claimedBy(Auth::user())
+            ->leftJoin('events', 'reservations.event_id', '=', 'events.id')
+            ->orderBy('events.start', 'DESC')
+            ->filter($request->only('position_type'))
+            ->with('event')
+            ->whereHas('event', function (Builder $query) use ($request) {
+                $query->filter([
+                    'title' => $request['event_title'],
+                    'start' => $request['event_start'],
+                    'end' => $request['event_end'],
+                ]);
+            })
+            ->with('event.venue')
+            ->whereHas('event.venue', function (Builder $query) use ($request) {
+                $query->filter([
+                    'name' => $request['venue_name']
+                ]);
+            })
+            ->paginate(5)
+            ->through(function ($reservation) {
                 return [
                     'id' => $reservation->id,
                     'event_title' => $reservation->event->title,
-                    'event_date' => $reservation->event->start,
+                    'event_start' => $reservation->event->start,
+                    'event_end' => $reservation->event->end,
                     'venue_name' => $reservation->event->venue->name,
                     'position_type' => $reservation->position_type,
                 ];
-            }),
+            })
+            ->appends([
+                'event_title' => $request['event_title'],
+                'event_start' => $request['event_start'],
+                'event_end' => $request['event_end'],
+                'venue_name' => $request['venue_name'],
+                'position_type' => $request['position_type'],
+            ]);
+
+        $reservationListOptions = Reservation::claimedBy(Auth::user())
+            ->with(['event', 'event.venue'])
+            ->get();
+
+        return Inertia::render('Volunteer/Reservation/Index', [
+            'filters' => [
+                'fields' => [
+                    'event_title' => $request['event_title'] ?: null,
+                    'event_start' => $request['event_start'] ?: null,
+                    'event_end' => $request['event_end'] ?: null,
+                    'venue_name' => $request['venue_name'] ?: null,
+                    'position_type' => $request['position_type'] ?: null,
+                ],
+                'options' => [
+                    'venue_name' => $reservationListOptions->pluck('event.venue.name')
+                        ->unique(),
+                    'position_type' => $reservationListOptions->pluck('position_type')
+                        ->unique(),
+                ]
+            ],
+            'next' => $reservation->where('event.end', '>=', Carbon::now())
+                ->transform(function ($reservation) {
+                    return [
+                        'id' => $reservation->id,
+                        'event' => [
+                            'title' => $reservation->event->title,
+                            'start' => $reservation->event->start,
+                            'end' => $reservation->event->end,
+                        ],
+                        'venue' => [
+                            'name' => $reservation->event->venue->name,
+                            'street' => $reservation->event->venue->street,
+                            'city' => $reservation->event->venue->city,
+                            'state' => $reservation->event->venue->state,
+                            'zip' => $reservation->event->venue->zip,
+                        ],
+                    ];
+                })
+                ->first(),
+            'reservations' => $reservationsList,
         ]);
     }
 

@@ -161,12 +161,11 @@ import XIconButton from "@/Components/IconButton";
 import XSlideOutMenu from "@/Components/SlideOutMenu";
 import XPagination from "@/Components/Pagination";
 import { MapIcon, SearchIcon } from "@heroicons/vue/outline";
-import { ChevronRightIcon, FilterIcon, ArrowNarrowLeftIcon, ArrowNarrowRightIcon } from "@heroicons/vue/solid";
+import { ChevronRightIcon, FilterIcon } from "@heroicons/vue/solid";
 import IconButton from "@/Components/IconButton";
 export default {
     name: 'Index',
     components: {
-        IconButton,
         VolunteerLayout,
         XCard,
         XTitle,
@@ -182,8 +181,6 @@ export default {
         ChevronRightIcon,
         SearchIcon,
         FilterIcon,
-        ArrowNarrowLeftIcon,
-        ArrowNarrowRightIcon,
     },
     props: {
         next: Object,
