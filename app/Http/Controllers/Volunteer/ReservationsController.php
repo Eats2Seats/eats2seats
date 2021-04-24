@@ -65,7 +65,7 @@ class ReservationsController extends Controller
                 'venue_name' => $request['venue_name'],
                 'position_type' => $request['position_type'],
             ]);
-        
+
         $reservationListOptions = Reservation::claimedBy(Auth::user())
             ->with(['event', 'event.venue'])
             ->get();

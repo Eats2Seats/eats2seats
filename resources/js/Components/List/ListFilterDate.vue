@@ -15,6 +15,8 @@
 </template>
 
 <script>
+const emitter = require('tiny-emitter/instance');
+
 export default {
     name: 'ListFilterDate',
     emits: [
@@ -30,11 +32,14 @@ export default {
         };
     },
     mounted () {
-        this.emitter.on('filter-clear', e => this.value = null);
+        emitter.on('filter-clear', e => this.value = null);
+    },
+    beforeUnmount() {
+        emitter.off('filter-clear');
     },
     watch: {
         value: function () {
-            this.emitter.emit('filter-update', {
+            emitter.emit('filter-update', {
                 field: this.field,
                 value: this.value,
             });

@@ -35,6 +35,8 @@ import XIconButton from "@/Components/IconButton";
 import XSlideOutMenu from "@/Components/SlideOutMenu";
 import XButton from "@/Components/Button";
 import {FilterIcon} from "@heroicons/vue/solid";
+const emitter = require('tiny-emitter/instance');
+
 export default {
     name: 'ListFilterMenu',
     components: {
@@ -48,16 +50,19 @@ export default {
         'filter-clear',
     ],
     mounted () {
-        this.emitter.on('filter-update', e => this.filtersChanged = true);
+        emitter.on('filter-update', e => this.filtersChanged = true);
+    },
+    beforeUnmount () {
+        emitter.off('filter-update');
     },
     methods: {
         applyFilters () {
-            this.emitter.emit('filter-apply');
+            emitter.emit('filter-apply');
             this.$refs["filter-menu"].toggleMenu();
         },
         clearFilters () {
-            this.emitter.emit('filter-clear');
-            this.emitter.emit('filter-apply');
+            emitter.emit('filter-clear');
+            emitter.emit('filter-apply');
         }
     }
 }

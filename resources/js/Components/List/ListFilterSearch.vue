@@ -16,6 +16,7 @@
 
 <script>
 import { SearchIcon } from "@heroicons/vue/outline";
+const emitter = require('tiny-emitter/instance');
 export default {
     name: 'ListFilterSearch',
     components: {
@@ -27,6 +28,7 @@ export default {
     ],
     props: [
         'fields',
+        'bus',
         'field',
     ],
     data () {
@@ -35,15 +37,18 @@ export default {
         };
     },
     mounted () {
-        this.emitter.on('filter-clear', e => this.value = null);
+        emitter.on('filter-clear', e => this.value = null);
+    },
+    beforeUnmount() {
+        emitter.off('filter-clear');
     },
     watch: {
         value: function () {
-            this.emitter.emit('filter-update', {
+            emitter.emit('filter-update', {
                 field: this.field,
                 value: this.value,
             });
-            this.emitter.emit('filter-apply');
+            emitter.emit('filter-apply');
         }
     },
 }

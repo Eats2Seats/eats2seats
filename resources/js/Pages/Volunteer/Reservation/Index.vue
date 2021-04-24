@@ -2,13 +2,20 @@
     <volunteer-layout :breadcrumbs="breadcrumbs">
 <!--        <next-reservation :next="next"/>-->
         <x-card>
-            <x-title>My Reservations</x-title>
-            <x-subtitle>View all past, present, and future events that you've committed to attending.</x-subtitle>
+            <x-title>
+                My Reservations
+            </x-title>
+            <x-subtitle>
+                View all past, present, and future events that you've committed to attending.
+            </x-subtitle>
             <list
                 :items="reservations"
                 :filters="filters"
             >
-                <list-filters v-slot="{ fields }">
+                <list-filters
+                    route-name="volunteer.reservations.index"
+                    v-slot="{ fields }"
+                >
                     <div class="my-6 flex">
                         <list-filter-search
                             :fields="fields"

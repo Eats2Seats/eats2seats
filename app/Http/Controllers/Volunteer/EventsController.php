@@ -47,7 +47,13 @@ class EventsController extends Controller
             ]);
 
         return Inertia::render('Volunteer/Event/Index', [
-            'filters' => $request->all(),
+            'filters' => [
+                'fields' => [
+                    'title' => $request['title'] ?: null,
+                    'start' => $request['start'] ?: null,
+                    'end' => $request['end'] ?: null,
+                ],
+            ],
             'next' => [
                 'id' => $nextEvent->id,
                 'title' => $nextEvent->title,
