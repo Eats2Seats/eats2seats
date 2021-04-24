@@ -29,6 +29,7 @@ class ReservationsController extends Controller
             ->get();
 
         $reservationsList = Reservation::claimedBy(Auth::user())
+            ->select('reservations.*')
             ->leftJoin('events', 'reservations.event_id', '=', 'events.id')
             ->orderBy('events.start', 'DESC')
             ->filter($request->only('position_type'))
@@ -64,7 +65,7 @@ class ReservationsController extends Controller
                 'venue_name' => $request['venue_name'],
                 'position_type' => $request['position_type'],
             ]);
-
+        
         $reservationListOptions = Reservation::claimedBy(Auth::user())
             ->with(['event', 'event.venue'])
             ->get();
