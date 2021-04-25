@@ -32,7 +32,7 @@
                 </inertia-link>
             </h1>
             <icon-button
-                class="bg-white group hover:bg-transparent"
+                class="bg-white group hover:bg-transparent hover:!border-white"
                 v-on:click="$refs.navMenu.toggleMenu()"
             >
                 <menu-alt1-icon class="h-5 w-5 text-indigo-600 group-hover:text-white"/>
