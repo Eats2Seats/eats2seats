@@ -51,12 +51,12 @@
 </template>
 
 <script>
-import IconButton from "@/Components/IconButton";
+import IconButton from "@/Components/General/XIconButton";
 import { MenuAlt1Icon } from '@heroicons/vue/solid';
-import XText from "@/Components/Text";
-import XSlideOutMenu from "@/Components/SlideOutMenu";
-import XNavigationMenuItem from "@/Components/NavigationMenuItem";
-import XBreadcrumbs from "@/Components/Breadcrumbs";
+import XText from "@/Components/General/XText";
+import XSlideOutMenu from "@/Components/General/SlideOutMenu";
+import XNavigationMenuItem from "@/Components/Layout/NavigationMenuItem";
+import XBreadcrumbs from "@/Components/Layout/Breadcrumbs";
 export default {
     name: 'VolunteerLayout',
     components: {

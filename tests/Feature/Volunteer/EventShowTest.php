@@ -127,69 +127,56 @@ class EventShowTest extends TestCase
         // Assert
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Volunteer/Event/Show')
-            ->has('event', fn (Assert $page) => $page
-                ->whereAll([
-                    'id' => $event->id,
-                    'title' => $event->title,
-                    'start' => $event->fresh()->start,
-                    'end' => $event->fresh()->end,
-                ])
-            )
-            ->has('venue', fn (Assert $page) => $page
-                ->whereAll([
-                    'name' => $venue->name,
-                    'street' => $venue->street,
-                    'city' => $venue->city,
-                    'state' => $venue->state,
-                    'zip' => $venue->zip,
-                ])
-            )
-            ->has('positions', fn (Assert $page) => $page
-                ->has('position_types', 2)
-                ->where('position_types', function (Collection $positions) {
-                    $this->assertContains('Food Sales', $positions);
-                    $this->assertContains('Alcohol Sales', $positions);
-                    return true;
-                })
-                ->has('list', fn (Assert $page) => $page
-                    ->has('data', 4)
-                    ->where('data', function (Collection $positions) use ($event, $standA, $standB, $reservations) {
-                        $groupedReservations = $reservations->whereNull('user_id')
-                            ->groupBy(['stand_name', 'position_type'])
-                            ->map(function ($stand) {
-                                return $stand->map(function ($position) {
-                                    return [
-                                        'event_id' => $position->first()->event_id,
-                                        'stand_id' => $position->first()->stand_id,
-                                        'stand_name' => $position->first()->stand_name,
-                                        'position_type' => $position->first()->position_type,
-                                        'remaining' => $position->count(),
-                                    ];
-                                })
-                                    ->values();
-                            })
-                            ->collapse()
-                            ->each(function ($position) use ($positions) {
-                                $positions->hasPosition($position);
-                            });
-                        return true;
+            ->hasAll([
+                'filters.fields.affiliation',
+                'filters.fields.position_type',
+                'positions.current_page',
+                'positions.first_page_url',
+                'positions.from',
+                'positions.last_page',
+                'positions.last_page_url',
+                'positions.links',
+                'positions.next_page_url',
+                'positions.path',
+                'positions.per_page',
+                'positions.prev_page_url',
+                'positions.to',
+                'positions.total',
+            ])
+            ->whereAll([
+                'filters.options.position_type' => $reservations->whereNull('user_id')->pluck('position_type')
+                    ->unique()->values(),
+                'event.id' => $event->id,
+                'event.title' => $event->title,
+                'event.start' => $event->fresh()->start,
+                'event.end' => $event->fresh()->end,
+                'venue.name' => $venue->name,
+                'venue.street' => $venue->street,
+                'venue.city' => $venue->city,
+                'venue.state' => $venue->state,
+                'venue.zip' => $venue->zip,
+            ])
+            ->where('positions.data', function (Collection $positions) use ($reservations) {
+                $reservations->whereNull('user_id')
+                    ->groupBy(['stand_name', 'position_type'])
+                    ->map(function ($stand) {
+                        return $stand->map(function ($position) {
+                            return [
+                                'event_id' => $position->first()->event_id,
+                                'stand_id' => $position->first()->stand_id,
+                                'stand_name' => $position->first()->stand_name,
+                                'position_type' => $position->first()->position_type,
+                                'remaining' => $position->count(),
+                            ];
+                        })
+                            ->values();
                     })
-                    ->hasAll([
-                        'current_page',
-                        'first_page_url',
-                        'from',
-                        'last_page',
-                        'last_page_url',
-                        'links',
-                        'next_page_url',
-                        'path',
-                        'per_page',
-                        'prev_page_url',
-                        'to',
-                        'total',
-                    ])
-                )
-            )
+                    ->collapse()
+                    ->each(function ($position) use ($positions) {
+                        $positions->hasPosition($position);
+                    });
+                return true;
+            })
             ->etc()
         );
     }

@@ -19,15 +19,49 @@ class EventIndexTest extends TestCase
         parent::setUp();
 
         Collection::macro('hasEvent', function ($event) {
-            \PHPUnit\Framework\Assert::assertTrue($this->contains($event->fresh()->only([
-                'id', 'title', 'start', 'end', 'published_at',
-            ])), 'Failed asserting that the response does contain the specified event.');
+            \PHPUnit\Framework\Assert::assertTrue($this->contains(
+                $event->fresh()
+                    ->all()
+                    ->where('id', '=', $event->id)
+                    ->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'venue_id' => $item->venue_id,
+                            'title' => $item->title,
+                            'start' => $item->start,
+                            'end' => $item->end,
+                            'published_at' => $item->published_at,
+                            'venue' => [
+                                'id' => $item->venue->id,
+                                'name' => $item->venue->name,
+                            ]
+                        ];
+                    })
+                    ->first()
+            ), 'Failed asserting that the response does contain the specified event.');
         });
 
         Collection::macro('missingEvent', function ($event) {
-            \PHPUnit\Framework\Assert::assertFalse($this->contains($event->fresh()->only([
-                'id', 'title', 'start', 'end', 'published_at',
-            ])), 'Failed asserting that the response does not contain the specified event.');
+            \PHPUnit\Framework\Assert::assertFalse($this->contains(
+                $event->fresh()
+                    ->all()
+                    ->where('id', '=', $event->id)
+                    ->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'venue_id' => $item->venue_id,
+                            'title' => $item->title,
+                            'start' => $item->start,
+                            'end' => $item->end,
+                            'published_at' => $item->published_at,
+                            'venue' => [
+                                'id' => $item->venue->id,
+                                'name' => $item->venue->name,
+                            ]
+                        ];
+                    })
+                    ->first()
+            ), 'Failed asserting that the response does not contain the specified event.');
         });
 
     }
@@ -61,54 +95,51 @@ class EventIndexTest extends TestCase
         // Assert
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Volunteer/Event/Index')
-            ->has('next', fn (Assert $page) => $page
-                ->whereAll([
-                    'id' => $eventA->id,
-                    'title' => $eventA->title,
-                    'start' => $eventA->fresh()->start,
-                    'end' => $eventA->fresh()->end,
-                ])
-                ->has('venue', fn (Assert $page) => $page
-                    ->whereAll([
-                        'name' => $eventA->venue->name,
-                        'street' => $eventA->venue->street,
-                        'city' => $eventA->venue->city,
-                        'state' => $eventA->venue->state,
-                        'zip' => $eventA->venue->zip,
-                    ])
-                )
-            )
-            ->has('events', fn (Assert $page) => $page
-                ->has('data', 2)
-                ->where('data', function (Collection $events) use ($eventA, $eventB, $eventC, $eventD, $eventE,
-                    $eventF, $eventG, $eventH, $eventI)
-                {
-                    $events->hasEvent($eventA);
-                    $events->missingEvent($eventB);
-                    $events->missingEvent($eventC);
-                    $events->missingEvent($eventD);
-                    $events->missingEvent($eventE);
-                    $events->missingEvent($eventF);
-                    $events->missingEvent($eventG);
-                    $events->missingEvent($eventH);
-                    $events->hasEvent($eventI);
-                    return true;
-                })
-                ->hasAll([
-                    'current_page',
-                    'first_page_url',
-                    'from',
-                    'last_page',
-                    'last_page_url',
-                    'links',
-                    'next_page_url',
-                    'path',
-                    'per_page',
-                    'prev_page_url',
-                    'to',
-                    'total',
-                ])
-            )
+            ->hasAll([
+                'filters.fields.title',
+                'filters.fields.start',
+                'filters.fields.end',
+                'filters.fields.venue_name',
+                'events.current_page',
+                'events.first_page_url',
+                'events.from',
+                'events.last_page',
+                'events.last_page_url',
+                'events.links',
+                'events.next_page_url',
+                'events.path',
+                'events.per_page',
+                'events.prev_page_url',
+                'events.to',
+                'events.total',
+            ])
+            ->whereAll([
+                'filters.options.venue_name' => Event::published()->available()->with('venue')->get()
+                    ->pluck('venue.name')->unique()->values(),
+                'next.id' => $eventA->id,
+                'next.title' => $eventA->title,
+                'next.start' => $eventA->fresh()->start,
+                'next.end' => $eventA->fresh()->end,
+                'next.venue.name' => $eventA->venue->name,
+                'next.venue.street' => $eventA->venue->street,
+                'next.venue.city' => $eventA->venue->city,
+                'next.venue.state' => $eventA->venue->state,
+                'next.venue.zip' => $eventA->venue->zip,
+            ])
+            ->where('events.data', function (Collection $events) use ($eventA, $eventB, $eventC, $eventD, $eventE,
+                $eventF, $eventG, $eventH, $eventI)
+            {
+                $events->hasEvent($eventA);
+                $events->missingEvent($eventB);
+                $events->missingEvent($eventC);
+                $events->missingEvent($eventD);
+                $events->missingEvent($eventE);
+                $events->missingEvent($eventF);
+                $events->missingEvent($eventG);
+                $events->missingEvent($eventH);
+                $events->hasEvent($eventI);
+                return true;
+            })
             ->etc()
         );
     }

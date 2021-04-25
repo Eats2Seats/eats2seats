@@ -5,11 +5,48 @@ namespace Tests\Feature\Volunteer;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 class ReservationIndexTest extends TestCase
 {
     use DatabaseMigrations;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Collection::macro('hasReservation', function ($reservation) {
+            \PHPUnit\Framework\Assert::assertTrue(
+                $this->contains([
+                    'id' => $reservation->id,
+                    'event_title' => $reservation->event->title,
+                    'event_start' => $reservation->event->start,
+                    'event_end' => $reservation->event->end,
+                    'venue_name' => $reservation->event->venue->name,
+                    'position_type' => $reservation->position_type,
+                ]),
+                'Failed asserting that the response contains the reservation.'
+            );
+        });
+
+        Collection::macro('missingReservation', function ($reservation) {
+            \PHPUnit\Framework\Assert::assertFalse(
+                $this->contains([
+                    'id' => $reservation->id,
+                    'event_title' => $reservation->event->title,
+                    'event_start' => $reservation->event->start,
+                    'event_end' => $reservation->event->end,
+                    'venue_name' => $reservation->event->venue->name,
+                    'position_type' => $reservation->position_type,
+                ]),
+                'Failed asserting that the response does not contain the reservation.'
+            );
+        });
+
+    }
 
     /** @test */
     public function a_user_can_view_a_list_of_their_claimed_reservations()
@@ -19,7 +56,7 @@ class ReservationIndexTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         $reservationA = Reservation::factory()->claimedBy($user)->create();
-        $reservationB = Reservation::factory()->claimedBy($user)->create();
+        $reservationB = Reservation::factory()->unclaimed()->create();
         $reservationC = Reservation::factory()->claimedBy($user)->create();
 
         // Act
@@ -30,83 +67,58 @@ class ReservationIndexTest extends TestCase
         $reservationB = $reservationB->fresh(['event', 'event.venue']);
         $reservationC = $reservationC->fresh(['event', 'event.venue']);
 
-        $response->assertStatus(200)
-            ->assertPropCount('next', 3)
-            ->assertPropValue('next.id', $reservationA->id)
-            ->assertPropCount('next.event', 3)
-            ->assertPropValue('next.event', function ($event) use ($reservationA) {
-                $this->assertEquals($reservationA->event->title, $event['title']);
-                $this->assertEquals($reservationA->event->start, $event['start']);
-                $this->assertEquals($reservationA->event->end, $event['end']);
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Volunteer/Reservation/Index')
+            ->hasAll([
+                'filters.fields.event_title',
+                'filters.fields.event_start',
+                'filters.fields.event_end',
+                'filters.fields.venue_name',
+                'filters.fields.position_type',
+                'reservations.current_page',
+                'reservations.first_page_url',
+                'reservations.from',
+                'reservations.last_page',
+                'reservations.last_page_url',
+                'reservations.links',
+                'reservations.next_page_url',
+                'reservations.path',
+                'reservations.per_page',
+                'reservations.prev_page_url',
+                'reservations.to',
+                'reservations.total',
+            ])
+            ->whereAll([
+                'filters.options.venue_name' => Reservation::claimedBy($user)
+                    ->with(['event', 'event.venue'])
+                    ->get()
+                    ->pluck('event.venue.name')
+                    ->unique()
+                    ->values(),
+                'filters.options.position_type' => Reservation::claimedBy($user)
+                    ->with(['event', 'event.venue'])
+                    ->get()
+                    ->pluck('position_type')
+                    ->unique()
+                    ->values(),
+                'next.id' => $reservationA->id,
+                'next.event.title' => $reservationA->event->title,
+                'next.event.start' => $reservationA->event->start,
+                'next.event.end' => $reservationA->event->end,
+                'next.venue.name' => $reservationA->event->venue->name,
+                'next.venue.street' => $reservationA->event->venue->street,
+                'next.venue.city' => $reservationA->event->venue->city,
+                'next.venue.state' => $reservationA->event->venue->state,
+                'next.venue.zip' => $reservationA->event->venue->zip,
+            ])
+            ->where('reservations.data', function (Collection $reservations) use ($reservationA, $reservationB, $reservationC) {
+                $reservations->hasReservation($reservationA);
+                $reservations->missingReservation($reservationB);
+                $reservations->hasReservation($reservationC);
+                return true;
             })
-            ->assertPropCount('next.venue', 5)
-            ->assertPropValue('next.venue', function ($venue) use ($reservationA) {
-                $this->assertEquals($reservationA->event->venue->name, $venue['name']);
-                $this->assertEquals($reservationA->event->venue->street, $venue['street']);
-                $this->assertEquals($reservationA->event->venue->city, $venue['city']);
-                $this->assertEquals($reservationA->event->venue->state, $venue['state']);
-                $this->assertEquals($reservationA->event->venue->zip, $venue['zip']);
-            })
-            ->assertPropCount('reservations', 3)
-            ->assertPropValue('reservations', function ($reservations) use ($reservationA, $reservationB, $reservationC) {
-                $this->assertContains([
-                    'id' => $reservationA->id,
-                    'event_title' => $reservationA->event->title,
-                    'event_date' => $reservationA->event->start,
-                    'venue_name' => $reservationA->event->venue->name,
-                    'position_type' => $reservationA->position_type,
-                ], $reservations);
-                $this->assertContains([
-                    'id' => $reservationB->id,
-                    'event_title' => $reservationB->event->title,
-                    'event_date' => $reservationB->event->start,
-                    'venue_name' => $reservationB->event->venue->name,
-                    'position_type' => $reservationB->position_type,
-                ], $reservations);
-                $this->assertContains([
-                    'id' => $reservationC->id,
-                    'event_title' => $reservationC->event->title,
-                    'event_date' => $reservationC->event->start,
-                    'venue_name' => $reservationC->event->venue->name,
-                    'position_type' => $reservationC->position_type,
-                ], $reservations);
-            });
-    }
-
-    /** @test */
-    public function a_user_cannot_view_a_list_of_reservations_containing_reservations_they_have_not_claimed()
-    {
-        $this->withoutExceptionHandling();
-
-        // Arrange
-        $userA = User::factory()->create();
-        $userB = User::factory()->create();
-        $reservationA = Reservation::factory()->claimedBy($userA)->create();
-        $reservationB = Reservation::factory()->claimedBy($userA)->create();
-        $reservationC = Reservation::factory()->claimedBy($userB)->create();
-        $reservationD = Reservation::factory()->claimedBy($userB)->create();
-        $reservationE = Reservation::factory()->unclaimed()->create();
-        $reservationF = Reservation::factory()->unclaimed()->create();
-
-        // Act
-        $response = $this->actingAs($userA)->get('/volunteer/reservations');
-
-        // Assert
-        $response->assertStatus(200)
-            ->assertPropCount('reservations', 2)
-            ->assertPropValue('reservations', function ($reservations) use ($reservationA, $reservationB,
-                $reservationC, $reservationD, $reservationE, $reservationF)
-            {
-                $reservations = collect($reservations)->map(function ($reservation) {
-                    return $reservation['id'];
-                });
-                $this->assertContains($reservationA->id, $reservations);
-                $this->assertContains($reservationB->id, $reservations);
-                $this->assertNotContains($reservationC->id, $reservations);
-                $this->assertNotContains($reservationD->id, $reservations);
-                $this->assertNotContains($reservationE->id, $reservations);
-                $this->assertNotContains($reservationF->id, $reservations);
-            });
+            ->etc()
+        );
     }
 
     /** @test */

@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import XIconButton from "@/Components/IconButton";
-import XSlideOutMenu from "@/Components/SlideOutMenu";
+import XIconButton from "@/Components/General/XIconButton";
+import XSlideOutMenu from "@/Components/General/SlideOutMenu";
 import ListFilterApplyButton from "@/Components/List/ListFilterApplyButton";
 import ListFilterClearButton from "@/Components/List/ListFilterClearButton";
 import {FilterIcon} from "@heroicons/vue/solid";

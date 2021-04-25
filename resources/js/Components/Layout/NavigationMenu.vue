@@ -57,10 +57,10 @@
 </template>
 
 <script>
-import XTitle from "@/Components/Title";
-import XIconButton from "@/Components/IconButton";
+import XTitle from "@/Components/General/XTitle";
+import XIconButton from "@/Components/General/XIconButton";
 import { XIcon } from "@heroicons/vue/solid";
-import XNavigationMenuItem from "@/Components/NavigationMenuItem";
+import XNavigationMenuItem from "@/Components/Layout/NavigationMenuItem";
 export default {
     name: 'NavigationMenu',
     components: {

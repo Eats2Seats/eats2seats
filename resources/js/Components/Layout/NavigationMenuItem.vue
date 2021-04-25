@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import XText from "@/Components/Text";
+import XText from "@/Components/General/XText";
 export default {
     name: 'NavigationMenuItem',
     components: {

@@ -1,12 +1,12 @@
 <template>
-    <h2 class="mt-3 font-serif font-normal text-lg text-gray-500">
+    <h1 class="font-serif font-bold text-2xl text-gray-700">
         <slot></slot>
-    </h2>
+    </h1>
 </template>
 
 <script>
 export default {
-    name: 'Subtitle'
+    name: 'XTitle'
 }
 </script>
 

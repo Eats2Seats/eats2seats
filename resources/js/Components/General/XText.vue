@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    name: 'Text'
+    name: 'XText'
 }
 </script>
 

@@ -43,10 +43,10 @@
 </template>
 
 <script>
-import XLabel from '@/Components/Label';
-import XText from "@/Components/Text";
-import XDivider from "@/Components/Divider";
-import XIconButton from "@/Components/IconButton";
+import XLabel from '@/Components/General/XLabel';
+import XText from "@/Components/General/XText";
+import XDivider from "@/Components/General/XDivider";
+import XIconButton from "@/Components/General/XIconButton";
 import { MapIcon } from '@heroicons/vue/outline'
 export default {
     name: 'EventDetails',

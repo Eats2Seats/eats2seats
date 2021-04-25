@@ -183,16 +183,12 @@ class ReservationsController extends Controller
      */
     public function update(Request $request, $id): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
     {
-        Validator::make($request->all(), [
-            'user_id' => ['required', 'integer', 'exists:users,id'],
-        ])->validate();
-
         $reservation = Reservation::findOrFail($id);
 
-        Gate::authorize('update', [$reservation, $request['user_id']]);
+        Gate::authorize('update', [$reservation, Auth::id()]);
 
         $reservation->update([
-            'user_id' => $request['user_id'],
+            'user_id' => Auth::id(),
         ]);
 
         return redirect('/volunteer/reservations/' . $id);

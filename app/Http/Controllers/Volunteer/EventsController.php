@@ -8,6 +8,7 @@ use App\Models\Reservation;
 use App\Models\Stand;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -36,9 +37,13 @@ class EventsController extends Controller
             ]))
             ->available()
             ->orderBy('start', 'ASC')
-            ->select([
-                'id', 'title', 'start', 'end', 'published_at',
-            ])
+            ->with('venue:id,name')
+            ->whereHas('venue', function (Builder $query) use ($request) {
+                $query->filter([
+                    'name' => $request['venue_name']
+                ]);
+            })
+            ->select(['id', 'venue_id', 'title', 'start', 'end', 'published_at'])
             ->paginate(5)
             ->appends([
                 'title' => $request['title'],
@@ -46,12 +51,21 @@ class EventsController extends Controller
                 'end' => $request['end'],
             ]);
 
+        $eventsListFilterOption = Event::published()
+            ->with('venue:id,name')
+            ->get();
+
         return Inertia::render('Volunteer/Event/Index', [
             'filters' => [
                 'fields' => [
                     'title' => $request['title'] ?: null,
                     'start' => $request['start'] ?: null,
                     'end' => $request['end'] ?: null,
+                    'venue_name' => $request['venue_name'] ?: null,
+                ],
+                'options' => [
+                    'venue_name' => $eventsListFilterOption->pluck('venue.name')
+                        ->unique(),
                 ],
             ],
             'next' => [
@@ -89,7 +103,8 @@ class EventsController extends Controller
                 'options' => [
                     'position_type' => $event->reservations
                         ->pluck('position_type')
-                        ->unique(),
+                        ->unique()
+                        ->values(),
                 ]
             ],
             'event' => [

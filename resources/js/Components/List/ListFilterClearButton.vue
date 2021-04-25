@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import XButton from "@/Components/Button";
+import XButton from "@/Components/General/XButton";
 const emitter = require('tiny-emitter/instance');
 
 export default {

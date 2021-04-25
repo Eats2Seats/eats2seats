@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import XIconButton from "@/Components/IconButton";
-import XText from "@/Components/Text";
+import XIconButton from "@/Components/General/XIconButton";
+import XText from "@/Components/General/XText";
 import {ArrowNarrowLeftIcon, ArrowNarrowRightIcon} from "@heroicons/vue/solid/esm";
 export default {
     name: 'ListPagination',
