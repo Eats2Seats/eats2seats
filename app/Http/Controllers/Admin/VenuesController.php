@@ -19,9 +19,8 @@ class VenuesController extends Controller
             'sort_name' => ['nullable', 'string', 'in:ASC,DESC'],
             'sort_city' => ['nullable', 'string', 'in:ASC,DESC'],
             'sort_state' => ['nullable', 'string', 'in:ASC,DESC'],
-            'sort' => ['nullable', 'array'],
-            'sort.*' => ['string', 'distinct', 'in:name,city,state'],
-        ])->validateWithBag('errors');
+            'sort' => ['nullable', 'array', 'distinct', 'in:name,city,state'],
+        ])->validate();
 
         $venues = Venue::query();
 
@@ -56,9 +55,8 @@ class VenuesController extends Controller
                     ],
                 ],
                 'sort' => $request['sort'] ?: [],
-                'group' => []
             ],
-            'venues' => $venues->select('*')->paginate(5),
+            'venues' => $venues->select('*')->paginate(5)->appends($request->all()),
         ]);
     }
 }

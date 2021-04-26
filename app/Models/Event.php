@@ -34,6 +34,9 @@ class Event extends Model
             })
             ->when($filters['end'] ?? null, function ($query, $end) {
                 $query->where('end', '<=', Carbon::parse($end));
+            })
+            ->when($filters['published_at'] ?? null, function ($query, $publishedAt) {
+                $query->where('published_at', 'LIKE', '%'.Carbon::parse($publishedAt).'%');
             });
     }
 

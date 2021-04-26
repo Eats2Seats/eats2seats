@@ -66,8 +66,26 @@ Route::prefix('volunteer')->group(function () {
  * Admin Routes
  */
 Route::prefix('admin')->group(function () {
+    Route::prefix('users')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\UsersController::class, 'index'])
+            ->name('admin.users.index');
+    });
     Route::prefix('venues')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\VenuesController::class, 'index'])
             ->name('admin.venues.index');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\VenuesController::class, 'show'])
+            ->name('admin.venues.show');
+    });
+    Route::prefix('stands')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\StandsController::class, 'index'])
+            ->name('admin.stands.index');
+    });
+    Route::prefix('events')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\EventsController::class, 'index'])
+            ->name('admin.events.index');
+    });
+    Route::prefix('reservations')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\ReservationsController::class, 'index'])
+            ->name('admin.reservations.index');
     });
 });

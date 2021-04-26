@@ -24,6 +24,7 @@ class StandFactory extends Factory
     {
         return [
             'venue_id' => Venue::factory(),
+            'default_name' => 'Test Default Name',
             'location' => 'Test Location',
         ];
     }

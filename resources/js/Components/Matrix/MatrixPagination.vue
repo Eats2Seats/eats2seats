@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-row items-center justify-between">
         <x-icon-button
-            class="disabled:bg-gray-50 group"
+            class="disabled:bg-gray-50 group bg-white"
             v-on:click="getPrevPage"
             :disabled="matrix.current_page === 1"
         >
@@ -11,7 +11,7 @@
             {{ matrix.from ? matrix.from : 0}} - {{ matrix.to ? matrix.to : 0 }} of {{ matrix.total }}
         </x-text>
         <x-icon-button
-            class="disabled:bg-gray-50 group"
+            class="disabled:bg-gray-50 group bg-white"
             v-on:click="getNextPage"
             :disabled="matrix.current_page === matrix.last_page"
         >

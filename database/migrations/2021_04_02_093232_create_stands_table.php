@@ -16,6 +16,7 @@ class CreateStandsTable extends Migration
         Schema::create('stands', function (Blueprint $table) {
             $table->id();
             $table->foreignId('venue_id')->constrained();
+            $table->string('default_name');
             $table->string('location');
             $table->timestamps();
         });

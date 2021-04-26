@@ -121,7 +121,6 @@ export default {
                 query.sort = this.form.sort.filter(function (field) {
                     return this.form.fields.hasOwnProperty(field);
                 }, this);
-                console.log(query);
                 this.$inertia.get(this.route, query, {
                     preserveScroll: true,
                     preserveState: true,

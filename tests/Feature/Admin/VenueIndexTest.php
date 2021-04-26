@@ -60,18 +60,15 @@ class VenueIndexTest extends TestCase
                 'venues.total',
             ])
             ->whereAll([
-                'venue_constraints.filter.name.value' => null,
-                'venue_constraints.filter.city.value' => null,
-                'venue_constraints.filter.city.options' => Venue::select('city')->distinct()->get(),
-                'venue_constraints.filter.state.value' => null,
-                'venue_constraints.filter.state.options' => Venue::select('state')->distinct()->get(),
-                'venue_constraints.sort.name.value' => null,
-                'venue_constraints.sort.name.options' => Venue::sortOptions['name'],
-                'venue_constraints.sort.city.value' => null,
-                'venue_constraints.sort.city.options' => Venue::sortOptions['city'],
-                'venue_constraints.sort.state.value' => null,
-                'venue_constraints.sort.state.options' => Venue::sortOptions['state'],
-                'venue_constraints.group' => [],
+                'venue_constraints.fields.name.filter_value' => null,
+                'venue_constraints.fields.name.sort_value' => null,
+                'venue_constraints.fields.city.filter_value' => null,
+                'venue_constraints.fields.city.filter_options' => Venue::all()->pluck('city')->unique(),
+                'venue_constraints.fields.city.sort_value' => null,
+                'venue_constraints.fields.state.filter_value' => null,
+                'venue_constraints.fields.state.filter_options' => Venue::all()->pluck('state')->unique(),
+                'venue_constraints.fields.state.sort_value' => null,
+                'venue_constraints.sort' => [],
             ])
             ->where('venues.data', function (Collection $venues) use ($venueA, $venueB, $venueC) {
                 $venues->assertHas($venueA->toArray());

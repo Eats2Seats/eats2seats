@@ -8,11 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Venue extends Model
 {
     use HasFactory;
-    public const sortOptions = [
-        'name' => ['ASC', 'DESC'],
-        'city' => ['ASC', 'DESC'],
-        'state' => ['ASC', 'DESC'],
-    ];
 
     public function scopeFilter($query, Array $filters)
     {
@@ -31,5 +26,10 @@ class Venue extends Model
     public function events()
     {
         return $this->hasMany(Event::class);
+    }
+
+    public function stands()
+    {
+        return $this->hasMany(Stand::class);
     }
 }

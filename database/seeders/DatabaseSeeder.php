@@ -89,6 +89,14 @@ class DatabaseSeeder extends Seeder
                 ->count($faker->numberBetween(5, 10))
                 ->state(function (array $attributes) use ($faker, $venue) {
                     return [
+                        'default_name' => $faker->randomElement([
+                            'Sal\'s Spaghetti',
+                            'Carrie\'s Cotton Candy',
+                            'Perry\'s Pizza',
+                            'Harry\'s Hot Dogs',
+                            'Bart\'s Bagels',
+                            'Izzy\'s Ice Cream',
+                        ]),
                         'venue_id' => $venue->id,
                         'location' => 'Stand #' . $faker->numberBetween(1, 25),
                     ];

@@ -139,4 +139,29 @@ class EventTest extends TestCase
         $this->assertContains($eventB->fresh()->toArray(), $filteredEvents);
         $this->assertNotContains($eventC->fresh()->toArray(), $filteredEvents);
     }
+
+    /** @test */
+    public function events_can_be_filtered_by_published_at_date()
+    {
+        // Arrange
+        $eventA = Event::factory()->create([
+            'published_at' => Carbon::parse('March 23 2022')
+        ]);
+        $eventB = Event::factory()->create([
+            'published_at' => Carbon::parse('March 24 2022')
+        ]);
+        $eventC = Event::factory()->create([
+            'published_at' => Carbon::parse('March 25 2022')
+        ]);
+
+        // Act
+        $filteredEvents = Event::filter([
+            'published_at' => Carbon::parse('March 24 2022'),
+        ])->get()->toArray();
+
+        // Assert
+        $this->assertNotContains($eventA->fresh()->toArray(), $filteredEvents);
+        $this->assertContains($eventB->fresh()->toArray(), $filteredEvents);
+        $this->assertNotContains($eventC->fresh()->toArray(), $filteredEvents);
+    }
 }

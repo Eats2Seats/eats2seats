@@ -9,6 +9,17 @@ class Stand extends Model
 {
     use HasFactory;
 
+    public function scopeFilter($query, Array $filters)
+    {
+        $query
+            ->when($filters['default_name'] ?? null, function ($query, $defaultName) {
+                $query->where('default_name', 'LIKE', '%'.$defaultName.'%');
+            })
+            ->when($filters['location'] ?? null, function ($query, $location) {
+                $query->where('location', 'LIKE', '%'.$location.'%');
+            });
+    }
+
     public function venue()
     {
         return $this->belongsTo(Venue::class);
