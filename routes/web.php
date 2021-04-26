@@ -25,7 +25,7 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard',
-    [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    [\App\Http\Controllers\Volunteer\DashboardController::class, 'index'])->name('dashboard');
 
 // Route::get('/sam', function () {
 //    return Inertia::render('Development/Sam');

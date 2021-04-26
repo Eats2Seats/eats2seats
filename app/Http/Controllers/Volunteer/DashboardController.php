@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Volunteer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
@@ -45,7 +45,6 @@ class DashboardController extends Controller
                     'zip' => $nextReservation->event->venue->zip,
                 ],
             ],
-            'user' => $user,
         ]);
     }
 }
