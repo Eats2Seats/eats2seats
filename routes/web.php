@@ -61,3 +61,13 @@ Route::prefix('volunteer')->group(function () {
             ->name('volunteer.reservations.delete');
     });
 });
+
+/**
+ * Admin Routes
+ */
+Route::prefix('admin')->group(function () {
+    Route::prefix('venues')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\VenuesController::class, 'index'])
+            ->name('admin.venues.index');
+    });
+});

@@ -6,16 +6,15 @@
     </div>
     <x-slide-out-menu ref="filter-menu">
         <template #title>
-            Filter Reservations
-            <!-- TODO Dynamic Name -->
+            {{ title }}
         </template>
         <template #body>
             <div class="m-6 space-y-6" ref="test">
                 <slot></slot>
             </div>
             <div class="fixed left-0 bottom-0 flex flex-col w-full p-6 space-y-4 border-t border-gray-200">
-                <list-filter-apply-button @click="toggleMenu"/>
-                <list-filter-clear-button @click="toggleMenu"/>
+                <matrix-filter-apply-button @click="toggleMenu"/>
+                <matrix-filter-clear-button @click="toggleMenu"/>
             </div>
         </template>
     </x-slide-out-menu>
@@ -24,9 +23,9 @@
 <script>
 import XIconButton from "@/Components/General/XIconButton";
 import XSlideOutMenu from "@/Components/General/SlideOutMenu";
-import ListFilterApplyButton from "@/Components/List/ListFilterApplyButton";
-import ListFilterClearButton from "@/Components/List/ListFilterClearButton";
 import {FilterIcon} from "@heroicons/vue/solid";
+import MatrixFilterApplyButton from "@/Components/Matrix/MatrixFilterApplyButton";
+import MatrixFilterClearButton from "@/Components/Matrix/MatrixFilterClearButton";
 const emitter = require('tiny-emitter/instance');
 
 export default {
@@ -35,8 +34,14 @@ export default {
         XIconButton,
         XSlideOutMenu,
         FilterIcon,
-        ListFilterApplyButton,
-        ListFilterClearButton,
+        MatrixFilterApplyButton,
+        MatrixFilterClearButton,
+    },
+    props: {
+        title: {
+            type: String,
+            required: true,
+        }
     },
     methods: {
         toggleMenu () {

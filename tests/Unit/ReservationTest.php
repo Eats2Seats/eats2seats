@@ -2,9 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Models\Event;
 use App\Models\Reservation;
-use App\Models\Stand;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;

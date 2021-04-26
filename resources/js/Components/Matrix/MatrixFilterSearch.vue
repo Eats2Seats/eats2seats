@@ -18,13 +18,13 @@
 import { SearchIcon } from "@heroicons/vue/solid";
 const emitter = require('tiny-emitter/instance');
 export default {
-    name: 'ListFilterSearch',
+    name: 'MatrixFilterSearch',
     components: {
         SearchIcon,
     },
     emits: [
-        'store-filter',
-        'apply-filter',
+        'matrix-constraint-filter-apply',
+        'matrix-constraint-filter-store',
     ],
     props: {
         field: {
@@ -43,20 +43,20 @@ export default {
         };
     },
     mounted () {
-        emitter.on('list-filters-initialized', (filters) => {
-            this.value = filters.fields[this.field];
+        emitter.on('matrix-constraints-updated', (constraints) => {
+            this.value = constraints.fields[this.field].filter_value;
         });
-        emitter.on('clear-all-filters', e => this.value = null);
+        emitter.on('matrix-constraint-filter-clear-all', e => this.value = null);
     },
     beforeUnmount() {
-        emitter.off('list-filters-initialized');
-        emitter.off('clear-all-filters');
+        emitter.off('matrix-constraints-updated');
+        emitter.off('matrix-constraint-filter-clear-all');
     },
     watch: {
         value: function () {
             this.instant
-                ? emitter.emit('apply-filter', this.field, this.value)
-                : emitter.emit('store-filter', this.field, this.value);
+                ? emitter.emit('matrix-constraint-filter-apply', this.field, this.value)
+                : emitter.emit('matrix-constraint-filter-store', this.field, this.value);
         }
     },
 }

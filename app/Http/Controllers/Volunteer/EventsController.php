@@ -49,6 +49,7 @@ class EventsController extends Controller
                 'title' => $request['title'],
                 'start' => $request['start'],
                 'end' => $request['end'],
+                'venue_name' => $request['venue_name']
             ]);
 
         $eventsListFilterOption = Event::published()

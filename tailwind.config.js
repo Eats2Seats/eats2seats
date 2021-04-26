@@ -37,6 +37,9 @@ module.exports = {
                 fuchsia: colors.fuchsia,
                 rose: colors.rose,
             },
+            gridTemplateColumns: {
+                '5-fit': 'auto auto auto auto auto'
+            }
         },
     },
 
@@ -46,6 +49,7 @@ module.exports = {
 
     plugins: [
         require('@tailwindcss/forms'),
-        require('@tailwindcss/typography')
+        require('@tailwindcss/typography'),
+        require('@tailwindcss/aspect-ratio'),
     ],
 };
