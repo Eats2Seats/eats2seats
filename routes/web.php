@@ -24,19 +24,18 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard',
+    [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/sam', function () {
-   return Inertia::render('Development/Sam');
-});
-Route::get('/qintian', function () {
-    return Inertia::render('Development/Qintian');
-});
-Route::get('/deven', function () {
-    return Inertia::render('Development/Deven');
-});
+// Route::get('/sam', function () {
+//    return Inertia::render('Development/Sam');
+// });
+// Route::get('/qintian', function () {
+//     return Inertia::render('Development/Qintian');
+// });
+// Route::get('/deven', function () {
+//     return Inertia::render('Development/Deven');
+// });
 
 /**
  * Volunteer Routes

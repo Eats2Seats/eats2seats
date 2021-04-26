@@ -7,6 +7,7 @@
         <stand-card
             :reservation="reservation"
         />
+
     </volunteer-layout>
 </template>
 
@@ -14,6 +15,7 @@
 import VolunteerLayout from "@/Layouts/VolunteerLayout";
 import EventCard from "@/Components/EventCard"
 import StandCard from "@/Components/StandCard"
+import ReservationActionCard from "@/Components/ReservationActionCard"
 
 export default {
     name: 'Show',
@@ -21,6 +23,7 @@ export default {
         VolunteerLayout,
         EventCard,
         StandCard,
+        ReservationActionCard,
     },
     props: {
         event: {
