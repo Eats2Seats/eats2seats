@@ -6,26 +6,21 @@
             </span>
         </div>
         <input
-            class="block w-full pl-10"
+            class="block w-full pl-10 shadow-sm"
             type="text"
             placeholder="Search"
-            v-model="value"
+            v-model="filter"
         >
     </div>
 </template>
 
 <script>
-import { SearchIcon } from "@heroicons/vue/solid";
-const emitter = require('tiny-emitter/instance');
+import {computed, inject, watch} from "vue";
+import {SearchIcon} from "@heroicons/vue/outline";
+
 export default {
     name: 'MatrixFilterSearch',
-    components: {
-        SearchIcon,
-    },
-    emits: [
-        'matrix-constraint-filter-apply',
-        'matrix-constraint-filter-store',
-    ],
+    components: {SearchIcon},
     props: {
         field: {
             type: String,
@@ -34,30 +29,29 @@ export default {
         instant: {
             type: Boolean,
             required: false,
-            default: false,
         }
     },
-    data () {
-        return {
-            value: null,
-        };
-    },
-    mounted () {
-        emitter.on('matrix-constraints-updated', (constraints) => {
-            this.value = constraints.fields[this.field].filter_value;
+    setup(props, context) {
+        // Inject the matrix state
+        const constraints = inject('constraints');
+
+        // Define a getter and setter for the filter value
+        const filter = computed({
+            get: () => {
+                return props.instant
+                    ? constraints.active.filter[props.field].value
+                    : constraints.stored.filter[props.field].value;
+            },
+            set: val => {
+                return props.instant
+                    ? constraints.active.filter[props.field].value = val
+                    : constraints.stored.filter[props.field].value = val;
+            }
         });
-        emitter.on('matrix-constraint-filter-clear-all', e => this.value = null);
-    },
-    beforeUnmount() {
-        emitter.off('matrix-constraints-updated');
-        emitter.off('matrix-constraint-filter-clear-all');
-    },
-    watch: {
-        value: function () {
-            this.instant
-                ? emitter.emit('matrix-constraint-filter-apply', this.field, this.value)
-                : emitter.emit('matrix-constraint-filter-store', this.field, this.value);
-        }
+
+        return {
+            filter
+        };
     },
 }
 </script>

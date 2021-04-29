@@ -10,7 +10,7 @@
 
 <script>
 import VolunteerLayout from "@/Layouts/VolunteerLayout";
-import ConfirmRegistrationCard from "@/Components/Volunteer/Reservation/Edit/ConfirmRegistrationCard";
+import ConfirmRegistrationCard from "@/Components/Pages/Volunteer/Reservation/Edit/ConfirmRegistrationCard";
 
 export default {
     name: 'Edit',

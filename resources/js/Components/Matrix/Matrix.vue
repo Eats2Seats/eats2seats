@@ -1,134 +1,137 @@
 <template>
-    <slot></slot>
+    <div class="mt-8 md:mt-10 bg-gray-50">
+        <slot :rowsSelected="selectedRows.length > 0"></slot>
+    </div>
 </template>
 
 <script>
-import {cloneDeep, throttle} from "lodash";
-
-const emitter = require('tiny-emitter/instance');
+import {watch, provide, reactive, computed, ref} from 'vue'
+import {Inertia} from "@inertiajs/inertia";
 
 export default {
     name: 'Matrix',
     components: {},
-    emits: [
-        'matrix-data-updated',
-        'matrix-constraints-updated',
-        'matrix-constraint-sort-applied',
-    ],
     props: {
-        matrix: {
+        data: {
             type: Object,
-            required: true,
-        },
-        constraints: {
-            type: Object,
-            required: false,
+            required: true
         },
         route: {
             type: String,
             required: true,
         }
     },
-    data() {
+    setup(props, context) {
+        // Define UID value via computed to maintain reactivity with data prop
+        const uid = computed(() => props.data.uid);
+
+        // Define pagination object via computed to maintain reactivity with data prop
+        const pagination = computed(() => {
+            return {
+                current_page: props.data.pagination.current_page ?? null,
+                data: props.data.pagination.data ?? [],
+                first_page_url: props.data.pagination.first_page_url ?? null,
+                from: props.data.pagination.from ?? null,
+                last_page: props.data.pagination.last_page ?? null,
+                last_page_url: props.data.pagination.last_page_url ?? null,
+                links: props.data.pagination.links ?? [],
+                next_page_url: props.data.pagination.next_page_url ?? null,
+                path: props.data.pagination.path ?? null,
+                per_page: props.data.pagination.per_page ?? null,
+                prev_page_url: props.data.pagination.prev_page_url ?? null,
+                to: props.data.pagination.to ?? null,
+                total: props.data.pagination.total ?? null,
+            };
+        });
+
+        // Define reactive constraints object and remove reactivity with data prop
+        const constraints = reactive({
+            active: {
+                filter: _.cloneDeep(props.data.filter) ?? {},
+                sort: {
+                    direction: _.cloneDeep(props.data.sort.direction) ?? {},
+                    priority: _.cloneDeep(props.data.sort.priority) ?? [],
+                },
+                display: {
+                    column: _.cloneDeep(props.data.display.column) ?? {},
+                    row: _.cloneDeep(props.data.display.row) ?? {},
+                }
+            },
+            stored: {
+                filter: _.cloneDeep(props.data.filter) ?? {},
+            },
+        });
+
+        // Define reactive variable to track selected rows for multi-row actions
+        const selectedRows = ref([]);
+
+        // Provide the matrix state data
+        provide('uid', uid);
+        provide('pagination', pagination);
+        provide('constraints', constraints);
+        provide('selected-rows', selectedRows);
+
+        // Define watcher to update matrix pagination on active constraints change
+        watch(constraints.active, _.throttle(() => {
+            // Remove all selected rows
+            selectedRows.value = [];
+
+            // Get existing query string from URL
+            const query = new URLSearchParams(window.location.search);
+
+            // Create query parameters for fields with filter values
+            Object.keys(constraints.active.filter).forEach((field) => {
+                (constraints.active.filter[field].value !== null && constraints.active.filter[field].value !== '')
+                    ? query.set(`${uid.value}[filter][${field}]`, constraints.active.filter[field].value)
+                    : query.delete(`${uid.value}[filter][${field}]`);
+            });
+
+            // Delete all existing sort priority query parameters
+            query.delete(`${uid.value}[sort_priority][]`);
+
+            // Create query parameters for fields with sort priority
+            constraints.active.sort.priority.forEach((field, index) => {
+                query.append(`${uid.value}[sort_priority][]`, field);
+            });
+
+            // Create query parameters for fields with sort values
+            Object.keys(constraints.active.sort.direction).forEach((field) => {
+                constraints.active.sort.direction[field] !== null
+                    ? query.set(`${uid.value}[sort][${field}]`, constraints.active.sort.direction[field])
+                    : query.delete(`${uid.value}[sort][${field}]`);
+            });
+
+            // Create query parameters for fields with visibility values
+            Object.keys(constraints.active.display.column).forEach((field) => {
+                constraints.active.display.column[field].value !== constraints.active.display.column[field].default
+                    ? query.set(`${uid.value}[display_column][${field}]`, constraints.active.display.column[field].value)
+                    : query.delete(`${uid.value}[display_column][${field}]`);
+            });
+
+            // Create query parameter for quantity of rows to display
+            constraints.active.display.row.value !== constraints.active.display.row.default
+                ? query.set(`${uid.value}[display_row]`, constraints.active.display.row.value)
+                : query.delete(`${uid.value}[display_row]`);
+
+            // Fetch constrained data from the backend
+            Inertia.get(`${props.route}${query.toString() === '' ? '' : '?' + query.toString()}`, {}, {
+                preserveScroll: true,
+                preserveState: true,
+            });
+
+            // Update stored constraints to match active constraints
+            constraints.stored.filter = _.cloneDeep(constraints.active.filter);
+        }, 150), {
+            deep: true,
+        });
+
         return {
-            constraintStore: {
-                fields: {},
-                sort: [],
-                group: [],
-            },
-            form: {
-                fields: {},
-                sort: [],
-                group: [],
-            },
+            uid,
+            pagination,
+            constraints,
+            selectedRows,
         };
     },
-    mounted () {
-        emitter.emit('matrix-data-updated', this.matrix);
-        emitter.emit('matrix-constraints-updated', this.constraints);
-        this.form = this.constraints;
-        this.constraintStore = cloneDeep(this.constraints)
-        emitter.on('matrix-constraint-filter-store', (field, value) => this.storeFilter(field, value));
-        emitter.on('matrix-constraint-filter-apply', (field, value) => this.applyFilter(field, value));
-        emitter.on('matrix-constraint-filter-apply-all', this.applyAllFilters);
-        emitter.on('matrix-constraint-filter-clear-all', this.clearAllFilters);
-        emitter.on('matrix-constraint-sort-apply', (field, direction) => this.applySort(field, direction));
-    },
-    beforeUnmount () {
-        emitter.off('matrix-constraint-filter-store');
-        emitter.off('matrix-constraint-filter-apply');
-        emitter.off('matrix-constraint-filter-apply-all');
-        emitter.off('matrix-constraint-filter-clear-all');
-        emitter.off('matrix-constraint-sort-apply');
-    },
-    methods: {
-        storeFilter (field, value) {
-            this.constraintStore.fields[field].filter_value = value;
-        },
-        applyFilter (field, value) {
-            this.storeFilter(field, value);
-            this.form.fields[field].filter_value = value;
-        },
-        applyAllFilters () {
-            Object.keys(this.constraintStore.fields).forEach(function (field) {
-                this.form.fields[field].filter_value = this.constraintStore.fields[field].filter_value;
-            }, this);
-        },
-        clearAllFilters () {
-            Object.keys(this.constraintStore.fields).forEach(function (field) {
-                this.constraintStore.fields[field].filter_value = null;
-            }, this);
-            this.applyAllFilters();
-        },
-        storeSort (field, direction) {
-            this.constraintStore.fields[field].sort_value = direction;
-            if (direction === null) {
-                let index = this.constraintStore.sort.indexOf(field);
-                this.constraintStore.sort.splice(index, 1);
-            }
-            else if (this.constraintStore.sort.indexOf(field) === -1) {
-                this.constraintStore.sort.push(field);
-            }
-        },
-        applySort (field, direction) {
-            this.storeSort(field, direction);
-            this.form.fields[field].sort_value = this.constraintStore.fields[field].sort_value;
-            this.form.sort = cloneDeep(this.constraintStore.sort);
-            emitter.emit('matrix-constraint-sort-applied', this.form.sort);
-        },
-        applyAllConstraints () {
-            this.form = cloneDeep(this.constraintStore);
-        },
-    },
-    watch: {
-        matrix: {
-            handler: function () {
-                emitter.emit('matrix-data-updated', this.matrix);
-            },
-            deep: true,
-        },
-        form: {
-            handler: throttle(function () {
-                let query = {};
-                Object.keys(this.form.fields).forEach(function (field) {
-                    if (this.constraintStore.fields[field].filter_value) {
-                        query[`filter_${field}`] = this.form.fields[field].filter_value;
-                    }
-                    if (this.constraintStore.fields[field].sort_value) {
-                        query[`sort_${field}`] = this.form.fields[field].sort_value;
-                    }
-                }, this);
-                query.sort = this.form.sort.filter(function (field) {
-                    return this.form.fields.hasOwnProperty(field);
-                }, this);
-                this.$inertia.get(this.route, query, {
-                    preserveScroll: true,
-                    preserveState: true,
-                });
-            }, 150),
-            deep: true,
-        }
-    }
 }
 </script>
 

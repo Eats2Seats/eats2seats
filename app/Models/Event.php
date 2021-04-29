@@ -36,7 +36,12 @@ class Event extends Model
                 $query->where('end', '<=', Carbon::parse($end));
             })
             ->when($filters['published_at'] ?? null, function ($query, $publishedAt) {
-                $query->where('published_at', 'LIKE', '%'.Carbon::parse($publishedAt).'%');
+                $query->whereDay('published_at', Carbon::parse($publishedAt));
+            })
+            ->when($filters['is_published'] ?? null, function ($query, $isPublished) {
+                filter_var($isPublished, FILTER_VALIDATE_BOOLEAN)
+                    ? $query->whereNotNull('published_at')
+                    : $query->whereNull('published_at');
             });
     }
 

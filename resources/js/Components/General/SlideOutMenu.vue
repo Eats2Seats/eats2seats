@@ -11,6 +11,7 @@
                 class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity ease-in-out duration-500"
                 :class="showMenu ? 'opacity-100' : 'opacity-0'"
                 aria-hidden="true"
+                @click="toggleMenu"
             ></div>
             <div class="absolute inset-y-0 right-0 pl-10 max-w-full flex">
                 <div

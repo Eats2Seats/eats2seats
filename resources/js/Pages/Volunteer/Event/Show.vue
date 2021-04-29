@@ -14,8 +14,8 @@
 
 <script>
 import VolunteerLayout from "@/Layouts/VolunteerLayout";
-import EventDetailsCard from "@/Components/Volunteer/Event/Show/EventDetailsCard";
-import AvailablePositionsCard from "@/Components/Volunteer/Event/Show/AvailablePositionsCard";
+import EventDetailsCard from "@/Components/Pages/Volunteer/Event/Show/EventDetailsCard";
+import AvailablePositionsCard from "@/Components/Pages/Volunteer/Event/Show/AvailablePositionsCard";
 export default {
     name: 'Show',
     components: {

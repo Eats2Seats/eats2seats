@@ -15,9 +15,9 @@
 
 <script>
 import VolunteerLayout from "@/Layouts/VolunteerLayout";
-import EventDetailsCard from "@/Components/Volunteer/Event/Show/EventDetailsCard";
-import StandDetailsCard from "@/Components/Volunteer/Reservation/Show/StandDetailsCard";
-import CancelReservationCard from "@/Components/Volunteer/Reservation/Show/CancelReservationCard";
+import EventDetailsCard from "@/Components/Pages/Volunteer/Event/Show/EventDetailsCard";
+import StandDetailsCard from "@/Components/Pages/Volunteer/Reservation/Show/StandDetailsCard";
+import CancelReservationCard from "@/Components/Pages/Volunteer/Reservation/Show/CancelReservationCard";
 export default {
     name: 'Show',
     components: {

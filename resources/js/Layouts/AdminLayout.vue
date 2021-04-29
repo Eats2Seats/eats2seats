@@ -5,11 +5,23 @@
         </template>
         <template #body>
             <nav class="flex-none divide-y border-gray-200 border-b">
-                <x-navigation-menu-item href="/admin">
+                <x-navigation-menu-item :href="route('admin.dashboard')">
                     Home
                 </x-navigation-menu-item>
-                <x-navigation-menu-item href="/admin/venues">
+                <x-navigation-menu-item :href="route('admin.users.index')">
+                    Users
+                </x-navigation-menu-item>
+                <x-navigation-menu-item :href="route('admin.venues.index')">
                     Venues
+                </x-navigation-menu-item>
+                <x-navigation-menu-item :href="route('admin.stands.index')">
+                    Stands
+                </x-navigation-menu-item>
+                <x-navigation-menu-item :href="route('admin.events.index')">
+                    Events
+                </x-navigation-menu-item>
+                <x-navigation-menu-item :href="route('admin.reservations.index')">
+                    Reservations
                 </x-navigation-menu-item>
             </nav>
             <div class="flex-1"></div>

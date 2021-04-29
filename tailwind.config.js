@@ -37,9 +37,9 @@ module.exports = {
                 fuchsia: colors.fuchsia,
                 rose: colors.rose,
             },
-            gridTemplateColumns: {
-                '5-fit': 'auto auto auto auto auto'
-            }
+            backgroundImage: theme => ({
+                deselect: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' class=\'h-5 w-5\' viewBox=\'0 0 20 20\' fill=\'white\'%3E%3Cpath fill-rule=\'evenodd\' d=\'M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z\' clip-rule=\'evenodd\' /%3E%3C/svg%3E")',
+            }),
         },
     },
 

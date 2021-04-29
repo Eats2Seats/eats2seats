@@ -2,14 +2,14 @@
     <div class="flex flex-col">
         <label
             class="mb-1.5 font-serif font-normal text-sm text-gray-500"
-            :for="`filter-select-${field}`"
+            :for="`${uid}-${field}-filter-select`"
         >
             <slot></slot>
         </label>
         <select
-            :name="`filter-select-${field}`"
-            :id="`filter-select-${field}`"
-            v-model="value"
+            :name="`${uid}-${field}-filter-select`"
+            :id="`${uid}-${field}-filter-select`"
+            v-model="filter"
         >
             <option :value="null">
                 <slot name="default-option">All</slot>
@@ -26,17 +26,11 @@
 </template>
 
 <script>
-import { SearchIcon } from "@heroicons/vue/solid";
-const emitter = require('tiny-emitter/instance');
+import {computed, inject} from "vue";
+
 export default {
     name: 'MatrixFilterSelect',
-    components: {
-        SearchIcon,
-    },
-    emits: [
-        'matrix-constraint-filter-apply',
-        'matrix-constraint-filter-store',
-    ],
+    components: {},
     props: {
         field: {
             type: String,
@@ -48,29 +42,33 @@ export default {
             default: false,
         }
     },
-    data () {
-        return {
-            value: null,
-            options: null,
-        };
-    },
-    mounted () {
-        emitter.on('matrix-constraints-updated', (constraints) => {
-            this.value = constraints.fields[this.field].filter_value;
-            this.options = constraints.fields[this.field].filter_options;
+    setup(props, context) {
+        // Inject matrix state
+        const uid = inject('uid');
+        const constraints = inject('constraints');
+
+        // Define a getter and setter for the filter value
+        const filter = computed({
+            get: () => {
+                return props.instant
+                    ? constraints.active.filter[props.field].value
+                    : constraints.stored.filter[props.field].value;
+            },
+            set: val => {
+                return props.instant
+                    ? constraints.active.filter[props.field].value = val
+                    : constraints.stored.filter[props.field].value = val;
+            }
         });
-        emitter.on('matrix-constraint-filter-clear-all', e => this.value = null);
-    },
-    beforeUnmount() {
-        emitter.off('matrix-constraints-updated');
-        emitter.off('matrix-constraint-filter-clear-all');
-    },
-    watch: {
-        value: function () {
-            this.instant
-                ? emitter.emit('matrix-constraint-filter-apply', this.field, this.value)
-                : emitter.emit('matrix-constraint-filter-store', this.field, this.value);
-        }
+
+        // Define a getter for the filter options
+        const options = computed(() => constraints.active.filter[props.field].options);
+
+        return {
+            uid,
+            filter,
+            options
+        };
     },
 }
 </script>

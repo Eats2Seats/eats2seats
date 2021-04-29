@@ -13,8 +13,8 @@
 
 <script>
 import VolunteerLayout from "@/Layouts/VolunteerLayout";
-import NextEventCard from "@/Components/Volunteer/Event/Index/NextEventCard";
-import UpcomingEventsCard from "@/Components/Volunteer/Event/Index/UpcomingEventsCard";
+import NextEventCard from "@/Components/Pages/Volunteer/Event/Index/NextEventCard";
+import UpcomingEventsCard from "@/Components/Pages/Volunteer/Event/Index/UpcomingEventsCard";
 export default {
     name: 'Index',
     components: {

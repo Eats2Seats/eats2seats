@@ -2,29 +2,25 @@
     <div class="flex flex-col">
         <label
             class="mb-1.5 font-serif font-normal text-sm text-gray-500"
-            for="filter-date"
+            :for="`${uid}-${field}-filter-date`"
         >
             <slot></slot>
         </label>
         <input
             type="date"
-            id="filter-date"
-            v-model="value"
+            :id="`${uid}-${field}-filter-date`"
+            :name="`${uid}-${field}-filter-date`"
+            v-model="filter"
         >
     </div>
 </template>
 
 <script>
-const emitter = require('tiny-emitter/instance');
+import {computed, inject} from "vue";
+
 export default {
     name: 'MatrixFilterDate',
-    components: {
-
-    },
-    emits: [
-        'matrix-constraint-filter-apply',
-        'matrix-constraint-filter-store',
-    ],
+    components: {},
     props: {
         field: {
             type: String,
@@ -36,27 +32,29 @@ export default {
             default: false,
         }
     },
-    data () {
-        return {
-            value: null,
-        };
-    },
-    mounted () {
-        emitter.on('matrix-constraints-updated', (constraints) => {
-            this.value = constraints.fields[this.field].filter_value;
+    setup(props, context) {
+        // Inject matrix state
+        const uid = inject('uid');
+        const constraints = inject('constraints');
+
+        // Define a getter and setter for the filter value
+        const filter = computed({
+            get: () => {
+                return props.instant
+                    ? constraints.active.filter[props.field].value
+                    : constraints.stored.filter[props.field].value;
+            },
+            set: val => {
+                return props.instant
+                    ? constraints.active.filter[props.field].value = val
+                    : constraints.stored.filter[props.field].value = val;
+            }
         });
-        emitter.on('matrix-constraint-filter-clear-all', e => this.value = null);
-    },
-    beforeUnmount() {
-        emitter.off('matrix-constraints-updated');
-        emitter.off('matrix-constraint-filter-clear-all');
-    },
-    watch: {
-        value: function () {
-            this.instant
-                ? emitter.emit('matrix-constraint-filter-apply', this.field, this.value)
-                : emitter.emit('matrix-constraint-filter-store', this.field, this.value);
-        }
+
+        return {
+            uid,
+            filter
+        };
     },
 }
 </script>
@@ -64,4 +62,3 @@ export default {
 <style scoped>
 
 </style>
-

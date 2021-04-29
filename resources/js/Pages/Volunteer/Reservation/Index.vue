@@ -12,8 +12,8 @@
 
 <script>
 import VolunteerLayout from "@/Layouts/VolunteerLayout";
-import NextReservationCard from "@/Components/Volunteer/Reservation/Index/NextReservationCard";
-import UpcomingReservationsCard from "@/Components/Volunteer/Reservation/Index/UpcomingReservationsCard";
+import NextReservationCard from "@/Components/Pages/Volunteer/Reservation/Index/NextReservationCard";
+import UpcomingReservationsCard from "@/Components/Pages/Volunteer/Reservation/Index/UpcomingReservationsCard";
 export default {
     name: 'Index',
     components: {
