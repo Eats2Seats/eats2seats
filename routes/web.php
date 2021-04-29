@@ -31,6 +31,18 @@ Route::middleware(['auth:sanctum', 'verified', 'documents.approved'])->get('/das
 /*
  * Auth Routes
  */
+Route::get('/login', function () {
+    return Inertia::render('Auth/Login');
+})
+    ->middleware('guest')
+    ->name('auth.login');
+
+Route::get('/register', function () {
+    return Inertia::render('Auth/Register');
+})
+    ->middleware('guest')
+    ->name('auth.register');
+
 Route::get('/pending-approval', function () {
     return Inertia::render('Auth/PendingApproval');
 })
