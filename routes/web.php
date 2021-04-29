@@ -24,9 +24,18 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+Route::middleware(['auth:sanctum', 'verified', 'documents.approved'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
+
+/*
+ * Auth Routes
+ */
+Route::get('/pending-approval', function () {
+    return Inertia::render('Auth/PendingApproval');
+})
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('pending.approval');
 
 /**
  * Volunteer Routes
