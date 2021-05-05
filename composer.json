@@ -13,11 +13,14 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "hashids/hashids": "^4.1",
         "inertiajs/inertia-laravel": "^0.4.1",
         "itsgoingd/clockwork": "^5.0",
+        "laravel/fortify": "^1.7",
         "laravel/framework": "^8.12",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
+        "league/flysystem-aws-s3-v3": "~1.0",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {

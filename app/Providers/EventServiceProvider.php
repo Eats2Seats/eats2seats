@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Events\LegalDocumentsReviewed;
+use App\Events\UserDocumentsReviewed;
+use App\Listeners\SendLegalDocumentsReviewedNotification;
+use App\Listeners\SendUserDocumentsReviewedNotification;
+use App\Listeners\SetUserDocumentsApprovedAtField;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -17,6 +22,10 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        UserDocumentsReviewed::class => [
+            SetUserDocumentsApprovedAtField::class,
+            SendUserDocumentsReviewedNotification::class,
         ],
     ];
 

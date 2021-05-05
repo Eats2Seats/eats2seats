@@ -28,10 +28,13 @@ class DatabaseSeeder extends Seeder
 
         $faker = Factory::create();
 
-        $userA = User::factory()->create([
-            'email' => 'userA@example.com',
-            'password' => bcrypt('12345'),
-        ]);
+        $userA = User::factory()
+            ->unverified()
+            ->documentsUnapproved()
+            ->create([
+                'email' => 'userA@example.com',
+                'password' => bcrypt('12345'),
+            ]);
 
         for ($i = 0; $i < 3; $i++) {
             $venue = Venue::factory()

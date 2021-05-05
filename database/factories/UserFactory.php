@@ -23,7 +23,8 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),
             'documents_approved_at' => now(),
@@ -46,7 +47,7 @@ class UserFactory extends Factory
         });
     }
 
-    public function documentsUnapproved(): UserFactory
+    public function documentsUnapproved(): Factory
     {
         return $this->state(function (array $attributes) {
             return [

@@ -43,35 +43,56 @@ Route::get('/register', function () {
     ->middleware('guest')
     ->name('auth.register');
 
-Route::get('/pending-approval', function () {
-    return Inertia::render('Auth/PendingApproval');
+Route::get('/email/verify', function () {
+    return Inertia::render('Auth/VerifyEmail');
 })
-    ->middleware(['auth:sanctum', 'verified'])
-    ->name('pending.approval');
+    ->middleware('auth:sanctum')
+    ->name('verification.notice');
 
 /**
  * Volunteer Routes
  */
-Route::prefix('volunteer')->group(function () {
-    Route::prefix('events')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Web\Volunteer\EventsController::class, 'index'])
-            ->name('volunteer.events.index');
-        Route::get('/{id}', [\App\Http\Controllers\Web\Volunteer\EventsController::class, 'show'])
-            ->name('volunteer.events.show');
+Route::prefix('volunteer')
+    ->middleware(['auth:sanctum', 'verified', 'documents.approved'])
+    ->group(function () {
+        Route::get('dashboard', function () {
+            return response([], 200);
+        })
+            ->name('volunteer.dashboard');
+        Route::prefix('events')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Web\Volunteer\EventsController::class, 'index'])
+                ->name('volunteer.events.index');
+            Route::get('/{id}', [\App\Http\Controllers\Web\Volunteer\EventsController::class, 'show'])
+                ->name('volunteer.events.show');
+        });
+        Route::prefix('reservations')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Web\Volunteer\ReservationsController::class, 'index'])
+                ->name('volunteer.reservations.index');
+            Route::get('/{id}', [\App\Http\Controllers\Web\Volunteer\ReservationsController::class, 'show'])
+                ->name('volunteer.reservations.show');
+            Route::get('/claim/{event}/{stand}/{positionType}', [\App\Http\Controllers\Web\Volunteer\ReservationsController::class, 'edit'])
+                ->name('volunteer.reservations.claim');
+            Route::put('/{id}', [\App\Http\Controllers\Web\Volunteer\ReservationsController::class, 'update'])
+                ->name('volunteer.reservations.update');
+            Route::delete('/{id}', [\App\Http\Controllers\Web\Volunteer\ReservationsController::class, 'delete'])
+                ->name('volunteer.reservations.delete');
+        });
+        Route::prefix('user-documents')
+            ->group(function () {
+                Route::get('/', [\App\Http\Controllers\Web\Volunteer\UserDocumentController::class, 'index'])
+                    ->name('volunteer.user-documents.index')
+                    ->withoutMiddleware('documents.approved');
+                Route::get('/create', [\App\Http\Controllers\Web\Volunteer\UserDocumentController::class, 'create'])
+                    ->name('volunteer.user-documents.create')
+                    ->withoutMiddleware('documents.approved');
+                Route::get('/{id}/{file}', \App\Http\Controllers\Web\Volunteer\DownloadUserDocument::class)
+                    ->name('volunteer.user-documents.download')
+                    ->withoutMiddleware('documents.approved');
+                Route::post('/', [\App\Http\Controllers\Web\Volunteer\UserDocumentController::class, 'store'])
+                    ->name('volunteer.user-documents.store')
+                    ->withoutMiddleware('documents.approved');
+            });
     });
-    Route::prefix('reservations')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Web\Volunteer\ReservationsController::class, 'index'])
-            ->name('volunteer.reservations.index');
-        Route::get('/{id}', [\App\Http\Controllers\Web\Volunteer\ReservationsController::class, 'show'])
-            ->name('volunteer.reservations.show');
-        Route::get('/claim/{event}/{stand}/{positionType}', [\App\Http\Controllers\Web\Volunteer\ReservationsController::class, 'edit'])
-            ->name('volunteer.reservations.claim');
-        Route::put('/{id}', [\App\Http\Controllers\Web\Volunteer\ReservationsController::class, 'update'])
-            ->name('volunteer.reservations.update');
-        Route::delete('/{id}', [\App\Http\Controllers\Web\Volunteer\ReservationsController::class, 'delete'])
-            ->name('volunteer.reservations.delete');
-    });
-});
 
 /**
  * Admin Routes
@@ -82,6 +103,10 @@ Route::prefix('admin')->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('/', [\App\Http\Controllers\Web\Admin\UsersController::class, 'index'])
             ->name('admin.users.index');
+    });
+    Route::prefix('user-documents') ->group(function () {
+        Route::put('/{id}', [\App\Http\Controllers\Web\Admin\UserDocumentsController::class, 'update'])
+            ->name('admin.user-documents.update');
     });
     Route::prefix('venues')->group(function () {
         Route::get('/', [\App\Http\Controllers\Web\Admin\VenuesController::class, 'index'])
