@@ -31,5 +31,10 @@ class SetUserDocumentsApprovedAtField
                 'documents_approved_at' => now(),
             ]);
         }
+        else {
+            $event->document->user()->update([
+                'documents_approved_at' => null,
+            ]);
+        }
     }
 }

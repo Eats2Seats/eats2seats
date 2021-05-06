@@ -61,6 +61,16 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new VerifyEmailNotification());
     }
 
+    public function scopeFilter($query, Array $filters) {
+        $query
+            ->when($filters['first_name'] ?? null, function ($query, $firstName) {
+                $query->where('first_name', 'LIKE', '%'.$firstName.'%');
+            })
+            ->when($filters['last_name'] ?? null, function ($query, $lastName) {
+                $query->where('last_name', 'LIKE', '%'.$lastName.'%');
+            });
+    }
+
     public function reservations(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Reservation::class);

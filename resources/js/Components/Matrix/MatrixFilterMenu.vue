@@ -7,7 +7,7 @@
             <filter-icon class="h-5 w-5 text-gray-500"/>
         </button>
     </div>
-    <x-slide-out-menu ref="menu" :class="`!${marginAdjustment}`">
+    <x-slide-out-menu ref="menu" class="!ml-0">
         <template #title>
             {{ title }}
         </template>

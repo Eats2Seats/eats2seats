@@ -11,6 +11,9 @@
                 <x-navigation-menu-item :href="route('admin.users.index')">
                     Users
                 </x-navigation-menu-item>
+                <x-navigation-menu-item :href="route('admin.user-documents.index')">
+                    User Documents
+                </x-navigation-menu-item>
                 <x-navigation-menu-item :href="route('admin.venues.index')">
                     Venues
                 </x-navigation-menu-item>

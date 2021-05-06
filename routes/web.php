@@ -105,6 +105,8 @@ Route::prefix('admin')->group(function () {
             ->name('admin.users.index');
     });
     Route::prefix('user-documents') ->group(function () {
+        Route::get('/', [\App\Http\Controllers\Web\Admin\UserDocumentsController::class, 'index'])
+            ->name('admin.user-documents.index');
         Route::put('/{id}', [\App\Http\Controllers\Web\Admin\UserDocumentsController::class, 'update'])
             ->name('admin.user-documents.update');
     });
