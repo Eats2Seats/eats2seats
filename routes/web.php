@@ -35,13 +35,27 @@ Route::get('/login', function () {
     return Inertia::render('Auth/Login');
 })
     ->middleware('guest')
-    ->name('auth.login');
+    ->name('login');
+
+Route::get('/forgot-password', function () {
+    return Inertia::render('Auth/ForgotPassword');
+})
+    ->middleware('guest')
+    ->name('password.request');
+
+Route::get('/reset-password/{token}', function (Request $request, $token) {
+    return Inertia::render('Auth/ResetPassword', [
+        'token' => $token,
+    ]);
+})
+    ->middleware('guest')
+    ->name('password.reset');
 
 Route::get('/register', function () {
     return Inertia::render('Auth/Register');
 })
     ->middleware('guest')
-    ->name('auth.register');
+    ->name('register');
 
 Route::get('/email/verify', function () {
     return Inertia::render('Auth/VerifyEmail');

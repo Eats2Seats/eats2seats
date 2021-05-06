@@ -1,60 +1,81 @@
 <template>
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
-
-        <div class="mb-4 text-sm text-gray-600">
-            Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.
-        </div>
-
-        <div class="mb-4 font-medium text-sm text-green-600" v-if="verificationLinkSent" >
-            A new verification link has been sent to the email address you provided during registration.
-        </div>
-
-        <form @submit.prevent="submit">
-            <div class="mt-4 flex items-center justify-between">
-                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Resend Verification Email
-                </jet-button>
-
-                <inertia-link :href="route('logout')" method="post" as="button" class="underline text-sm text-gray-600 hover:text-gray-900">Log Out</inertia-link>
+    <div class="container mx-auto h-screen flex flex-col justify-center items-center">
+        <div class="sm:w-[640px] flex flex-col">
+            <div class="w-full flex flex-col bg-white rounded p-8 shadow-lg">
+                <h1 class="font-sans font-bold text-2xl text-gray-700">
+                    Confirm Your Email
+                </h1>
+                <hr class="my-4"/>
+                <p class="font-sans font-normal text-base text-gray-700">
+                    Thanks for creating an account! Before you can continue, we just need you to verify your email address. We've gone ahead and sent an email to you, but you're welcome to request another using the button below.
+                </p>
+                <p
+                    v-if="emailSent"
+                    class="mt-4 font-sans font-normal text-base text-green-600"
+                >
+                    A new confirmation email has been sent!
+                </p>
+                <div class="flex flex-row justify-between items-end">
+                    <form
+                        @submit.prevent="submit"
+                        class="space-y-4"
+                    >
+                        <button
+                            type="submit"
+                            class="!mt-8 py-3 px-6 text-white bg-indigo-600 hover:bg-indigo-700 rounded shadow-sm disabled:bg-gray-500 disabled:cursor-wait"
+                            :disabled="form.processing"
+                        >
+                            Resend Confirmation Email
+                        </button>
+                    </form>
+                    <inertia-link
+                        :href="route('logout')"
+                        method="post"
+                        class="mt-4 text-right font-sans font-normal text-base text-indigo-600 underline hover:text-indigo-700"
+                    >
+                        Logout instead
+                    </inertia-link>
+                </div>
             </div>
-        </form>
-    </jet-authentication-card>
+        </div>
+        <h1 class="absolute bottom-0 mb-12 font-sans font-bold text-gray-300 text-3xl">
+            Eats2Seats
+        </h1>
+    </div>
 </template>
 
 <script>
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-    import JetButton from '@/Jetstream/Button'
+import {computed, inject, ref} from "vue";
+    import {useForm} from "@inertiajs/inertia-vue3";
 
     export default {
-        components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
-            JetButton,
-        },
+        name: 'VerifyEmail',
+        components: {},
+        props: {},
+        setup(props, context) {
+            // Inject Ziggy route helper
+            const route = inject('route');
 
-        props: {
-            status: String
-        },
+            // Define reactive Inertia form object
+            const form = useForm({});
 
-        data() {
+            // Define reactive variable to determine if email sent
+            const emailSent = ref(false)
+
+            // Define method to submit form
+            const submit = () => {
+                form.post(route('verification.send'), {
+                    onSuccess: () => {
+                        emailSent.value = true;
+                    }
+                })
+            };
+
             return {
-                form: this.$inertia.form()
-            }
-        },
-
-        methods: {
-            submit() {
-                this.form.post(this.route('verification.send'))
-            },
-        },
-
-        computed: {
-            verificationLinkSent() {
-                return this.status === 'verification-link-sent';
+                route,
+                form,
+                submit,
+                emailSent,
             }
         }
     }

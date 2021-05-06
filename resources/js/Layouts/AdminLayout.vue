@@ -31,6 +31,7 @@
             <x-navigation-menu-item
                 class="border-t border-gray-200"
                 href="/logout"
+                method="post"
             >
                 Sign Out
             </x-navigation-menu-item>

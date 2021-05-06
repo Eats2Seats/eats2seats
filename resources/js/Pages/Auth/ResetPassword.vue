@@ -1,75 +1,102 @@
 <template>
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
-
-        <jet-validation-errors class="mb-4" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus />
+    <div class="container mx-auto h-screen flex flex-col justify-center items-center">
+        <div class="sm:w-[640px] flex flex-col">
+            <div class="w-full flex flex-col bg-white rounded p-8 shadow-lg">
+                <h1 class="font-sans font-bold text-2xl text-gray-700">
+                    Reset Your Password
+                </h1>
+                <hr class="my-4"/>
+                <form
+                    @submit.prevent="submit"
+                    class="space-y-4"
+                >
+                    <form-input
+                        field="email"
+                        type="email"
+                        placeholder="john@doe.com"
+                        autocomplete="email"
+                        required
+                    >
+                        Email
+                    </form-input>
+                    <form-input
+                        field="password"
+                        type="password"
+                        placeholder="password123"
+                        autocomplete="new-password"
+                        required
+                    >
+                        Password
+                    </form-input>
+                    <form-input
+                        field="password_confirmation"
+                        type="password"
+                        placeholder="password123"
+                        autocomplete="new-password"
+                        required
+                    >
+                        Confirm Password
+                    </form-input>
+                    <button
+                        type="submit"
+                        class="!mt-8 w-full py-3 px-6 text-white bg-indigo-600 hover:bg-indigo-700 rounded shadow-sm disabled:bg-gray-500 disabled:cursor-wait"
+                        :disabled="form.processing"
+                    >
+                        Reset Password
+                    </button>
+                </form>
+                <inertia-link
+                    :href="route('login')"
+                    class="mt-4 text-right font-sans font-normal text-base text-indigo-600 underline hover:text-indigo-700"
+                >
+                    Login instead
+                </inertia-link>
             </div>
-
-            <div class="mt-4">
-                <jet-label for="password" value="Password" />
-                <jet-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4">
-                <jet-label for="password_confirmation" value="Confirm Password" />
-                <jet-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Reset Password
-                </jet-button>
-            </div>
-        </form>
-    </jet-authentication-card>
+        </div>
+        <h1 class="absolute bottom-0 mb-12 font-sans font-bold text-gray-300 text-3xl">
+            Eats2Seats
+        </h1>
+    </div>
 </template>
 
 <script>
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-    import JetButton from '@/Jetstream/Button'
-    import JetInput from '@/Jetstream/Input'
-    import JetLabel from '@/Jetstream/Label'
-    import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import FormInput from "@/Components/Form/FormInput";
+    import {inject, provide} from "vue";
+    import {useForm} from "@inertiajs/inertia-vue3";
 
     export default {
-        components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
-            JetButton,
-            JetInput,
-            JetLabel,
-            JetValidationErrors
-        },
-
+        name: 'ResetPassword',
+        components: {FormInput},
         props: {
             email: String,
             token: String,
         },
+        setup(props, context) {
+            // Inject Ziggy route helper
+            const route = inject('route');
 
-        data() {
+            // Define reactive Inertia form object
+            const form = useForm({
+                token: props.token,
+                email: null,
+                password: null,
+                password_confirmation: null,
+            });
+
+            // Define function to submit form
+            const submit = () => {
+                form.post(route('password.update'), {
+                    onFinish: () => form.reset('password', 'password_confirmation')
+                })
+            };
+
+            // Provide form to children components
+            provide('form', form);
+
             return {
-                form: this.$inertia.form({
-                    token: this.token,
-                    email: this.email,
-                    password: '',
-                    password_confirmation: '',
-                })
-            }
-        },
-
-        methods: {
-            submit() {
-                this.form.post(this.route('password.update'), {
-                    onFinish: () => this.form.reset('password', 'password_confirmation'),
-                })
+                route,
+                form,
+                submit,
             }
         }
     }

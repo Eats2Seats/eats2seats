@@ -42,11 +42,11 @@ class UserDocumentsApprovedNotification extends Notification implements ShouldQu
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line("Good news {$notifiable->first_name}!")
+            ->line("Hey {$notifiable->first_name},")
             ->line('Your legal documents were approved!')
             ->line('You can now login and register for events.')
-            ->action('Volunteer Dashboard', url(route('volunteer.events.index')))
-            ->line('Thank you for your patience!');
+            ->line('Click the link below to get started.')
+            ->action('Volunteer Dashboard', url(route('volunteer.dashboard')));
     }
 
     /**

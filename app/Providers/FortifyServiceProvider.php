@@ -10,6 +10,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -32,15 +33,23 @@ class FortifyServiceProvider extends ServiceProvider
     public function boot()
     {
         Fortify::registerView(function () {
-            return view('auth.register');
+            return view('register');
         });
 
         Fortify::loginView(function () {
-            return view('auth.login');
+            return view('login');
         });
 
         Fortify::verifyEmailView(function () {
             return view('verification.notice');
+        });
+
+        Fortify::requestPasswordResetLinkView(function () {
+            return view('password.request');
+        });
+
+        Fortify::resetPasswordView(function ($request) {
+            return view('password.reset');
         });
 
         Fortify::createUsersUsing(CreateNewUser::class);

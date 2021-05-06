@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Notifications\LegalDocumentRejectedNotification;
 use App\Notifications\LegalDocumentsApprovedNotification;
 use App\Notifications\VerifyEmailNotification;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,6 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
+    use CanResetPassword;
     use TwoFactorAuthenticatable;
 
     /**

@@ -1,67 +1,97 @@
 <template>
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
+    <div class="container mx-auto h-screen flex flex-col justify-center items-center">
+        <div class="sm:w-[640px] flex flex-col">
+            <div class="w-full flex flex-col bg-white rounded p-8 shadow-lg">
+                <h1 class="font-sans font-bold text-2xl text-gray-700">
+                    Request Password Reset Link
+                </h1>
+                <hr class="my-4"/>
+                <p class="font-sans font-normal text-base text-gray-700">
+                    Forgot your password? No problem. Just let us know your email address and we'll email you a password reset link that will allow you to choose a new one.
+                </p>
+                <p
+                    v-if="emailSent"
+                    class="mt-4 font-sans font-normal text-base text-green-600"
+                >
+                    A new password reset email has been sent!
+                </p>
+                <form
+                    @submit.prevent="submit"
+                    class="mt-4 space-y-4"
+                >
+                    <form-input
+                        field="email"
+                        type="email"
+                        placeholder="john@doe.com"
+                        autocomplete="email"
+                        required
+                    >
+                        Email
+                    </form-input>
+                    <div class="!mt-8 flex flex-row justify-between items-end">
+                        <button
+                            type="submit"
+                            class="py-3 px-6 text-white bg-indigo-600 hover:bg-indigo-700 rounded shadow-sm disabled:bg-gray-500 disabled:cursor-wait"
+                            :disabled="form.processing"
+                        >
+                            Email Password Reset Link
+                        </button>
+                        <inertia-link
+                            :href="route('login')"
+                            class="text-right font-sans font-normal text-base text-indigo-600 underline hover:text-indigo-700"
+                        >
+                            Login instead
+                        </inertia-link>
+                    </div>
+                </form>
 
-        <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
-        </div>
-
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
-        </div>
-
-        <jet-validation-errors class="mb-4" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus />
             </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
-                </jet-button>
-            </div>
-        </form>
-    </jet-authentication-card>
+        </div>
+        <h1 class="absolute bottom-0 mb-12 font-sans font-bold text-gray-300 text-3xl">
+            Eats2Seats
+        </h1>
+    </div>
 </template>
 
 <script>
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-    import JetButton from '@/Jetstream/Button'
-    import JetInput from '@/Jetstream/Input'
-    import JetLabel from '@/Jetstream/Label'
-    import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import FormInput from "@/Components/Form/FormInput";
+    import {inject, provide, ref} from "vue";
+    import {useForm} from "@inertiajs/inertia-vue3";
 
     export default {
-        components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
-            JetButton,
-            JetInput,
-            JetLabel,
-            JetValidationErrors
-        },
+        name: 'ForgotPassword',
+        components: {FormInput},
+        props: {},
+        setup(props, context) {
+            // Inject Ziggy route helper
+            const route = inject('route');
 
-        props: {
-            status: String
-        },
+            // Define reactive Inertia form object
+            const form = useForm({
+                email: null,
+            });
 
-        data() {
+            // Define reactive variable to track if email was sent
+            const emailSent = ref(false);
+
+            // Define function to submit form
+            const submit = () => {
+                form.post(route('password.email'), {
+                    onSuccess: () => {
+                        form.errors = null;
+                        emailSent.value = true;
+                    }
+                });
+            };
+
+            // Provide form object to children components
+            provide('form', form);
+
             return {
-                form: this.$inertia.form({
-                    email: ''
-                })
-            }
-        },
-
-        methods: {
-            submit() {
-                this.form.post(this.route('password.email'))
+                route,
+                emailSent,
+                form,
+                submit,
             }
         }
     }

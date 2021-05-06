@@ -19,7 +19,7 @@ class EnsureUserDocumentsApproved
     public function handle(Request $request, Closure $next): mixed
     {
         if (!$request->user()->documents_approved_at) {
-            return $request->user()->documents()->latest()->first()->review_status === 'pending'
+            return $request->user()->documents()->latest()->first()?->review_status === 'pending'
                 ? Redirect::route('volunteer.user-documents.index')
                 : Redirect::route('volunteer.user-documents.create');
         }

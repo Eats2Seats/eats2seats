@@ -1,100 +1,118 @@
 <template>
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
-
-        <jet-validation-errors class="mb-4" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <jet-label for="first_name" value="First Name" />
-                <jet-input id="first_name" type="text" class="mt-1 block w-full" v-model="form.first_name" required autofocus autocomplete="firstname" />
-            </div>
-
-            <div>
-                <jet-label for="last_name" value="Last Name" />
-                <jet-input id="last_name" type="text" class="mt-1 block w-full" v-model="form.last_name" required autofocus autocomplete="surname" />
-            </div>
-
-            <div class="mt-4">
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required />
-            </div>
-
-            <div class="mt-4">
-                <jet-label for="password" value="Password" />
-                <jet-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4">
-                <jet-label for="password_confirmation" value="Confirm Password" />
-                <jet-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4">
-                <jet-label for="terms">
-                    <div class="flex items-center">
-                        <jet-checkbox name="terms" id="terms" v-model:checked="form.terms" />
-
-                        <div class="ml-2">
-                            I agree to the <a target="_blank" href="#" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a target="_blank" href="#" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
-                        </div>
-                    </div>
-                </jet-label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <inertia-link :href="route('auth.login')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    Already registered?
+    <div class="container mx-auto h-screen flex flex-col justify-center items-center">
+        <div class="sm:w-[640px] flex flex-col">
+            <div class="w-full flex flex-col bg-white rounded p-8 shadow-lg">
+                <h1 class="font-sans font-bold text-2xl text-gray-700">
+                    Create an Account
+                </h1>
+                <hr class="my-4"/>
+                <form
+                    @submit.prevent="submit"
+                    class="space-y-4"
+                >
+                    <form-input
+                        field="first_name"
+                        type="text"
+                        placeholder="John"
+                        autocomplete="given-name"
+                        required
+                    >
+                        First Name
+                    </form-input>
+                    <form-input
+                        field="last_name"
+                        type="text"
+                        placeholder="Doe"
+                        autocomplete="family-name"
+                        required
+                    >
+                        Last Name
+                    </form-input>
+                    <form-input
+                        field="email"
+                        type="email"
+                        placeholder="john@doe.com"
+                        autocomplete="email"
+                        required
+                    >
+                        Email
+                    </form-input>
+                    <form-input
+                        field="password"
+                        type="password"
+                        placeholder="password123"
+                        autocomplete="new-password"
+                        required
+                    >
+                        Password
+                    </form-input>
+                    <form-input
+                        field="password_confirmation"
+                        type="password"
+                        placeholder="password123"
+                        autocomplete="new-password"
+                        required
+                    >
+                        Confirm Password
+                    </form-input>
+                    <button
+                        type="submit"
+                        class="!mt-8 w-full py-3 px-6 text-white bg-indigo-600 hover:bg-indigo-700 rounded shadow-sm disabled:bg-gray-500 disabled:cursor-wait"
+                        :disabled="form.processing"
+                    >
+                        Create Account
+                    </button>
+                </form>
+                <inertia-link
+                    :href="route('login')"
+                    class="mt-4 text-right font-sans font-normal text-base text-indigo-600 underline hover:text-indigo-700"
+                >
+                    Login instead
                 </inertia-link>
-
-                <jet-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </jet-button>
             </div>
-        </form>
-    </jet-authentication-card>
+        </div>
+        <h1 class="absolute bottom-0 mb-12 font-sans font-bold text-gray-300 text-3xl">
+            Eats2Seats
+        </h1>
+    </div>
 </template>
 
 <script>
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-    import JetButton from '@/Jetstream/Button'
-    import JetInput from '@/Jetstream/Input'
-    import JetCheckbox from "@/Jetstream/Checkbox";
-    import JetLabel from '@/Jetstream/Label'
-    import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import {useForm} from "@inertiajs/inertia-vue3";
+    import {inject, provide} from "vue";
+    import FormInput from "@/Components/Form/FormInput";
 
     export default {
-        components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
-            JetButton,
-            JetInput,
-            JetCheckbox,
-            JetLabel,
-            JetValidationErrors
-        },
+        name: 'Register',
+        components: {FormInput},
+        props: {},
+        setup(props, context) {
+            // Inject Ziggy route helper
+            const route = inject('route');
 
-        data() {
+            // Define reactive Inertia form object
+            const form = useForm({
+                first_name: null,
+                last_name: null,
+                email: null,
+                password: null,
+                password_confirmation: null,
+            });
+
+            // Define function to submit form
+            const submit = () => {
+                form.post(route('register'), {
+                    preserveScroll: true,
+                    preserveState: true,
+                });
+            };
+
+            provide('form', form);
+
             return {
-                form: this.$inertia.form({
-                    first_name: '',
-                    last_name: '',
-                    email: '',
-                    password: '',
-                    password_confirmation: '',
-                    terms: false,
-                })
-            }
-        },
-
-        methods: {
-            submit() {
-                this.form.post(this.route('auth.register'), {
-                    onFinish: () => this.form.reset('password', 'password_confirmation'),
-                })
+                route,
+                form,
+                submit,
             }
         }
     }

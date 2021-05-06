@@ -41,10 +41,10 @@ class UserDocumentsRejectedNotification extends Notification
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line("Good news {$notifiable->first_name}!")
+            ->line("Hey {$notifiable->first_name},")
             ->line('Unfortunately your legal documents were not approved.')
             ->line('To learn why and make the necessary corrections please click the following link.')
-            ->action('Fix Your Documents', url('/'))
+            ->action('Fix Your Documents', url(route('volunteer.user-documents.index')))
             ->line('Thank you for your patience!');
     }
 
