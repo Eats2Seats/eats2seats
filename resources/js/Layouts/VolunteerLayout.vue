@@ -25,30 +25,32 @@
             </x-navigation-menu-item>
         </template>
     </x-slide-out-menu>
-    <header class="shadow">
-        <div class="flex flex-row justify-between items-center p-6 bg-indigo-600">
-            <h1 class="font-serif font-bold text-2xl text-white hover:underline">
-                <inertia-link href="/volunteer">
-                    Eats2Seats
-                </inertia-link>
-            </h1>
-            <icon-button
-                class="bg-white group hover:bg-transparent hover:!border-white"
-                v-on:click="$refs.navMenu.toggleMenu()"
-            >
-                <menu-alt1-icon class="h-5 w-5 text-indigo-600 group-hover:text-white"/>
-            </icon-button>
-        </div>
-        <x-breadcrumbs :breadcrumbs="breadcrumbs"/>
-    </header>
+    <div class="flex flex-col w-full min-h-screen">
+        <header class="flex-none shadow">
+            <div class="flex flex-row justify-between items-center p-6 bg-indigo-600">
+                <h1 class="font-serif font-bold text-2xl text-white hover:underline">
+                    <inertia-link href="/volunteer">
+                        Eats2Seats
+                    </inertia-link>
+                </h1>
+                <icon-button
+                    class="bg-white group hover:bg-transparent hover:!border-white"
+                    v-on:click="$refs.navMenu.toggleMenu()"
+                >
+                    <menu-alt1-icon class="h-5 w-5 text-indigo-600 group-hover:text-white"/>
+                </icon-button>
+            </div>
+            <x-breadcrumbs :breadcrumbs="breadcrumbs"/>
+        </header>
 
-    <main class="container mx-auto">
-        <slot></slot>
-    </main>
+        <main class="flex-1 container mx-auto">
+            <slot></slot>
+        </main>
 
-    <footer class="mt-8 md:mt-10 py-12 px-6 bg-indigo-600 text-center">
-        <x-text class="text-white">Copyright © 2021 Eats2Seats</x-text>
-    </footer>
+        <footer class="flex-none justify-self-end mt-8 md:mt-10 py-12 px-6 bg-indigo-600 text-center">
+            <x-text class="text-white">Copyright © 2021 Eats2Seats</x-text>
+        </footer>
+    </div>
 </template>
 
 <script>

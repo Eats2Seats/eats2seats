@@ -69,9 +69,7 @@ Route::get('/email/verify', function () {
 Route::prefix('volunteer')
     ->middleware(['auth:sanctum', 'verified', 'documents.approved'])
     ->group(function () {
-        Route::get('dashboard', function () {
-            return response([], 200);
-        })
+        Route::get('dashboard', \App\Http\Controllers\Web\Volunteer\DashboardController::class)
             ->name('volunteer.dashboard');
         Route::prefix('events')->group(function () {
             Route::get('/', [\App\Http\Controllers\Web\Volunteer\EventsController::class, 'index'])
@@ -127,32 +125,48 @@ Route::prefix('admin')->group(function () {
     Route::prefix('venues')->group(function () {
         Route::get('/', [\App\Http\Controllers\Web\Admin\VenuesController::class, 'index'])
             ->name('admin.venues.index');
-        Route::get('/{id}', [\App\Http\Controllers\Web\Admin\VenuesController::class, 'show'])
-            ->name('admin.venues.show');
         Route::get('/create', [\App\Http\Controllers\Web\Admin\VenuesController::class, 'create'])
             ->name('admin.venues.create');
+        Route::get('/{id}', [\App\Http\Controllers\Web\Admin\VenuesController::class, 'show'])
+            ->name('admin.venues.show');
         Route::get('/{id}/edit', [\App\Http\Controllers\Web\Admin\VenuesController::class, 'edit'])
             ->name('admin.venues.edit');
+        Route::post('/', [\App\Http\Controllers\Web\Admin\VenuesController::class, 'store'])
+            ->name('admin.venues.store');
+        Route::put('/{id}', [\App\Http\Controllers\Web\Admin\VenuesController::class, 'store'])
+            ->name('admin.venues.update');
+        Route::delete('/{id}', [\App\Http\Controllers\Web\Admin\VenuesController::class, 'delete'])
+            ->name('admin.venues.delete');
     });
     Route::prefix('stands')->group(function () {
         Route::get('/', [\App\Http\Controllers\Web\Admin\StandsController::class, 'index'])
             ->name('admin.stands.index');
-        Route::get('/{id}', [\App\Http\Controllers\Web\Admin\StandsController::class, 'show'])
-            ->name('admin.stands.show');
         Route::get('/create', [\App\Http\Controllers\Web\Admin\StandsController::class, 'create'])
             ->name('admin.stands.create');
+        Route::get('/{id}', [\App\Http\Controllers\Web\Admin\StandsController::class, 'show'])
+            ->name('admin.stands.show');
         Route::get('/{id}/edit', [\App\Http\Controllers\Web\Admin\StandsController::class, 'edit'])
             ->name('admin.stands.edit');
+        Route::post('/', [\App\Http\Controllers\Web\Admin\StandsController::class, 'store'])
+            ->name('admin.stands.store');
+        Route::put('/{id}', [\App\Http\Controllers\Web\Admin\StandsController::class, 'update'])
+            ->name('admin.stands.update');
+        Route::delete('/{id}', [\App\Http\Controllers\Web\Admin\StandsController::class, 'delete'])
+            ->name('admin.stands.delete');
     });
     Route::prefix('events')->group(function () {
         Route::get('/', [\App\Http\Controllers\Web\Admin\EventsController::class, 'index'])
             ->name('admin.events.index');
-        Route::get('/{id}', [\App\Http\Controllers\Web\Admin\EventsController::class, 'show'])
-            ->name('admin.events.show');
         Route::get('/create', [\App\Http\Controllers\Web\Admin\EventsController::class, 'create'])
             ->name('admin.events.create');
+        Route::get('/{id}', [\App\Http\Controllers\Web\Admin\EventsController::class, 'show'])
+            ->name('admin.events.show');
         Route::get('/{id}/edit', [\App\Http\Controllers\Web\Admin\EventsController::class, 'edit'])
             ->name('admin.events.edit');
+        Route::post('/', [\App\Http\Controllers\Web\Admin\EventsController::class, 'store'])
+            ->name('admin.events.store');
+        Route::put('/{id}', [\App\Http\Controllers\Web\Admin\EventsController::class, 'update'])
+            ->name('admin.events.update');
     });
     Route::prefix('reservations')->group(function () {
         Route::get('/', [\App\Http\Controllers\Web\Admin\ReservationsController::class, 'index'])

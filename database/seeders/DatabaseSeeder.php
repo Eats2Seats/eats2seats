@@ -102,6 +102,7 @@ class DatabaseSeeder extends Seeder
                         ]),
                         'venue_id' => $venue->id,
                         'location' => 'Stand #' . $faker->numberBetween(1, 25),
+                        'default_positions' => $faker->numberBetween(5, 20),
                     ];
                 })
                 ->create();

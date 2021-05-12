@@ -7,17 +7,22 @@
             <slot></slot>
             <span v-if="required" class="text-red-600">*</span>
         </label>
-        <input
+        <select
             v-model="value"
-            :type="type"
             :id="field"
             :name="field"
-            class="mt-1 disabled:bg-gray-50"
-            :autocomplete="autocomplete"
-            :placeholder="placeholder"
-            :disabled="disabled"
+            class="mt-1"
             @input="clearError"
-        />
+        >
+            <option :value="null">Choose One</option>
+            <option
+                v-for="(option, id) in options"
+                :key="option"
+                :value="id"
+            >
+                {{ option }}
+            </option>
+        </select>
         <p
             v-if="error"
             class="mt-1 font-sans font-normal text-sm text-red-600"
@@ -31,14 +36,10 @@
 import {computed, inject} from "vue";
 
 export default {
-    name: 'FormInput',
+    name: 'FormSelect',
     components: {},
     props: {
         field: {
-            type: String,
-            required: true,
-        },
-        type: {
             type: String,
             required: true,
         },
@@ -46,27 +47,18 @@ export default {
             type: Boolean,
             required: false,
         },
-        placeholder: {
-            type: String,
-            required: true,
-        },
-        autocomplete: {
-            type: String,
-            required: false,
-        },
-        disabled: {
-            type: Boolean,
-            required: false
-        }
     },
     setup(props, context) {
         // Inject form object
         const form = inject('form');
+        const formOptions = inject('form-options');
 
         const value = computed({
             get: () => form[props.field],
             set: val => form[props.field] = val,
         });
+
+        const options = computed(() => formOptions[props.field]);
 
         const error = computed({
             get: () => form.errors[props.field],
@@ -77,6 +69,7 @@ export default {
 
         return {
             value,
+            options,
             error,
             clearError
         };

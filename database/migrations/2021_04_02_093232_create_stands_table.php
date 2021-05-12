@@ -18,7 +18,9 @@ class CreateStandsTable extends Migration
             $table->foreignId('venue_id')->constrained();
             $table->string('default_name');
             $table->string('location');
+            $table->integer('default_positions');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -81,16 +81,17 @@
                 <matrix-body-cell>
                     <div class="flex justify-end space-x-3">
                         <inertia-link
-                            :href="route('admin.stands.show', { id: row.id })"
-                            class="group"
-                        >
-                            <eye-icon class="h-6 w-6 text-gray-500 group-hover:text-indigo-600"/>
-                        </inertia-link>
-                        <inertia-link
                             :href="route('admin.stands.edit', { id: row.id })"
                             class="group"
                         >
-                            <pencil-alt-icon class="h-6 w-6 text-gray-500 group-hover:text-indigo-600"/>
+                          <pencil-alt-icon class="h-6 w-6 text-gray-500 group-hover:text-indigo-600"/>
+                        </inertia-link>
+                        <inertia-link
+                            :href="route('admin.stands.delete', { id: row.id })"
+                            method="delete"
+                            class="group"
+                        >
+                            <trash-icon class="h-6 w-6 text-gray-500 group-hover:text-indigo-600"/>
                         </inertia-link>
                     </div>
                 </matrix-body-cell>
@@ -117,7 +118,7 @@ import MatrixHeadCell from "@/Components/Matrix/MatrixHeadCell";
 import MatrixBody from "@/Components/Matrix/MatrixBody";
 import MatrixBodyCellSelect from "@/Components/Matrix/MatrixBodyCellSelect";
 import MatrixBodyCell from "@/Components/Matrix/MatrixBodyCell";
-import {EyeIcon, PencilAltIcon} from "@heroicons/vue/outline";
+import {EyeIcon, PencilAltIcon, TrashIcon} from "@heroicons/vue/outline";
 import MatrixColumnVisibility from "@/Components/Matrix/MatrixColumnVisibility";
 import MatrixColumnVisibilityItem from "@/Components/Matrix/MatrixColumnVisibilityItem";
 import MatrixPagination from "@/Components/Matrix/MatrixPagination";
@@ -126,7 +127,7 @@ import MatrixFilterMenu from "@/Components/Matrix/MatrixFilterMenu";
 import MatrixFilterSelect from "@/Components/Matrix/MatrixFilterSelect";
 import MatrixRowAction from "@/Components/Matrix/MatrixRowAction";
 import MatrixRowActionItem from "@/Components/Matrix/MatrixRowActionItem";
-import {TrashIcon, PlusSmIcon} from "@heroicons/vue/solid";
+import {PlusSmIcon} from "@heroicons/vue/solid";
 export default {
     name: 'StandMatrix',
     components: {

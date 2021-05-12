@@ -26,6 +26,7 @@ class StandFactory extends Factory
             'venue_id' => Venue::factory(),
             'default_name' => 'Test Default Name',
             'location' => 'Test Location',
+            'default_positions' => 15,
         ];
     }
 }
