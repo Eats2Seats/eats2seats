@@ -10,7 +10,6 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
-use Inertia\Inertia;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -32,6 +31,8 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->app->singleton(\Laravel\Fortify\Contracts\LoginResponse::class, \App\Http\Responses\LoginResponse::class);
+
         Fortify::registerView(function () {
             return view('register');
         });
