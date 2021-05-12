@@ -5,7 +5,7 @@
         </template>
         <template #body>
             <nav class="flex-none divide-y border-gray-200 border-b">
-                <x-navigation-menu-item href="/volunteer">
+                <x-navigation-menu-item href="/volunteer/dashboard">
                     Home
                 </x-navigation-menu-item>
                 <x-navigation-menu-item href="/volunteer/events">
@@ -29,7 +29,7 @@
         <header class="flex-none shadow">
             <div class="flex flex-row justify-between items-center p-6 bg-indigo-600">
                 <h1 class="font-serif font-bold text-2xl text-white hover:underline">
-                    <inertia-link href="/volunteer">
+                    <inertia-link href="/volunteer/dashboard">
                         Eats2Seats
                     </inertia-link>
                 </h1>

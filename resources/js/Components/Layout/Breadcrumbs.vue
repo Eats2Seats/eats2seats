@@ -1,7 +1,7 @@
 <template>
-    <div class="bg-white">
+    <div class="bg-white px-6">
         <div class="container mx-auto space-x-2 py-4 flex flex-row items-center">
-            <inertia-link href="/volunteer">
+            <inertia-link href="/volunteer/dashboard">
                 <home-icon class="h-5 w-5 text-gray-500 hover:text-indigo-600"/>
             </inertia-link>
             <div

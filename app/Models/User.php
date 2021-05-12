@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Notifications\LegalDocumentRejectedNotification;
-use App\Notifications\LegalDocumentsApprovedNotification;
 use App\Notifications\VerifyEmailNotification;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -47,15 +45,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-    ];
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = [
-        'profile_photo_url',
     ];
 
     public function sendEmailVerificationNotification()
