@@ -5,14 +5,8 @@
         </template>
         <template #body>
             <nav class="flex-none divide-y border-gray-200 border-b">
-                <x-navigation-menu-item :href="route('admin.dashboard')">
-                    Home
-                </x-navigation-menu-item>
-                <x-navigation-menu-item :href="route('admin.users.index')">
-                    Users
-                </x-navigation-menu-item>
                 <x-navigation-menu-item :href="route('admin.user-documents.index')">
-                    User Documents
+                    Legal Documents
                 </x-navigation-menu-item>
                 <x-navigation-menu-item :href="route('admin.venues.index')">
                     Venues

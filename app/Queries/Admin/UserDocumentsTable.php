@@ -65,7 +65,7 @@ class UserDocumentsTable
 
         // Paginate the query
         $paginated = $query
-            ->paginate(15, ['*'], $uid . '_page')
+            ->paginate($constraints['display_row'] ?? $rows, ['*'], $uid . '_page')
             ->appends($request);
 
         // Transform the paginated data
